@@ -1,0 +1,10 @@
+{
+  "name": "pulumi-k8s-istio",
+  "dependencies": {
+    "@pulumi/kubernetes": "^0.25.6",
+    "@pulumi/pulumi": "^0.17.28"
+  },
+  "pulumi": {
+    "resource": true
+  }
+}
