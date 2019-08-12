@@ -3,29 +3,30 @@
 
 {{#groups}}
 export namespace {{group}} {
-    {{#versions}}
-    export namespace {{version}} {
-        {{#schemas}}
-        {{#isEnum}}
-        {{#description}}
-        // {{{description}}}
-        {{/description}}
-        export type {{schema}} = {{{type}}};
-        {{/isEnum}}
-        {{^isEnum}}
-        export interface {{schema}}{{#isKind}}Spec{{/isKind}} {
-        {{#properties}}
-            {{#description}}
-            // {{{description}}}
-            {{/description}}
-            readonly {{property}}: {{{type}}};
-        {{/properties}}
-        }
-        {{/isEnum}}
-
-        {{/schemas}}
+  {{#versions}}
+  export namespace {{version}} {
+    {{#schemas}}
+    {{#isEnum}}
+    {{#description}}
+    // {{{description}}}
+    {{/description}}
+    // @ts-ignore
+    export type {{schema}} = {{{type}}};
+    {{/isEnum}}
+    {{^isEnum}}
+    // @ts-ignore
+    export interface {{schema}} {
+    {{#properties}}
+      {{#description}}
+      // {{{description}}}
+      {{/description}}
+       // @ts-ignore
+       readonly {{property}}: {{{type}}};
+    {{/properties}}
     }
-
-    {{/versions}}
+    {{/isEnum}}
+    {{/schemas}}
+  }
+  {{/versions}}
 }
 {{/groups}}
