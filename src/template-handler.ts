@@ -1,7 +1,7 @@
 import { outputFile, readFile } from 'fs-extra';
 import { join } from 'path';
 
-import { Options } from '../../interfaces';
+import { Options } from './interfaces';
 
 export class TemplateHandler {
   constructor(private readonly options: Options) {}
