@@ -1,27 +1,14 @@
-import { readFile, outputFile } from 'fs-extra';
-import { join } from 'path';
 import * as mustache from 'mustache';
 import * as execa from 'execa';
 import paramCase = require('param-case');
 
+import { createApiVersion } from '../../utils';
 import { Generator, Options } from '../../interfaces';
+import { TemplateHandler } from './template-handler';
 import { filterGroupsWithKinds } from './filter-groups-with-kinds';
 import { getGroupVersions } from './get-group-versions';
 import { createGroups } from './create-groups';
-import { GroupTS, KindTS, MemberTS } from './interfaces';
-import { createApiVersion } from '../../utils';
-
-export class TemplateHandler {
-	constructor(private readonly options: Options) {}
-
-	read(...templatePaths: string[]) {
-    return readFile(join(this.options.templateDir, ...templatePaths), 'utf8');
-	}
-
-	write(data: string, outPaths: string[]) {
-		return outputFile(join(this.options.outDir, ...outPaths), data, 'utf8');
-	}
-}
+import { GroupTS, KindTS } from './interfaces';
 
 export class NodeGenerator implements Generator {
 	private async generateInputTypes(groups: GroupTS[], template: TemplateHandler) {
@@ -48,9 +35,9 @@ export class NodeGenerator implements Generator {
     const indexTemplate = await template.read('index.ts.mustache');
     const versionIndexTemplate = await template.read('versionIndex.ts.mustache');
     const kindIndexTemplate = await template.read('kindIndex.ts.mustache');
+    const kindTemplate = await template.read('kind.ts.mustache');
 
     await this.generateTypesIndex(template);
-
 
     const indexTs = mustache.render(indexTemplate, { groups });
     await template.write(indexTs, ['index.ts']);
@@ -72,7 +59,6 @@ export class NodeGenerator implements Generator {
         await template.write(versionIndexTs, [group, version, 'index.ts']);
 
         for (const schema of schemas) {
-          const kindTemplate = await template.read('kind.ts.mustache');
           const apiVersion = createApiVersion(group, version);
 
           const kind: KindTS = {
@@ -97,10 +83,8 @@ export class NodeGenerator implements Generator {
     const groups = await createGroups(groupVersions, options.jsonPaths, options.istioApiPath);
 
     const template = new TemplateHandler(options);
-
     // Clean outDir
     await execa('rm', ['-rf', options.outDir]);
-
     // Generate input types
     await this.generateInputTypes(groups, template);
     // Generate output types
