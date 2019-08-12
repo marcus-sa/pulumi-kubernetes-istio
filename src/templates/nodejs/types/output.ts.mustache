@@ -17,9 +17,9 @@ export namespace {{group}} {
     // @ts-ignore
     export interface {{schema}} {
     {{#properties}}
-      {{#description}}
-      // {{{description}}}
-      {{/description}}
+       {{#description}}
+       // {{{description}}}
+       {{/description}}
        // @ts-ignore
        readonly {{property}}: {{{type}}};
     {{/properties}}
@@ -29,4 +29,5 @@ export namespace {{group}} {
   }
   {{/versions}}
 }
+
 {{/groups}}

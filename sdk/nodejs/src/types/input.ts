@@ -99,6 +99,7 @@ export namespace authentication {
     export type PortSelector = Input<{ number: Input<number> } | { name: Input<string> }>;
   }
 }
+
 export namespace mcp {
   export namespace v1alpha1 {
     // @ts-ignore
@@ -259,6 +260,7 @@ export namespace mcp {
     }
   }
 }
+
 export namespace mesh {
   export namespace v1alpha1 {
     // @ts-ignore
@@ -612,418 +614,7 @@ export namespace mesh {
     export type TLSmode = Input<'DISABLE' | 'SIMPLE' | 'MUTUAL' | 'ISTIO_MUTUAL'>;
   }
 }
-export namespace mixer {
-  export namespace v1 {
-    // @ts-ignore
-    export interface Attributes {
-      // A map of attribute name to its value.
-      // @ts-ignore
-      attributes: Input<Record<Input<string>, Input<AttributeValue>>>;
-    }
-    // @ts-ignore
-    export type AttributeValue = Input<{ stringValue: Input<string> } | { int64Value: Input<number> } | { doubleValue: Input<number> } | { boolValue: Input<boolean> } | { bytesValue: Input<string> } | { timestampValue: Input<Timestamp> } | { durationValue: Input<Duration> } | { stringMapValue: Input<StringMap> }>;
-    // @ts-ignore
-    export interface StringMap {
-      // Holds a set of name/value pairs.
-      // @ts-ignore
-      entries: Input<Record<Input<string>, Input<string>>>;
-    }
-    // @ts-ignore
-    export interface CompressedAttributes {
-      // Holds attributes of type STRING, DNS_NAME, EMAIL_ADDRESS, URI
-      // @ts-ignore
-      strings: Input<Record<Input<string>, Input<number>>>;
-      // Holds attributes of type BYTES
-      // @ts-ignore
-      bytes: Input<object>;
-      // The message-level dictionary.
-      // @ts-ignore
-      words?: Input<Input<string>[]>;
-      // Holds attributes of type INT64
-      // @ts-ignore
-      int64s: Input<Record<Input<string>, Input<number>>>;
-      // Holds attributes of type DOUBLE
-      // @ts-ignore
-      doubles: Input<Record<Input<string>, Input<number>>>;
-      // Holds attributes of type BOOL
-      // @ts-ignore
-      bools: Input<Record<Input<string>, Input<boolean>>>;
-      // Holds attributes of type TIMESTAMP
-      // @ts-ignore
-      timestamps: Input<Record<Input<string>, Input<Timestamp>>>;
-      // Holds attributes of type DURATION
-      // @ts-ignore
-      durations: Input<Record<Input<string>, Input<Duration>>>;
-      // Holds attributes of type STRING_MAP
-      // @ts-ignore
-      stringMaps: Input<Record<Input<string>, Input<StringMap>>>;
-    }
-    // @ts-ignore
-    export interface StringMap {
-      // Holds a set of name/value pairs.
-      // @ts-ignore
-      entries: Input<Record<Input<string>, Input<number>>>;
-    }
-    // @ts-ignore
-    export interface CheckRequest {
-      // The number of words in the global dictionary, used with to populate the attributes. This value is used as a quick way to determine whether the client is using a dictionary that the server understands.
-      // @ts-ignore
-      globalWordCount?: Input<number>;
-      // Used for deduplicating `Check` calls in the case of failed RPCs and retries. This should be a UUID per call, where the same UUID is used for retries of the same call.
-      // @ts-ignore
-      deduplicationId?: Input<string>;
-      // The individual quotas to allocate
-      // @ts-ignore
-      quotas: Input<Record<Input<string>, Input<QuotaParams>>>;
-    }
-    // @ts-ignore
-    export interface QuotaParams {
-      // Amount of quota to allocate
-      // @ts-ignore
-      amount?: Input<number>;
-      // When true, supports returning less quota than what was requested.
-      // @ts-ignore
-      bestEffort?: Input<boolean>;
-    }
-    // @ts-ignore
-    export interface CheckResponse {
-      // The resulting quota, one entry per requested quota.
-      // @ts-ignore
-      quotas: Input<Record<Input<string>, Input<QuotaResult>>>;
-    }
-    // @ts-ignore
-    export interface QuotaResult {
-      // The amount of granted quota. When `QuotaParams.best_effort` is true, this will be >= 0. If `QuotaParams.best_effort` is false, this will be either 0 or >= `QuotaParams.amount`.
-      // @ts-ignore
-      grantedAmount?: Input<number>;
-    }
-    // @ts-ignore
-    export interface PreconditionResult {
-      // The number of uses for which this result can be considered valid.
-      // @ts-ignore
-      validUseCount?: Input<number>;
-      // @ts-ignore
-      referencedAttributes?: Input<ReferencedAttributes>;
-      // @ts-ignore
-      routeDirective?: Input<RouteDirective>;
-    }
-    // @ts-ignore
-    export interface ReferencedAttributes {
-      // The message-level dictionary. Refer to [CompressedAttributes][istio.mixer.v1.CompressedAttributes] for information on using dictionaries.
-      // @ts-ignore
-      words?: Input<Input<string>[]>;
-    }
-    // @ts-ignore
-    export interface RouteDirective {
-      // If set, enables a direct response without proxying the request to the routing destination. Required to be a value in the 2xx or 3xx range.
-      // @ts-ignore
-      directResponseCode?: Input<number>;
-      // Supplies the response body for the direct response. If this setting is omitted, no body is included in the generated response.
-      // @ts-ignore
-      directResponseBody?: Input<string>;
-    }
-    // @ts-ignore
-    export type Condition = Input<'CONDITION_UNSPECIFIED' | 'ABSENCE' | 'EXACT' | 'REGEX'>;
-    // @ts-ignore
-    export interface AttributeMatch {
-      // The name of the attribute. This is a dictionary index encoded in a manner identical to all strings in the [CompressedAttributes][istio.mixer.v1.CompressedAttributes] message.
-      // @ts-ignore
-      name?: Input<number>;
-      // @ts-ignore
-      condition?: Input<Condition>;
-      // If a REGEX condition is provided for a STRING_MAP attribute, clients should use the regex value to match against map keys.
-      // @ts-ignore
-      regex?: Input<string>;
-      // A key in a STRING_MAP. When multiple keys from a STRING_MAP attribute were referenced, there will be multiple AttributeMatch messages with different map_key values. Values for map_key SHOULD be ignored for attributes that are not STRING_MAP.
-      // @ts-ignore
-      mapKey?: Input<number>;
-    }
-    // @ts-ignore
-    export interface HeaderOperation {
-      // Header name.
-      // @ts-ignore
-      name?: Input<string>;
-      // Header value.
-      // @ts-ignore
-      value?: Input<string>;
-      // @ts-ignore
-      operation?: Input<Operation>;
-    }
-    // @ts-ignore
-    export type Operation = Input<'REPLACE' | 'REMOVE' | 'APPEND'>;
-    // @ts-ignore
-    export interface ReportRequest {
-      // The number of words in the global dictionary. To detect global dictionary out of sync between client and server.
-      // @ts-ignore
-      globalWordCount?: Input<number>;
-      // @ts-ignore
-      repeatedAttributesSemantics?: Input<RepeatedAttributesSemantics>;
-      // The default message-level dictionary for all the attributes. Individual attribute messages can have their own dictionaries, but if they don't then this set of words, if it is provided, is used instead.
-      // @ts-ignore
-      defaultWords?: Input<Input<string>[]>;
-    }
-    // @ts-ignore
-    export type RepeatedAttributesSemantics = Input<'DELTA_ENCODING' | 'INDEPENDENT_ENCODING'>;
-    // @ts-ignore
-    export interface ReportResponse {
-    }
-    // @ts-ignore
-    export interface Duration {
-      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-      // @ts-ignore
-      seconds?: Input<number>;
-      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-      // @ts-ignore
-      nanos?: Input<number>;
-    }
-    // @ts-ignore
-    export interface Timestamp {
-      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-      // @ts-ignore
-      seconds?: Input<number>;
-      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-      // @ts-ignore
-      nanos?: Input<number>;
-    }
-      export interface HTTPAPISpecArgs {
-        metadata: Input<types.input.meta.v1.ObjectMeta>;
-        spec: Input<HTTPAPISpec>;
-      }
-    // @ts-ignore
-    export interface HTTPAPISpec {
-      // @ts-ignore
-      attributes?: Input<Attributes>;
-      // List of HTTP patterns to match.
-      // @ts-ignore
-      patterns?: Input<Input<HTTPAPISpecPattern>[]>;
-      // List of APIKey that describes how to extract an API-KEY from an HTTP request. The first API-Key match found in the list is used, i.e. 'OR' semantics.
-      // @ts-ignore
-      apiKeys?: Input<Input<APIKey>[]>;
-    }
-    // @ts-ignore
-    export type HTTPAPISpecPattern = Input<{ attributes: Input<Attributes> } | { httpMethod: Input<string> } | { uriTemplate: Input<string> } | { attributes: Input<Attributes> } | { regex: Input<string> } | { httpMethod: Input<string> }>;
-    // @ts-ignore
-    export type APIKey = Input<{ query: Input<string> } | { header: Input<string> } | { cookie: Input<string> }>;
-    // @ts-ignore
-    export interface HTTPAPISpecReference {
-      // REQUIRED. The short name of the HTTPAPISpec. This is the resource name defined by the metadata name field.
-      // @ts-ignore
-      name: Input<string>;
-      // Optional namespace of the HTTPAPISpec. Defaults to the encompassing HTTPAPISpecBinding's metadata namespace field.
-      // @ts-ignore
-      namespace?: Input<string>;
-    }
-      export interface HTTPAPISpecBindingArgs {
-        metadata: Input<types.input.meta.v1.ObjectMeta>;
-        spec: Input<HTTPAPISpecBinding>;
-      }
-    // @ts-ignore
-    export interface HTTPAPISpecBinding {
-      // REQUIRED. One or more services to map the listed HTTPAPISpec onto.
-      // @ts-ignore
-      services: Input<Input<IstioService>[]>;
-      // REQUIRED. One or more HTTPAPISpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the HTTPAPISpecs should not overlap.
-      // @ts-ignore
-      apiSpecs: Input<Input<HTTPAPISpecReference>[]>;
-    }
-    // @ts-ignore
-    export interface IstioService {
-      // The short name of the service such as "foo".
-      // @ts-ignore
-      name?: Input<string>;
-      // Optional namespace of the service. Defaults to value of metadata namespace field.
-      // @ts-ignore
-      namespace?: Input<string>;
-      // Domain suffix used to construct the service FQDN in implementations that support such specification.
-      // @ts-ignore
-      domain?: Input<string>;
-      // The service FQDN.
-      // @ts-ignore
-      service?: Input<string>;
-      // Optional one or more labels that uniquely identify the service version.
-      // @ts-ignore
-      labels: Input<Record<Input<string>, Input<string>>>;
-    }
-    // @ts-ignore
-    export interface NetworkFailPolicy {
-      // @ts-ignore
-      policy?: Input<FailPolicy>;
-      // Max retries on transport error.
-      // @ts-ignore
-      maxRetry?: Input<number>;
-      // @ts-ignore
-      baseRetryWait?: Input<Duration>;
-      // @ts-ignore
-      maxRetryWait?: Input<Duration>;
-    }
-    // @ts-ignore
-    export type FailPolicy = Input<'FAIL_OPEN' | 'FAIL_CLOSE'>;
-    // @ts-ignore
-    export interface ServiceConfig {
-      // If true, do not call Mixer Check.
-      // @ts-ignore
-      disableCheckCalls?: Input<boolean>;
-      // If true, do not call Mixer Report.
-      // @ts-ignore
-      disableReportCalls?: Input<boolean>;
-      // @ts-ignore
-      mixerAttributes?: Input<Attributes>;
-      // HTTP API specifications to generate API attributes.
-      // @ts-ignore
-      httpApiSpec?: Input<Input<HTTPAPISpec>[]>;
-      // Quota specifications to generate quota requirements.
-      // @ts-ignore
-      quotaSpec?: Input<Input<QuotaSpec>[]>;
-      // @ts-ignore
-      networkFailPolicy?: Input<NetworkFailPolicy>;
-      // @ts-ignore
-      forwardAttributes?: Input<Attributes>;
-    }
-    // @ts-ignore
-    export interface QuotaSpec {
-      // A list of Quota rules.
-      // @ts-ignore
-      rules?: Input<Input<QuotaRule>[]>;
-    }
-    // @ts-ignore
-    export interface TransportConfig {
-      // @ts-ignore
-      networkFailPolicy?: Input<NetworkFailPolicy>;
-      // The flag to disable check cache.
-      // @ts-ignore
-      disableCheckCache?: Input<boolean>;
-      // The flag to disable quota cache.
-      // @ts-ignore
-      disableQuotaCache?: Input<boolean>;
-      // The flag to disable report batch.
-      // @ts-ignore
-      disableReportBatch?: Input<boolean>;
-      // @ts-ignore
-      statsUpdateInterval?: Input<Duration>;
-      // Name of the cluster that will forward check calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
-      // @ts-ignore
-      checkCluster?: Input<string>;
-      // Name of the cluster that will forward report calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
-      // @ts-ignore
-      reportCluster?: Input<string>;
-      // @ts-ignore
-      attributesForMixerProxy?: Input<Attributes>;
-      // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
-      // @ts-ignore
-      reportBatchMaxEntries?: Input<number>;
-      // @ts-ignore
-      reportBatchMaxTime?: Input<Duration>;
-    }
-    // @ts-ignore
-    export interface HttpClientConfig {
-      // @ts-ignore
-      mixerAttributes?: Input<Attributes>;
-      // @ts-ignore
-      forwardAttributes?: Input<Attributes>;
-      // @ts-ignore
-      transport?: Input<TransportConfig>;
-      // Map of control configuration indexed by destination.service. This is used to support per-service configuration for cases where a mixerclient serves multiple services.
-      // @ts-ignore
-      serviceConfigs: Input<Record<Input<string>, Input<ServiceConfig>>>;
-      // Default destination service name if none was specified in the client request.
-      // @ts-ignore
-      defaultDestinationService?: Input<string>;
-    }
-    // @ts-ignore
-    export interface TcpClientConfig {
-      // If set to true, disables Mixer check calls.
-      // @ts-ignore
-      disableCheckCalls?: Input<boolean>;
-      // If set to true, disables Mixer check calls.
-      // @ts-ignore
-      disableReportCalls?: Input<boolean>;
-      // @ts-ignore
-      mixerAttributes?: Input<Attributes>;
-      // @ts-ignore
-      transport?: Input<TransportConfig>;
-      // @ts-ignore
-      connectionQuotaSpec?: Input<QuotaSpec>;
-      // @ts-ignore
-      reportInterval?: Input<Duration>;
-    }
-    // @ts-ignore
-    export interface QuotaRule {
-      // The list of quotas to charge.
-      // @ts-ignore
-      quotas?: Input<Input<Quota>[]>;
-      // If empty, match all request. If any of match is true, it is matched.
-      // @ts-ignore
-      match?: Input<Input<AttributeMatch>[]>;
-    }
-    // @ts-ignore
-    export interface AttributeMatch {
-      // Map of attribute names to StringMatch type. Each map element specifies one condition to match.
-      // @ts-ignore
-      clause: Input<Record<Input<string>, Input<StringMatch>>>;
-    }
-    // @ts-ignore
-    export interface Quota {
-      // The quota name to charge
-      // @ts-ignore
-      quota?: Input<string>;
-      // The quota amount to charge
-      // @ts-ignore
-      charge?: Input<number>;
-    }
-    // @ts-ignore
-    export type StringMatch = Input<{ exact: Input<string> } | { prefix: Input<string> } | { regex: Input<string> }>;
-    // @ts-ignore
-    export interface QuotaSpecBinding {
-      // REQUIRED. One or more services to map the listed QuotaSpec onto.
-      // @ts-ignore
-      services: Input<Input<IstioService>[]>;
-      // REQUIRED. One or more QuotaSpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the QuotaSpecs should not overlap.
-      // @ts-ignore
-      quotaSpecs: Input<Input<QuotaSpecReference>[]>;
-    }
-    // @ts-ignore
-    export interface QuotaSpecReference {
-      // REQUIRED. The short name of the QuotaSpec. This is the resource name defined by the metadata name field.
-      // @ts-ignore
-      name: Input<string>;
-      // Optional namespace of the QuotaSpec. Defaults to the value of the metadata namespace field.
-      // @ts-ignore
-      namespace?: Input<string>;
-    }
-    // @ts-ignore
-    export interface Duration {
-      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-      // @ts-ignore
-      seconds?: Input<number>;
-      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-      // @ts-ignore
-      nanos?: Input<number>;
-    }
-    // @ts-ignore
-    export interface Attributes {
-      // A map of attribute name to its value.
-      // @ts-ignore
-      attributes: Input<Record<Input<string>, Input<AttributeValue>>>;
-    }
-    // @ts-ignore
-    export type AttributeValue = Input<{ stringValue: Input<string> } | { int64Value: Input<number> } | { doubleValue: Input<number> } | { boolValue: Input<boolean> } | { bytesValue: Input<string> } | { timestampValue: Input<Timestamp> } | { durationValue: Input<Duration> } | { stringMapValue: Input<StringMap> }>;
-    // @ts-ignore
-    export interface Timestamp {
-      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-      // @ts-ignore
-      seconds?: Input<number>;
-      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-      // @ts-ignore
-      nanos?: Input<number>;
-    }
-    // @ts-ignore
-    export interface StringMap {
-      // Holds a set of name/value pairs.
-      // @ts-ignore
-      entries: Input<Record<Input<string>, Input<string>>>;
-    }
-  }
-}
+
 export namespace networking {
   export namespace v1alpha3 {
       export interface DestinationRuleArgs {
@@ -1933,6 +1524,420 @@ export namespace networking {
     }
   }
 }
+
+export namespace mixer {
+  export namespace v1 {
+    // @ts-ignore
+    export interface Attributes {
+      // A map of attribute name to its value.
+      // @ts-ignore
+      attributes: Input<Record<Input<string>, Input<AttributeValue>>>;
+    }
+    // @ts-ignore
+    export type AttributeValue = Input<{ stringValue: Input<string> } | { int64Value: Input<number> } | { doubleValue: Input<number> } | { boolValue: Input<boolean> } | { bytesValue: Input<string> } | { timestampValue: Input<Timestamp> } | { durationValue: Input<Duration> } | { stringMapValue: Input<StringMap> }>;
+    // @ts-ignore
+    export interface StringMap {
+      // Holds a set of name/value pairs.
+      // @ts-ignore
+      entries: Input<Record<Input<string>, Input<string>>>;
+    }
+    // @ts-ignore
+    export interface CompressedAttributes {
+      // Holds attributes of type STRING, DNS_NAME, EMAIL_ADDRESS, URI
+      // @ts-ignore
+      strings: Input<Record<Input<string>, Input<number>>>;
+      // Holds attributes of type BYTES
+      // @ts-ignore
+      bytes: Input<object>;
+      // The message-level dictionary.
+      // @ts-ignore
+      words?: Input<Input<string>[]>;
+      // Holds attributes of type INT64
+      // @ts-ignore
+      int64s: Input<Record<Input<string>, Input<number>>>;
+      // Holds attributes of type DOUBLE
+      // @ts-ignore
+      doubles: Input<Record<Input<string>, Input<number>>>;
+      // Holds attributes of type BOOL
+      // @ts-ignore
+      bools: Input<Record<Input<string>, Input<boolean>>>;
+      // Holds attributes of type TIMESTAMP
+      // @ts-ignore
+      timestamps: Input<Record<Input<string>, Input<Timestamp>>>;
+      // Holds attributes of type DURATION
+      // @ts-ignore
+      durations: Input<Record<Input<string>, Input<Duration>>>;
+      // Holds attributes of type STRING_MAP
+      // @ts-ignore
+      stringMaps: Input<Record<Input<string>, Input<StringMap>>>;
+    }
+    // @ts-ignore
+    export interface StringMap {
+      // Holds a set of name/value pairs.
+      // @ts-ignore
+      entries: Input<Record<Input<string>, Input<number>>>;
+    }
+    // @ts-ignore
+    export interface CheckRequest {
+      // The number of words in the global dictionary, used with to populate the attributes. This value is used as a quick way to determine whether the client is using a dictionary that the server understands.
+      // @ts-ignore
+      globalWordCount?: Input<number>;
+      // Used for deduplicating `Check` calls in the case of failed RPCs and retries. This should be a UUID per call, where the same UUID is used for retries of the same call.
+      // @ts-ignore
+      deduplicationId?: Input<string>;
+      // The individual quotas to allocate
+      // @ts-ignore
+      quotas: Input<Record<Input<string>, Input<QuotaParams>>>;
+    }
+    // @ts-ignore
+    export interface QuotaParams {
+      // Amount of quota to allocate
+      // @ts-ignore
+      amount?: Input<number>;
+      // When true, supports returning less quota than what was requested.
+      // @ts-ignore
+      bestEffort?: Input<boolean>;
+    }
+    // @ts-ignore
+    export interface CheckResponse {
+      // The resulting quota, one entry per requested quota.
+      // @ts-ignore
+      quotas: Input<Record<Input<string>, Input<QuotaResult>>>;
+    }
+    // @ts-ignore
+    export interface QuotaResult {
+      // The amount of granted quota. When `QuotaParams.best_effort` is true, this will be >= 0. If `QuotaParams.best_effort` is false, this will be either 0 or >= `QuotaParams.amount`.
+      // @ts-ignore
+      grantedAmount?: Input<number>;
+    }
+    // @ts-ignore
+    export interface PreconditionResult {
+      // The number of uses for which this result can be considered valid.
+      // @ts-ignore
+      validUseCount?: Input<number>;
+      // @ts-ignore
+      referencedAttributes?: Input<ReferencedAttributes>;
+      // @ts-ignore
+      routeDirective?: Input<RouteDirective>;
+    }
+    // @ts-ignore
+    export interface ReferencedAttributes {
+      // The message-level dictionary. Refer to [CompressedAttributes][istio.mixer.v1.CompressedAttributes] for information on using dictionaries.
+      // @ts-ignore
+      words?: Input<Input<string>[]>;
+    }
+    // @ts-ignore
+    export interface RouteDirective {
+      // If set, enables a direct response without proxying the request to the routing destination. Required to be a value in the 2xx or 3xx range.
+      // @ts-ignore
+      directResponseCode?: Input<number>;
+      // Supplies the response body for the direct response. If this setting is omitted, no body is included in the generated response.
+      // @ts-ignore
+      directResponseBody?: Input<string>;
+    }
+    // @ts-ignore
+    export type Condition = Input<'CONDITION_UNSPECIFIED' | 'ABSENCE' | 'EXACT' | 'REGEX'>;
+    // @ts-ignore
+    export interface AttributeMatch {
+      // The name of the attribute. This is a dictionary index encoded in a manner identical to all strings in the [CompressedAttributes][istio.mixer.v1.CompressedAttributes] message.
+      // @ts-ignore
+      name?: Input<number>;
+      // @ts-ignore
+      condition?: Input<Condition>;
+      // If a REGEX condition is provided for a STRING_MAP attribute, clients should use the regex value to match against map keys.
+      // @ts-ignore
+      regex?: Input<string>;
+      // A key in a STRING_MAP. When multiple keys from a STRING_MAP attribute were referenced, there will be multiple AttributeMatch messages with different map_key values. Values for map_key SHOULD be ignored for attributes that are not STRING_MAP.
+      // @ts-ignore
+      mapKey?: Input<number>;
+    }
+    // @ts-ignore
+    export interface HeaderOperation {
+      // Header name.
+      // @ts-ignore
+      name?: Input<string>;
+      // Header value.
+      // @ts-ignore
+      value?: Input<string>;
+      // @ts-ignore
+      operation?: Input<Operation>;
+    }
+    // @ts-ignore
+    export type Operation = Input<'REPLACE' | 'REMOVE' | 'APPEND'>;
+    // @ts-ignore
+    export interface ReportRequest {
+      // The number of words in the global dictionary. To detect global dictionary out of sync between client and server.
+      // @ts-ignore
+      globalWordCount?: Input<number>;
+      // @ts-ignore
+      repeatedAttributesSemantics?: Input<RepeatedAttributesSemantics>;
+      // The default message-level dictionary for all the attributes. Individual attribute messages can have their own dictionaries, but if they don't then this set of words, if it is provided, is used instead.
+      // @ts-ignore
+      defaultWords?: Input<Input<string>[]>;
+    }
+    // @ts-ignore
+    export type RepeatedAttributesSemantics = Input<'DELTA_ENCODING' | 'INDEPENDENT_ENCODING'>;
+    // @ts-ignore
+    export interface ReportResponse {
+    }
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+      // @ts-ignore
+      seconds?: Input<number>;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+      // @ts-ignore
+      nanos?: Input<number>;
+    }
+    // @ts-ignore
+    export interface Timestamp {
+      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+      // @ts-ignore
+      seconds?: Input<number>;
+      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+      // @ts-ignore
+      nanos?: Input<number>;
+    }
+      export interface HTTPAPISpecArgs {
+        metadata: Input<types.input.meta.v1.ObjectMeta>;
+        spec: Input<HTTPAPISpec>;
+      }
+    // @ts-ignore
+    export interface HTTPAPISpec {
+      // @ts-ignore
+      attributes?: Input<Attributes>;
+      // List of HTTP patterns to match.
+      // @ts-ignore
+      patterns?: Input<Input<HTTPAPISpecPattern>[]>;
+      // List of APIKey that describes how to extract an API-KEY from an HTTP request. The first API-Key match found in the list is used, i.e. 'OR' semantics.
+      // @ts-ignore
+      apiKeys?: Input<Input<APIKey>[]>;
+    }
+    // @ts-ignore
+    export type HTTPAPISpecPattern = Input<{ attributes: Input<Attributes> } | { httpMethod: Input<string> } | { uriTemplate: Input<string> } | { attributes: Input<Attributes> } | { regex: Input<string> } | { httpMethod: Input<string> }>;
+    // @ts-ignore
+    export type APIKey = Input<{ query: Input<string> } | { header: Input<string> } | { cookie: Input<string> }>;
+    // @ts-ignore
+    export interface HTTPAPISpecReference {
+      // REQUIRED. The short name of the HTTPAPISpec. This is the resource name defined by the metadata name field.
+      // @ts-ignore
+      name: Input<string>;
+      // Optional namespace of the HTTPAPISpec. Defaults to the encompassing HTTPAPISpecBinding's metadata namespace field.
+      // @ts-ignore
+      namespace?: Input<string>;
+    }
+      export interface HTTPAPISpecBindingArgs {
+        metadata: Input<types.input.meta.v1.ObjectMeta>;
+        spec: Input<HTTPAPISpecBinding>;
+      }
+    // @ts-ignore
+    export interface HTTPAPISpecBinding {
+      // REQUIRED. One or more services to map the listed HTTPAPISpec onto.
+      // @ts-ignore
+      services: Input<Input<IstioService>[]>;
+      // REQUIRED. One or more HTTPAPISpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the HTTPAPISpecs should not overlap.
+      // @ts-ignore
+      apiSpecs: Input<Input<HTTPAPISpecReference>[]>;
+    }
+    // @ts-ignore
+    export interface IstioService {
+      // The short name of the service such as "foo".
+      // @ts-ignore
+      name?: Input<string>;
+      // Optional namespace of the service. Defaults to value of metadata namespace field.
+      // @ts-ignore
+      namespace?: Input<string>;
+      // Domain suffix used to construct the service FQDN in implementations that support such specification.
+      // @ts-ignore
+      domain?: Input<string>;
+      // The service FQDN.
+      // @ts-ignore
+      service?: Input<string>;
+      // Optional one or more labels that uniquely identify the service version.
+      // @ts-ignore
+      labels: Input<Record<Input<string>, Input<string>>>;
+    }
+    // @ts-ignore
+    export interface NetworkFailPolicy {
+      // @ts-ignore
+      policy?: Input<FailPolicy>;
+      // Max retries on transport error.
+      // @ts-ignore
+      maxRetry?: Input<number>;
+      // @ts-ignore
+      baseRetryWait?: Input<Duration>;
+      // @ts-ignore
+      maxRetryWait?: Input<Duration>;
+    }
+    // @ts-ignore
+    export type FailPolicy = Input<'FAIL_OPEN' | 'FAIL_CLOSE'>;
+    // @ts-ignore
+    export interface ServiceConfig {
+      // If true, do not call Mixer Check.
+      // @ts-ignore
+      disableCheckCalls?: Input<boolean>;
+      // If true, do not call Mixer Report.
+      // @ts-ignore
+      disableReportCalls?: Input<boolean>;
+      // @ts-ignore
+      mixerAttributes?: Input<Attributes>;
+      // HTTP API specifications to generate API attributes.
+      // @ts-ignore
+      httpApiSpec?: Input<Input<HTTPAPISpec>[]>;
+      // Quota specifications to generate quota requirements.
+      // @ts-ignore
+      quotaSpec?: Input<Input<QuotaSpec>[]>;
+      // @ts-ignore
+      networkFailPolicy?: Input<NetworkFailPolicy>;
+      // @ts-ignore
+      forwardAttributes?: Input<Attributes>;
+    }
+    // @ts-ignore
+    export interface QuotaSpec {
+      // A list of Quota rules.
+      // @ts-ignore
+      rules?: Input<Input<QuotaRule>[]>;
+    }
+    // @ts-ignore
+    export interface TransportConfig {
+      // @ts-ignore
+      networkFailPolicy?: Input<NetworkFailPolicy>;
+      // The flag to disable check cache.
+      // @ts-ignore
+      disableCheckCache?: Input<boolean>;
+      // The flag to disable quota cache.
+      // @ts-ignore
+      disableQuotaCache?: Input<boolean>;
+      // The flag to disable report batch.
+      // @ts-ignore
+      disableReportBatch?: Input<boolean>;
+      // @ts-ignore
+      statsUpdateInterval?: Input<Duration>;
+      // Name of the cluster that will forward check calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
+      // @ts-ignore
+      checkCluster?: Input<string>;
+      // Name of the cluster that will forward report calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
+      // @ts-ignore
+      reportCluster?: Input<string>;
+      // @ts-ignore
+      attributesForMixerProxy?: Input<Attributes>;
+      // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
+      // @ts-ignore
+      reportBatchMaxEntries?: Input<number>;
+      // @ts-ignore
+      reportBatchMaxTime?: Input<Duration>;
+    }
+    // @ts-ignore
+    export interface HttpClientConfig {
+      // @ts-ignore
+      mixerAttributes?: Input<Attributes>;
+      // @ts-ignore
+      forwardAttributes?: Input<Attributes>;
+      // @ts-ignore
+      transport?: Input<TransportConfig>;
+      // Map of control configuration indexed by destination.service. This is used to support per-service configuration for cases where a mixerclient serves multiple services.
+      // @ts-ignore
+      serviceConfigs: Input<Record<Input<string>, Input<ServiceConfig>>>;
+      // Default destination service name if none was specified in the client request.
+      // @ts-ignore
+      defaultDestinationService?: Input<string>;
+    }
+    // @ts-ignore
+    export interface TcpClientConfig {
+      // If set to true, disables Mixer check calls.
+      // @ts-ignore
+      disableCheckCalls?: Input<boolean>;
+      // If set to true, disables Mixer check calls.
+      // @ts-ignore
+      disableReportCalls?: Input<boolean>;
+      // @ts-ignore
+      mixerAttributes?: Input<Attributes>;
+      // @ts-ignore
+      transport?: Input<TransportConfig>;
+      // @ts-ignore
+      connectionQuotaSpec?: Input<QuotaSpec>;
+      // @ts-ignore
+      reportInterval?: Input<Duration>;
+    }
+    // @ts-ignore
+    export interface QuotaRule {
+      // The list of quotas to charge.
+      // @ts-ignore
+      quotas?: Input<Input<Quota>[]>;
+      // If empty, match all request. If any of match is true, it is matched.
+      // @ts-ignore
+      match?: Input<Input<AttributeMatch>[]>;
+    }
+    // @ts-ignore
+    export interface AttributeMatch {
+      // Map of attribute names to StringMatch type. Each map element specifies one condition to match.
+      // @ts-ignore
+      clause: Input<Record<Input<string>, Input<StringMatch>>>;
+    }
+    // @ts-ignore
+    export interface Quota {
+      // The quota name to charge
+      // @ts-ignore
+      quota?: Input<string>;
+      // The quota amount to charge
+      // @ts-ignore
+      charge?: Input<number>;
+    }
+    // @ts-ignore
+    export type StringMatch = Input<{ exact: Input<string> } | { prefix: Input<string> } | { regex: Input<string> }>;
+    // @ts-ignore
+    export interface QuotaSpecBinding {
+      // REQUIRED. One or more services to map the listed QuotaSpec onto.
+      // @ts-ignore
+      services: Input<Input<IstioService>[]>;
+      // REQUIRED. One or more QuotaSpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the QuotaSpecs should not overlap.
+      // @ts-ignore
+      quotaSpecs: Input<Input<QuotaSpecReference>[]>;
+    }
+    // @ts-ignore
+    export interface QuotaSpecReference {
+      // REQUIRED. The short name of the QuotaSpec. This is the resource name defined by the metadata name field.
+      // @ts-ignore
+      name: Input<string>;
+      // Optional namespace of the QuotaSpec. Defaults to the value of the metadata namespace field.
+      // @ts-ignore
+      namespace?: Input<string>;
+    }
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+      // @ts-ignore
+      seconds?: Input<number>;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+      // @ts-ignore
+      nanos?: Input<number>;
+    }
+    // @ts-ignore
+    export interface Attributes {
+      // A map of attribute name to its value.
+      // @ts-ignore
+      attributes: Input<Record<Input<string>, Input<AttributeValue>>>;
+    }
+    // @ts-ignore
+    export type AttributeValue = Input<{ stringValue: Input<string> } | { int64Value: Input<number> } | { doubleValue: Input<number> } | { boolValue: Input<boolean> } | { bytesValue: Input<string> } | { timestampValue: Input<Timestamp> } | { durationValue: Input<Duration> } | { stringMapValue: Input<StringMap> }>;
+    // @ts-ignore
+    export interface Timestamp {
+      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+      // @ts-ignore
+      seconds?: Input<number>;
+      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+      // @ts-ignore
+      nanos?: Input<number>;
+    }
+    // @ts-ignore
+    export interface StringMap {
+      // Holds a set of name/value pairs.
+      // @ts-ignore
+      entries: Input<Record<Input<string>, Input<string>>>;
+    }
+  }
+}
+
 export namespace policy {
   export namespace v1beta1 {
     // @ts-ignore
@@ -2219,6 +2224,7 @@ export namespace policy {
     export type NullValue = Input<'NULL_VALUE'>;
   }
 }
+
 export namespace rbac {
   export namespace v1alpha1 {
     // @ts-ignore
@@ -2381,6 +2387,7 @@ export namespace rbac {
     }
   }
 }
+
 export namespace security {
   export namespace v1beta1 {
     // @ts-ignore
@@ -2464,3 +2471,4 @@ export namespace security {
     }
   }
 }
+
