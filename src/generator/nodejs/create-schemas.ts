@@ -1,15 +1,13 @@
 import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 
 import { getSchemaName, isKind } from '../../utils';
-import { addRequiredDescription } from './add-required-desc'
+import { addRequiredDescription } from './add-required-desc';
 import { createSchemaType } from './create-schema-type';
 import { PropertyTS, SchemaTS } from './interfaces';
 
-export function createSchemas(definition: OpenAPIObject): SchemaTS[] {
-  const { schemas: schemaDefs } = definition.components;
-
-  return Object.keys(schemaDefs).map(name => {
-    const schemaDef = schemaDefs[name] as SchemaObject;
+export function createSchemas({ components: { schemas } }: OpenAPIObject, isInput: boolean): SchemaTS[] {
+  return Object.keys(schemas).map(name => {
+    const schemaDef = schemas[name] as SchemaObject;
     const schema = {} as SchemaTS;
 
     if (schemaDef.type === 'object') {
@@ -18,8 +16,8 @@ export function createSchemas(definition: OpenAPIObject): SchemaTS[] {
           const schemaPropertyDef = schemaDef.properties[name];
           const schemaProperty = { property: name } as PropertyTS;
 
+          schemaProperty.type = createSchemaType(schemaPropertyDef, isInput);
           addRequiredDescription(schemaPropertyDef, schemaProperty);
-          schemaProperty.type = createSchemaType(schemaPropertyDef);
 
           return schemaProperty;
         });
@@ -30,11 +28,9 @@ export function createSchemas(definition: OpenAPIObject): SchemaTS[] {
             property.required = true;
           });
         }
-      } else if (schemaDef.additionalProperties) {
-        // console.log(schema.additionalProperties);
       }
     } else if (schemaDef.enum || schemaDef.oneOf) {
-      schema.type = createSchemaType(schemaDef);
+      schema.type = createSchemaType(schemaDef, isInput);
       schema.isEnum = true;
     }
 

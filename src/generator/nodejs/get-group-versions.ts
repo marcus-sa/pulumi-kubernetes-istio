@@ -1,5 +1,6 @@
-// TODO: Clean this up
-export function getGroupVersions(paths: string[]): { group: string, versions: string[] }[] {
+import { GroupVersions } from './interfaces';
+
+export function getGroupVersions(paths: string[]): GroupVersions[] {
   return paths
     .map(path => {
       const paths = path.split('/');
@@ -10,13 +11,13 @@ export function getGroupVersions(paths: string[]): { group: string, versions: st
       group: urn[0],
       versions: [urn[1]],
     }))
-    .reduce((unique, item) => {
-      const u = unique.find(({ group }) => group === item.group);
+    .reduce((items, item) => {
+      const group = items.find(({ group }) => group === item.group);
 
-      if (u) {
-        u.versions = [...new Set([...u.versions, ...item.versions])];
+      if (group) {
+        group.versions = [...new Set([...group.versions, ...item.versions])];
       }
 
-      return u ? unique : [...unique, item];
+      return group ? items : [...items, item];
     }, []);
 }

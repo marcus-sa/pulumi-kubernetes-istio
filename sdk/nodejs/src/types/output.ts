@@ -2,1787 +2,2403 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 export namespace authentication {
-    export namespace v1alpha1 {
-        export type StringMatch = { exact: string } | { prefix: string } | { suffix: string } | { regex: string };
-
-        export interface MutualTls {
-            // WILL BE DEPRECATED, if set, will translates to `TLS_PERMISSIVE` mode. Set this flag to true to allow regular TLS (i.e without client x509 certificate). If request carries client certificate, identity will be extracted and used (set to peer identity). Otherwise, peer identity will be left unset. When the flag is false (default), request must have client certificate.
-            readonly allowTls: boolean;
-            readonly mode: Mode;
-        }
-
-        export type Mode = 'STRICT' | 'PERMISSIVE';
-
-        export interface Jwt {
-            // Identifies the issuer that issued the JWT. See [issuer](https://tools.ietf.org/html/rfc7519#section-4.1.1) Usually a URL or an email address.
-            readonly issuer: string;
-            // The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3). that are allowed to access. A JWT containing any of these audiences will be accepted.
-            readonly audiences: string[];
-            // URL of the provider's public key set to validate signature of the JWT. See [OpenID Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata).
-            readonly jwksUri: string;
-            // JSON Web Key Set of public keys to validate signature of the JWT. See https://auth0.com/docs/jwks.
-            readonly jwks: string;
-            // JWT is sent in a request header. `header` represents the header name.
-            readonly jwtHeaders: string[];
-            // JWT is sent in a query parameter. `query` represents the query parameter name.
-            readonly jwtParams: string[];
-            // List of trigger rules to decide if this JWT should be used to validate the request. The JWT validation happens if any one of the rules matched. If the list is not empty and none of the rules matched, authentication will skip the JWT validation. Leave this empty to always trigger the JWT validation.
-            readonly triggerRules: TriggerRule[];
-        }
-
-        export interface TriggerRule {
-            // List of paths to be excluded from the request. The rule is satisfied if request path does not match to any of the path in this list.
-            readonly excludedPaths: StringMatch[];
-            // List of paths that the request must include. If the list is not empty, the rule is satisfied if request path matches at least one of the path in the list. If the list is empty, the rule is ignored, in other words the rule is always satisfied.
-            readonly includedPaths: StringMatch[];
-        }
-
-        export type PeerAuthenticationMethod = { mtls: MutualTls } | { jwt: Jwt };
-
-        export interface OriginAuthenticationMethod {
-            readonly jwt: Jwt;
-        }
-
-        export type PrincipalBinding = 'USE_PEER' | 'USE_ORIGIN';
-
-        export interface PolicySpec {
-            // List rules to select workloads that the policy should be applied on. If empty, policy will be used on all workloads in the same namespace.
-            readonly targets: TargetSelector[];
-            // List of authentication methods that can be used for peer authentication. They will be evaluated in order; the first validate one will be used to set peer identity (source.user) and other peer attributes. If none of these methods pass, request will be rejected with authentication failed error (401). Leave the list empty if peer authentication is not required
-            readonly peers: PeerAuthenticationMethod[];
-            // Set this flag to true to accept request (for peer authentication perspective), even when none of the peer authentication methods defined above satisfied. Typically, this is used to delay the rejection decision to next layer (e.g authorization). This flag is ignored if no authentication defined for peer (peers field is empty).
-            readonly peerIsOptional: boolean;
-            // List of authentication methods that can be used for origin authentication. Similar to peers, these will be evaluated in order; the first validate one will be used to set origin identity and attributes (i.e request.auth.user, request.auth.issuer etc). If none of these methods pass, request will be rejected with authentication failed error (401). A method may be skipped, depends on its trigger rule. If all of these methods are skipped, origin authentication will be ignored, as if it is not defined. Leave the list empty if origin authentication is not required.
-            readonly origins: OriginAuthenticationMethod[];
-            // Set this flag to true to accept request (for origin authentication perspective), even when none of the origin authentication methods defined above satisfied. Typically, this is used to delay the rejection decision to next layer (e.g authorization). This flag is ignored if no authentication defined for origin (origins field is empty).
-            readonly originIsOptional: boolean;
-            readonly principalBinding: PrincipalBinding;
-        }
-
-        export interface TargetSelector {
-            // REQUIRED. The name must be a short name from the service registry. The fully qualified domain name will be resolved in a platform specific manner.
-            readonly name: string;
-            // Select workload by labels. Once implemented, this is the preferred way rather than using the service name.
-            readonly labels: Record<string, string>;
-            // Specifies the ports. Note that this is the port(s) exposed by the service, not workload instance ports. For example, if a service is defined as below, then `8000` should be used, not `9000`. ```yaml kind: Service metadata: ... spec: ports: - name: http port: 8000 targetPort: 9000 selector: app: backend ``` Leave empty to match all ports that are exposed.
-            readonly ports: PortSelector[];
-        }
-
-        export type PortSelector = { number: number } | { name: string };
-
+  export namespace v1alpha1 {
+    // @ts-ignore
+    export type StringMatch = { exact: string } | { prefix: string } | { suffix: string } | { regex: string };
+    // @ts-ignore
+    export interface MutualTls {
+      // WILL BE DEPRECATED, if set, will translates to `TLS_PERMISSIVE` mode. Set this flag to true to allow regular TLS (i.e without client x509 certificate). If request carries client certificate, identity will be extracted and used (set to peer identity). Otherwise, peer identity will be left unset. When the flag is false (default), request must have client certificate.
+       // @ts-ignore
+       readonly allowTls: boolean;
+       // @ts-ignore
+       readonly mode: Mode;
     }
-
+    // @ts-ignore
+    export type Mode = 'STRICT' | 'PERMISSIVE';
+    // @ts-ignore
+    export interface Jwt {
+      // Identifies the issuer that issued the JWT. See [issuer](https://tools.ietf.org/html/rfc7519#section-4.1.1) Usually a URL or an email address.
+       // @ts-ignore
+       readonly issuer: string;
+      // The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3). that are allowed to access. A JWT containing any of these audiences will be accepted.
+       // @ts-ignore
+       readonly audiences: string[];
+      // URL of the provider's public key set to validate signature of the JWT. See [OpenID Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata).
+       // @ts-ignore
+       readonly jwksUri: string;
+      // JSON Web Key Set of public keys to validate signature of the JWT. See https://auth0.com/docs/jwks.
+       // @ts-ignore
+       readonly jwks: string;
+      // JWT is sent in a request header. `header` represents the header name.
+       // @ts-ignore
+       readonly jwtHeaders: string[];
+      // JWT is sent in a query parameter. `query` represents the query parameter name.
+       // @ts-ignore
+       readonly jwtParams: string[];
+      // List of trigger rules to decide if this JWT should be used to validate the request. The JWT validation happens if any one of the rules matched. If the list is not empty and none of the rules matched, authentication will skip the JWT validation. Leave this empty to always trigger the JWT validation.
+       // @ts-ignore
+       readonly triggerRules: TriggerRule[];
+    }
+    // @ts-ignore
+    export interface TriggerRule {
+      // List of paths to be excluded from the request. The rule is satisfied if request path does not match to any of the path in this list.
+       // @ts-ignore
+       readonly excludedPaths: StringMatch[];
+      // List of paths that the request must include. If the list is not empty, the rule is satisfied if request path matches at least one of the path in the list. If the list is empty, the rule is ignored, in other words the rule is always satisfied.
+       // @ts-ignore
+       readonly includedPaths: StringMatch[];
+    }
+    // @ts-ignore
+    export type PeerAuthenticationMethod = { mtls: MutualTls } | { jwt: Jwt };
+    // @ts-ignore
+    export interface OriginAuthenticationMethod {
+       // @ts-ignore
+       readonly jwt: Jwt;
+    }
+    // @ts-ignore
+    export type PrincipalBinding = 'USE_PEER' | 'USE_ORIGIN';
+    // @ts-ignore
+    export interface Policy {
+      // List rules to select workloads that the policy should be applied on. If empty, policy will be used on all workloads in the same namespace.
+       // @ts-ignore
+       readonly targets: TargetSelector[];
+      // List of authentication methods that can be used for peer authentication. They will be evaluated in order; the first validate one will be used to set peer identity (source.user) and other peer attributes. If none of these methods pass, request will be rejected with authentication failed error (401). Leave the list empty if peer authentication is not required
+       // @ts-ignore
+       readonly peers: PeerAuthenticationMethod[];
+      // Set this flag to true to accept request (for peer authentication perspective), even when none of the peer authentication methods defined above satisfied. Typically, this is used to delay the rejection decision to next layer (e.g authorization). This flag is ignored if no authentication defined for peer (peers field is empty).
+       // @ts-ignore
+       readonly peerIsOptional: boolean;
+      // List of authentication methods that can be used for origin authentication. Similar to peers, these will be evaluated in order; the first validate one will be used to set origin identity and attributes (i.e request.auth.user, request.auth.issuer etc). If none of these methods pass, request will be rejected with authentication failed error (401). A method may be skipped, depends on its trigger rule. If all of these methods are skipped, origin authentication will be ignored, as if it is not defined. Leave the list empty if origin authentication is not required.
+       // @ts-ignore
+       readonly origins: OriginAuthenticationMethod[];
+      // Set this flag to true to accept request (for origin authentication perspective), even when none of the origin authentication methods defined above satisfied. Typically, this is used to delay the rejection decision to next layer (e.g authorization). This flag is ignored if no authentication defined for origin (origins field is empty).
+       // @ts-ignore
+       readonly originIsOptional: boolean;
+       // @ts-ignore
+       readonly principalBinding: PrincipalBinding;
+    }
+    // @ts-ignore
+    export interface TargetSelector {
+      // REQUIRED. The name must be a short name from the service registry. The fully qualified domain name will be resolved in a platform specific manner.
+       // @ts-ignore
+       readonly name: string;
+      // Select workload by labels. Once implemented, this is the preferred way rather than using the service name.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+      // Specifies the ports. Note that this is the port(s) exposed by the service, not workload instance ports. For example, if a service is defined as below, then `8000` should be used, not `9000`. ```yaml kind: Service metadata: ... spec: ports: - name: http port: 8000 targetPort: 9000 selector: app: backend ``` Leave empty to match all ports that are exposed.
+       // @ts-ignore
+       readonly ports: PortSelector[];
+    }
+    // @ts-ignore
+    export type PortSelector = { number: number } | { name: string };
+  }
 }
 export namespace mcp {
-    export namespace v1alpha1 {
-        export interface SinkNode {
-            // An opaque identifier for the MCP node.
-            readonly id: string;
-            // Opaque annotations extending the node identifier.
-            readonly annotations: Record<string, string>;
-        }
-
-        export interface MeshConfigRequest {
-            // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
-            readonly typeUrl: string;
-            // The version_info provided in the request messages will be the version_info received with the most recent successfully processed response or empty on the first request. It is expected that no new request is sent after a response is received until the client instance is ready to ACK/NACK the new configuration. ACK/NACK takes place by returning the new API config version as applied or the previous API config version respectively. Each type_url (see below) has an independent version associated with it.
-            readonly versionInfo: string;
-            readonly sinkNode: SinkNode;
-            // The nonce corresponding to MeshConfigResponse being ACK/NACKed. See above discussion on version_info and the MeshConfigResponse nonce comment. This may be empty if no nonce is available, e.g. at startup.
-            readonly responseNonce: string;
-            readonly errorDetail: Status;
-        }
-
-        export interface MeshConfigResponse {
-            // Type URL for resources wrapped in the provided resources(s). This must be consistent with the type_url in the wrapper messages if resources is non-empty.
-            readonly typeUrl: string;
-            // The version of the response data.
-            readonly versionInfo: string;
-            // The nonce provides a way to explicitly ack a specific MeshConfigResponse in a following MeshConfigRequest. Additional messages may have been sent by client to the management server for the previous version on the stream prior to this MeshConfigResponse, that were unprocessed at response send time. The nonce allows the management server to ignore any further MeshConfigRequests for the previous version until a MeshConfigRequest bearing the nonce.
-            readonly nonce: string;
-        }
-
-        export interface IncrementalMeshConfigRequest {
-            // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
-            readonly typeUrl: string;
-            readonly sinkNode: SinkNode;
-            // When the IncrementalMeshConfigRequest is a ACK or NACK message in response to a previous IncrementalMeshConfigResponse, the response_nonce must be the nonce in the IncrementalMeshConfigResponse. Otherwise response_nonce must be omitted.
-            readonly responseNonce: string;
-            readonly errorDetail: Status;
-            // When the IncrementalMeshConfigRequest is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
-            readonly initialResourceVersions: Record<string, string>;
-        }
-
-        export interface IncrementalMeshConfigResponse {
-            // The nonce provides a way for IncrementalMeshConfigRequests to uniquely reference an IncrementalMeshConfigResponse. The nonce is required.
-            readonly nonce: string;
-            // The version of the response data (used for debugging).
-            readonly systemVersionInfo: string;
-            // Resources names of resources that have be deleted and to be removed from the MCP Client. Removed resources for missing resources can be ignored.
-            readonly removedResources: string[];
-        }
-
-        export interface RequestResources {
-            readonly sinkNode: SinkNode;
-            // When the RequestResources is an ACK or NACK message in response to a previous RequestResources, the response_nonce must be the nonce in the RequestResources. Otherwise response_nonce must be omitted.
-            readonly responseNonce: string;
-            readonly errorDetail: Status;
-            // When the RequestResources is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
-            readonly initialResourceVersions: Record<string, string>;
-            // Type of resource collection that is being requested, e.g.
-            readonly collection: string;
-            // Request an incremental update for the specified collection. The source may choose to honor this request or ignore and and provide a full-state update in the corresponding `Resource` response.
-            readonly incremental: boolean;
-        }
-
-        export interface Resources {
-            // Required. The nonce provides a way for RequestChange to uniquely reference a RequestResources.
-            readonly nonce: string;
-            // The version of the response data (used for debugging).
-            readonly systemVersionInfo: string;
-            // Names of resources that have been deleted and to be removed from the MCP sink node. Removed resources for missing resources can be ignored.
-            readonly removedResources: string[];
-            // Type of resource collection that is being requested, e.g.
-            readonly collection: string;
-            // This resource response is an incremental update. The source should only send incremental updates if the sink requested them.
-            readonly incremental: boolean;
-        }
-
-        export interface Metadata {
-            // Fully qualified name of the resource. Unique in context of a collection.
-            readonly name: string;
-            // Map of string keys and values that can be used by source and sink to communicate arbitrary metadata about this resource.
-            readonly annotations: Record<string, string>;
-            readonly createTime: Timestamp;
-            // Resource version. This is used to determine when resources change across resource updates. It should be treated as opaque by consumers/sinks.
-            readonly version: string;
-            // Map of string keys and values that can be used to organize and categorize resources within a collection.
-            readonly labels: Record<string, string>;
-        }
-
-        export interface Resource {
-            readonly body: Any;
-            readonly metadata: Metadata;
-        }
-
-        export interface Any {
-            // A URL/resource name that uniquely identifies the type of the serialized protocol buffer message. This string must contain at least one "/" character. The last segment of the URL's path must represent the fully qualified name of the type (as in `path/google.protobuf.Duration`). The name should be in a canonical form (e.g., leading "." is not accepted).
-            readonly typeUrl: string;
-            // Must be a valid serialized protocol buffer of the above specified type.
-            readonly value: string;
-        }
-
-        export interface Timestamp {
-            // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-            readonly seconds: number;
-            // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface Status {
-            // The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
-            readonly code: number;
-            // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
-            readonly message: string;
-            // A list of messages that carry the error details. There is a common set of message types for APIs to use.
-            readonly details: Any[];
-        }
-
+  export namespace v1alpha1 {
+    // @ts-ignore
+    export interface SinkNode {
+      // An opaque identifier for the MCP node.
+       // @ts-ignore
+       readonly id: string;
+      // Opaque annotations extending the node identifier.
+       // @ts-ignore
+       readonly annotations: Record<string, string>;
     }
-
+    // @ts-ignore
+    export interface MeshConfigRequest {
+      // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
+       // @ts-ignore
+       readonly typeUrl: string;
+      // The version_info provided in the request messages will be the version_info received with the most recent successfully processed response or empty on the first request. It is expected that no new request is sent after a response is received until the client instance is ready to ACK/NACK the new configuration. ACK/NACK takes place by returning the new API config version as applied or the previous API config version respectively. Each type_url (see below) has an independent version associated with it.
+       // @ts-ignore
+       readonly versionInfo: string;
+       // @ts-ignore
+       readonly sinkNode: SinkNode;
+      // The nonce corresponding to MeshConfigResponse being ACK/NACKed. See above discussion on version_info and the MeshConfigResponse nonce comment. This may be empty if no nonce is available, e.g. at startup.
+       // @ts-ignore
+       readonly responseNonce: string;
+       // @ts-ignore
+       readonly errorDetail: Status;
+    }
+    // @ts-ignore
+    export interface MeshConfigResponse {
+      // Type URL for resources wrapped in the provided resources(s). This must be consistent with the type_url in the wrapper messages if resources is non-empty.
+       // @ts-ignore
+       readonly typeUrl: string;
+      // The version of the response data.
+       // @ts-ignore
+       readonly versionInfo: string;
+      // The nonce provides a way to explicitly ack a specific MeshConfigResponse in a following MeshConfigRequest. Additional messages may have been sent by client to the management server for the previous version on the stream prior to this MeshConfigResponse, that were unprocessed at response send time. The nonce allows the management server to ignore any further MeshConfigRequests for the previous version until a MeshConfigRequest bearing the nonce.
+       // @ts-ignore
+       readonly nonce: string;
+    }
+    // @ts-ignore
+    export interface IncrementalMeshConfigRequest {
+      // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
+       // @ts-ignore
+       readonly typeUrl: string;
+       // @ts-ignore
+       readonly sinkNode: SinkNode;
+      // When the IncrementalMeshConfigRequest is a ACK or NACK message in response to a previous IncrementalMeshConfigResponse, the response_nonce must be the nonce in the IncrementalMeshConfigResponse. Otherwise response_nonce must be omitted.
+       // @ts-ignore
+       readonly responseNonce: string;
+       // @ts-ignore
+       readonly errorDetail: Status;
+      // When the IncrementalMeshConfigRequest is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
+       // @ts-ignore
+       readonly initialResourceVersions: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface IncrementalMeshConfigResponse {
+      // The nonce provides a way for IncrementalMeshConfigRequests to uniquely reference an IncrementalMeshConfigResponse. The nonce is required.
+       // @ts-ignore
+       readonly nonce: string;
+      // The version of the response data (used for debugging).
+       // @ts-ignore
+       readonly systemVersionInfo: string;
+      // Resources names of resources that have be deleted and to be removed from the MCP Client. Removed resources for missing resources can be ignored.
+       // @ts-ignore
+       readonly removedResources: string[];
+    }
+    // @ts-ignore
+    export interface RequestResources {
+       // @ts-ignore
+       readonly sinkNode: SinkNode;
+      // When the RequestResources is an ACK or NACK message in response to a previous RequestResources, the response_nonce must be the nonce in the RequestResources. Otherwise response_nonce must be omitted.
+       // @ts-ignore
+       readonly responseNonce: string;
+       // @ts-ignore
+       readonly errorDetail: Status;
+      // When the RequestResources is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
+       // @ts-ignore
+       readonly initialResourceVersions: Record<string, string>;
+      // Type of resource collection that is being requested, e.g.
+       // @ts-ignore
+       readonly collection: string;
+      // Request an incremental update for the specified collection. The source may choose to honor this request or ignore and and provide a full-state update in the corresponding `Resource` response.
+       // @ts-ignore
+       readonly incremental: boolean;
+    }
+    // @ts-ignore
+    export interface Resources {
+      // Required. The nonce provides a way for RequestChange to uniquely reference a RequestResources.
+       // @ts-ignore
+       readonly nonce: string;
+      // The version of the response data (used for debugging).
+       // @ts-ignore
+       readonly systemVersionInfo: string;
+      // Names of resources that have been deleted and to be removed from the MCP sink node. Removed resources for missing resources can be ignored.
+       // @ts-ignore
+       readonly removedResources: string[];
+      // Type of resource collection that is being requested, e.g.
+       // @ts-ignore
+       readonly collection: string;
+      // This resource response is an incremental update. The source should only send incremental updates if the sink requested them.
+       // @ts-ignore
+       readonly incremental: boolean;
+    }
+    // @ts-ignore
+    export interface Metadata {
+      // Fully qualified name of the resource. Unique in context of a collection.
+       // @ts-ignore
+       readonly name: string;
+      // Map of string keys and values that can be used by source and sink to communicate arbitrary metadata about this resource.
+       // @ts-ignore
+       readonly annotations: Record<string, string>;
+       // @ts-ignore
+       readonly createTime: Timestamp;
+      // Resource version. This is used to determine when resources change across resource updates. It should be treated as opaque by consumers/sinks.
+       // @ts-ignore
+       readonly version: string;
+      // Map of string keys and values that can be used to organize and categorize resources within a collection.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface Resource {
+       // @ts-ignore
+       readonly body: Any;
+       // @ts-ignore
+       readonly metadata: Metadata;
+    }
+    // @ts-ignore
+    export interface Any {
+      // A URL/resource name that uniquely identifies the type of the serialized protocol buffer message. This string must contain at least one "/" character. The last segment of the URL's path must represent the fully qualified name of the type (as in `path/google.protobuf.Duration`). The name should be in a canonical form (e.g., leading "." is not accepted).
+       // @ts-ignore
+       readonly typeUrl: string;
+      // Must be a valid serialized protocol buffer of the above specified type.
+       // @ts-ignore
+       readonly value: string;
+    }
+    // @ts-ignore
+    export interface Timestamp {
+      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+       // @ts-ignore
+       readonly seconds: number;
+      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Status {
+      // The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+       // @ts-ignore
+       readonly code: number;
+      // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+       // @ts-ignore
+       readonly message: string;
+      // A list of messages that carry the error details. There is a common set of message types for APIs to use.
+       // @ts-ignore
+       readonly details: Any[];
+    }
+  }
 }
 export namespace mesh {
-    export namespace v1alpha1 {
-        export interface MeshConfig {
-            readonly connectTimeout: Duration;
-            readonly tcpKeepalive: TcpKeepalive;
-            readonly h2UpgradePolicy: H2UpgradePolicy;
-            readonly outboundTrafficPolicy: OutboundTrafficPolicy;
-            // Address of the server that will be used by the proxies for policy check calls. By using different names for mixerCheckServer and mixerReportServer, it is possible to have one set of Mixer servers handle policy check calls while another set of Mixer servers handle telemetry calls.
-            readonly mixerCheckServer: string;
-            // Address of the server that will be used by the proxies for policy report calls.
-            readonly mixerReportServer: string;
-            // Disable policy checks by the Mixer service. Default is false, i.e. Mixer policy check is enabled by default.
-            readonly disablePolicyChecks: boolean;
-            // Allow all traffic in cases when the Mixer policy service cannot be reached. Default is false which means the traffic is denied when the client is unable to connect to Mixer.
-            readonly policyCheckFailOpen: boolean;
-            // Enable session affinity for Envoy Mixer reports so that calls from a proxy will always target the same Mixer instance.
-            readonly sidecarToTelemetrySessionAffinity: boolean;
-            // Port on which Envoy should listen for incoming connections from other services.
-            readonly proxyListenPort: number;
-            // Port on which Envoy should listen for HTTP PROXY requests if set.
-            readonly proxyHttpPort: number;
-            // Class of ingress resources to be processed by Istio ingress controller. This corresponds to the value of "kubernetes.io/ingress.class" annotation.
-            readonly ingressClass: string;
-            // Name of theKubernetes service used for the istio ingress controller.
-            readonly ingressService: string;
-            readonly ingressControllerMode: IngressControllerMode;
-            readonly authPolicy: AuthPolicy;
-            readonly rdsRefreshDelay: Duration;
-            // Flag to control generation of trace spans and request IDs. Requires a trace span collector defined in the proxy configuration.
-            readonly enableTracing: boolean;
-            // File address for the proxy access log (e.g. /dev/stdout). Empty value disables access logging.
-            readonly accessLogFile: string;
-            // Format for the proxy access log Empty value results in proxy's default access log format
-            readonly accessLogFormat: string;
-            readonly accessLogEncoding: AccessLogEncoding;
-            // This flag enables Envoy's gRPC Access Log Service. See [Access Log Service](https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/accesslog/v2/als.proto) for details about Envoy's gRPC Access Log Service API.
-            readonly enableEnvoyAccessLogService: boolean;
-            readonly defaultConfig: ProxyConfig;
-            // $hide_from_docs
-            readonly mixerAddress: string;
-            // Enables clide side policy checks.
-            readonly enableClientSidePolicyCheck: boolean;
-            // Unix Domain Socket through which Envoy communicates with NodeAgent SDS to get key/cert for mTLS. Use secret-mount files instead of SDS if set to empty.
-            readonly sdsUdsPath: string;
-            readonly sdsRefreshDelay: Duration;
-            // ConfigSource describes a source of configuration data for networking rules, and other Istio configuration artifacts. Multiple data sources can be configured for a single control plane.
-            readonly configSources: ConfigSource[];
-            // This flag is used by secret discovery service(SDS). If set to true ([prerequisite](https://kubernetes.io/docs/concepts/storage/volumes/#projected)), Istio will inject volumes mount for Kubernetes service account trustworthy JWT(which is available with Kubernetes 1.12 or higher), so that the Kubernetes API server mounts Kubernetes service account trustworthy JWT to the Envoy container, which will be used to request key/cert eventually. This isn't supported for non-Kubernetes cases.
-            readonly enableSdsTokenMount: boolean;
-            // This flag is used by secret discovery service(SDS). If set to true, Envoy will fetch a normal Kubernetes service account JWT from '/var/run/secrets/kubernetes.io/serviceaccount/token' (https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod) and pass to sds server, which will be used to request key/cert eventually. If both enable_sds_token_mount and sds_use_k8s_sa_jwt are set to true, enable_sds_token_mount(trustworthy jwt) takes precedence. This isn't supported for non-k8s case.
-            readonly sdsUseK8sSaJwt: boolean;
-            // The trust domain corresponds to the trust root of a system. Refer to [SPIFEE-ID](https://github.com/spiffe/spiffe/blob/master/standards/SPIFFE-ID.md#21-trust-domain) Fallback to old identity format(without trust domain) if not set.
-            readonly trustDomain: string;
-            // The default value for the ServiceEntry.export_to field and services imported through container registry integrations, e.g. this applies to Kubernetes Service resources. The value is a list of namespace names and reserved namespace aliases. The allowed namespace aliases are: * - All Namespaces . - Current Namespace ~ - No Namespace
-            readonly defaultServiceExportTo: string[];
-            // The default value for the VirtualService.export_to field. Has the same syntax as 'default_service_export_to'.
-            readonly defaultVirtualServiceExportTo: string[];
-            // The default value for the DestinationRule.export_to field. Has the same syntax as 'default_service_export_to'.
-            readonly defaultDestinationRuleExportTo: string[];
-            // The namespace to treat as the administrative root namespace for Istio configuration. When processing a leaf namespace Istio will search for declarations in that namespace first and if none are found it will search in the root namespace. Any matching declaration found in the root namespace is processed as if it were declared in the leaf namespace.
-            readonly rootNamespace: string;
-            readonly localityLbSetting: LocalityLoadBalancerSetting;
-            readonly dnsRefreshRate: Duration;
-            // The flag to disable report batch.
-            readonly disableReportBatch: boolean;
-            // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
-            readonly reportBatchMaxEntries: number;
-            readonly reportBatchMaxTime: Duration;
-        }
-
-        export type IngressControllerMode = 'OFF' | 'DEFAULT' | 'STRICT';
-
-        export type AuthPolicy = 'NONE' | 'MUTUAL_TLS';
-
-        export type AccessLogEncoding = 'TEXT' | 'JSON';
-
-        export interface ProxyConfig {
-            readonly connectTimeout: Duration;
-            // Path to the generated configuration file directory. Proxy agent generates the actual configuration and stores it in this directory.
-            readonly configPath: string;
-            // Path to the proxy binary
-            readonly binaryPath: string;
-            // Service cluster defines the name for the service_cluster that is shared by all Envoy instances. This setting corresponds to _--service-cluster_ flag in Envoy. In a typical Envoy deployment, the _service-cluster_ flag is used to identify the caller, for source-based routing scenarios.
-            readonly serviceCluster: string;
-            readonly drainDuration: Duration;
-            readonly parentShutdownDuration: Duration;
-            // Address of the discovery service exposing xDS with mTLS connection.
-            readonly discoveryAddress: string;
-            readonly discoveryRefreshDelay: Duration;
-            // Address of the Zipkin service (e.g. _zipkin:9411_). DEPRECATED: Use [tracing][istio.mesh.v1alpha1.ProxyConfig.tracing] instead.
-            readonly zipkinAddress: string;
-            // IP Address and Port of a statsd UDP listener (e.g. _10.75.241.127:9125_).
-            readonly statsdUdpAddress: string;
-            // $hide_from_docs
-            readonly envoyMetricsServiceAddress: string;
-            // Port on which Envoy should listen for administrative commands.
-            readonly proxyAdminPort: number;
-            // $hide_from_docs
-            readonly availabilityZone: string;
-            readonly controlPlaneAuthPolicy: AuthenticationPolicy;
-            // File path of custom proxy configuration, currently used by proxies in front of Mixer and Pilot.
-            readonly customConfigFile: string;
-            // Maximum length of name field in Envoy's metrics. The length of the name field is determined by the length of a name field in a service and the set of labels that comprise a particular version of the service. The default value is set to 189 characters. Envoy's internal metrics take up 67 characters, for a total of 256 character name per metric. Increase the value of this field if you find that the metrics from Envoys are truncated.
-            readonly statNameLength: number;
-            // The number of worker threads to run. Default value is number of cores on the machine.
-            readonly concurrency: number;
-            // Path to the proxy bootstrap template file
-            readonly proxyBootstrapTemplatePath: string;
-            readonly interceptionMode: InboundInterceptionMode;
-            readonly tracing: Tracing;
-            readonly sds: SDS;
-            readonly envoyAccessLogService: RemoteService;
-            readonly envoyMetricsService: RemoteService;
-        }
-
-        export interface OutboundTrafficPolicy {
-            readonly mode: Mode;
-        }
-
-        export interface ConfigSource {
-            // Address of the server implementing the Istio Mesh Configuration protocol (MCP). Can be IP address or a fully qualified DNS name. Use fs:/// to specify a file-based backend with absolute path to the directory.
-            readonly address: string;
-            readonly tlsSettings: TLSSettings;
-        }
-
-        export interface LocalityLoadBalancerSetting {
-            // Optional: only one of distribute or failover can be set. Explicitly specify loadbalancing weight across different zones and geographical locations. Refer to [Locality weighted load balancing](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/locality_weight) If empty, the locality weight is set according to the endpoints number within it.
-            readonly distribute: Distribute[];
-            // Optional: only failover or distribute can be set. Explicitly specify the region traffic will land on when endpoints in local region becomes unhealthy. Should be used together with OutlierDetection to detect unhealthy endpoints. Note: if no OutlierDetection specified, this will not take effect.
-            readonly failover: Failover[];
-        }
-
-        export type H2UpgradePolicy = 'DO_NOT_UPGRADE' | 'UPGRADE';
-
-        export type Mode = 'REGISTRY_ONLY' | 'ALLOW_ANY';
-
-        export interface Distribute {
-            // Originating locality, '/' separated, e.g. 'region/zone/sub_zone'.
-            readonly from: string;
-            // Map of upstream localities to traffic distribution weights. The sum of all weights should be == 100. Any locality not assigned a weight will receive no traffic.
-            readonly to: Record<string, number>;
-        }
-
-        export interface Failover {
-            // Originating region.
-            readonly from: string;
-            // Destination region the traffic will fail over to when endpoints in the 'from' region becomes unhealthy.
-            readonly to: string;
-        }
-
-        export interface Network {
-            // REQUIRED: The list of endpoints in the network (obtained through the constituent service registries or from CIDR ranges). All endpoints in the network are directly accessible to one another.
-            readonly endpoints: NetworkEndpoints[];
-            // REQUIRED: Set of gateways associated with the network.
-            readonly gateways: IstioNetworkGateway[];
-        }
-
-        export type NetworkEndpoints = { fromCidr: string } | { fromRegistry: string };
-
-        export type IstioNetworkGateway = { port: number } | { locality: string } | { registryServiceName: string } | { port: number } | { address: string } | { locality: string };
-
-        export interface MeshNetworks {
-            // REQUIRED: The set of networks inside this mesh. Each network should have a unique name and information about how to infer the endpoints in the network as well as the gateways associated with the network.
-            readonly networks: Record<string, Network>;
-        }
-
-        export type AuthenticationPolicy = 'NONE' | 'MUTUAL_TLS' | 'INHERIT';
-
-        export type Tracing = { zipkin: Zipkin } | { lightstep: Lightstep } | { datadog: Datadog } | { stackdriver: Stackdriver };
-
-        export interface Zipkin {
-            // Address of the Zipkin service (e.g. _zipkin:9411_).
-            readonly address: string;
-        }
-
-        export interface Lightstep {
-            // Address of the LightStep Satellite pool.
-            readonly address: string;
-            // The LightStep access token.
-            readonly accessToken: string;
-            // True if a secure connection should be used when communicating with the pool.
-            readonly secure: boolean;
-            // Path to the trusted cacert used to authenticate the pool.
-            readonly cacertPath: string;
-        }
-
-        export interface Datadog {
-            // Address of the Datadog Agent.
-            readonly address: string;
-        }
-
-        export interface Stackdriver {
-            // debug enables trace output to stdout. $hide_from_docs
-            readonly debug: boolean;
-            readonly maxNumberOfAttributes: Int64Value;
-            readonly maxNumberOfAnnotations: Int64Value;
-            readonly maxNumberOfMessageEvents: Int64Value;
-        }
-
-        export interface SDS {
-            // True if SDS is enabled.
-            readonly enabled: boolean;
-            // Path of k8s service account JWT path.
-            readonly k8sSaJwtPath: string;
-        }
-
-        export type InboundInterceptionMode = 'REDIRECT' | 'TPROXY';
-
-        export interface RemoteService {
-            readonly tcpKeepalive: TcpKeepalive;
-            // Address of a remove service used for various purposes (access log receiver, metrics receiver, etc.). Can be IP address or a fully qualified DNS name.
-            readonly address: string;
-            readonly tlsSettings: TLSSettings;
-        }
-
-        export interface Duration {
-            // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-            readonly seconds: number;
-            // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface Int64Value {
-            // The int64 value.
-            readonly value: number;
-        }
-
-        export interface TcpKeepalive {
-            readonly time: Duration;
-            // Maximum number of keepalive probes to send without response before deciding the connection is dead. Default is to use the OS level configuration (unless overridden, Linux defaults to 9.)
-            readonly probes: number;
-            readonly interval: Duration;
-        }
-
-        export interface TLSSettings {
-            readonly mode: TLSmode;
-            // REQUIRED if mode is `MUTUAL`. The path to the file holding the client-side TLS certificate to use. Should be empty if mode is `ISTIO_MUTUAL`.
-            readonly clientCertificate: string;
-            // REQUIRED if mode is `MUTUAL`. The path to the file holding the client's private key. Should be empty if mode is `ISTIO_MUTUAL`.
-            readonly privateKey: string;
-            // OPTIONAL: The path to the file containing certificate authority certificates to use in verifying a presented server certificate. If omitted, the proxy will not verify the server's certificate. Should be empty if mode is `ISTIO_MUTUAL`.
-            readonly caCertificates: string;
-            // A list of alternate names to verify the subject identity in the certificate. If specified, the proxy will verify that the server certificate's subject alt name matches one of the specified values. If specified, this list overrides the value of subject_alt_names from the ServiceEntry.
-            readonly subjectAltNames: string[];
-            // SNI string to present to the server during TLS handshake.
-            readonly sni: string;
-        }
-
-        export type TLSmode = 'DISABLE' | 'SIMPLE' | 'MUTUAL' | 'ISTIO_MUTUAL';
-
+  export namespace v1alpha1 {
+    // @ts-ignore
+    export interface MeshConfig {
+       // @ts-ignore
+       readonly connectTimeout: Duration;
+       // @ts-ignore
+       readonly tcpKeepalive: TcpKeepalive;
+       // @ts-ignore
+       readonly h2UpgradePolicy: H2UpgradePolicy;
+       // @ts-ignore
+       readonly outboundTrafficPolicy: OutboundTrafficPolicy;
+      // Address of the server that will be used by the proxies for policy check calls. By using different names for mixerCheckServer and mixerReportServer, it is possible to have one set of Mixer servers handle policy check calls while another set of Mixer servers handle telemetry calls.
+       // @ts-ignore
+       readonly mixerCheckServer: string;
+      // Address of the server that will be used by the proxies for policy report calls.
+       // @ts-ignore
+       readonly mixerReportServer: string;
+      // Disable policy checks by the Mixer service. Default is false, i.e. Mixer policy check is enabled by default.
+       // @ts-ignore
+       readonly disablePolicyChecks: boolean;
+      // Allow all traffic in cases when the Mixer policy service cannot be reached. Default is false which means the traffic is denied when the client is unable to connect to Mixer.
+       // @ts-ignore
+       readonly policyCheckFailOpen: boolean;
+      // Enable session affinity for Envoy Mixer reports so that calls from a proxy will always target the same Mixer instance.
+       // @ts-ignore
+       readonly sidecarToTelemetrySessionAffinity: boolean;
+      // Port on which Envoy should listen for incoming connections from other services.
+       // @ts-ignore
+       readonly proxyListenPort: number;
+      // Port on which Envoy should listen for HTTP PROXY requests if set.
+       // @ts-ignore
+       readonly proxyHttpPort: number;
+      // Class of ingress resources to be processed by Istio ingress controller. This corresponds to the value of "kubernetes.io/ingress.class" annotation.
+       // @ts-ignore
+       readonly ingressClass: string;
+      // Name of theKubernetes service used for the istio ingress controller.
+       // @ts-ignore
+       readonly ingressService: string;
+       // @ts-ignore
+       readonly ingressControllerMode: IngressControllerMode;
+       // @ts-ignore
+       readonly authPolicy: AuthPolicy;
+       // @ts-ignore
+       readonly rdsRefreshDelay: Duration;
+      // Flag to control generation of trace spans and request IDs. Requires a trace span collector defined in the proxy configuration.
+       // @ts-ignore
+       readonly enableTracing: boolean;
+      // File address for the proxy access log (e.g. /dev/stdout). Empty value disables access logging.
+       // @ts-ignore
+       readonly accessLogFile: string;
+      // Format for the proxy access log Empty value results in proxy's default access log format
+       // @ts-ignore
+       readonly accessLogFormat: string;
+       // @ts-ignore
+       readonly accessLogEncoding: AccessLogEncoding;
+      // This flag enables Envoy's gRPC Access Log Service. See [Access Log Service](https://www.envoyproxy.io/docs/envoy/latest/api-v2/config/accesslog/v2/als.proto) for details about Envoy's gRPC Access Log Service API.
+       // @ts-ignore
+       readonly enableEnvoyAccessLogService: boolean;
+       // @ts-ignore
+       readonly defaultConfig: ProxyConfig;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly mixerAddress: string;
+      // Enables clide side policy checks.
+       // @ts-ignore
+       readonly enableClientSidePolicyCheck: boolean;
+      // Unix Domain Socket through which Envoy communicates with NodeAgent SDS to get key/cert for mTLS. Use secret-mount files instead of SDS if set to empty.
+       // @ts-ignore
+       readonly sdsUdsPath: string;
+       // @ts-ignore
+       readonly sdsRefreshDelay: Duration;
+      // ConfigSource describes a source of configuration data for networking rules, and other Istio configuration artifacts. Multiple data sources can be configured for a single control plane.
+       // @ts-ignore
+       readonly configSources: ConfigSource[];
+      // This flag is used by secret discovery service(SDS). If set to true ([prerequisite](https://kubernetes.io/docs/concepts/storage/volumes/#projected)), Istio will inject volumes mount for Kubernetes service account trustworthy JWT(which is available with Kubernetes 1.12 or higher), so that the Kubernetes API server mounts Kubernetes service account trustworthy JWT to the Envoy container, which will be used to request key/cert eventually. This isn't supported for non-Kubernetes cases.
+       // @ts-ignore
+       readonly enableSdsTokenMount: boolean;
+      // This flag is used by secret discovery service(SDS). If set to true, Envoy will fetch a normal Kubernetes service account JWT from '/var/run/secrets/kubernetes.io/serviceaccount/token' (https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod) and pass to sds server, which will be used to request key/cert eventually. If both enable_sds_token_mount and sds_use_k8s_sa_jwt are set to true, enable_sds_token_mount(trustworthy jwt) takes precedence. This isn't supported for non-k8s case.
+       // @ts-ignore
+       readonly sdsUseK8sSaJwt: boolean;
+      // The trust domain corresponds to the trust root of a system. Refer to [SPIFEE-ID](https://github.com/spiffe/spiffe/blob/master/standards/SPIFFE-ID.md#21-trust-domain) Fallback to old identity format(without trust domain) if not set.
+       // @ts-ignore
+       readonly trustDomain: string;
+      // The default value for the ServiceEntry.export_to field and services imported through container registry integrations, e.g. this applies to Kubernetes Service resources. The value is a list of namespace names and reserved namespace aliases. The allowed namespace aliases are: * - All Namespaces . - Current Namespace ~ - No Namespace
+       // @ts-ignore
+       readonly defaultServiceExportTo: string[];
+      // The default value for the VirtualService.export_to field. Has the same syntax as 'default_service_export_to'.
+       // @ts-ignore
+       readonly defaultVirtualServiceExportTo: string[];
+      // The default value for the DestinationRule.export_to field. Has the same syntax as 'default_service_export_to'.
+       // @ts-ignore
+       readonly defaultDestinationRuleExportTo: string[];
+      // The namespace to treat as the administrative root namespace for Istio configuration. When processing a leaf namespace Istio will search for declarations in that namespace first and if none are found it will search in the root namespace. Any matching declaration found in the root namespace is processed as if it were declared in the leaf namespace.
+       // @ts-ignore
+       readonly rootNamespace: string;
+       // @ts-ignore
+       readonly localityLbSetting: LocalityLoadBalancerSetting;
+       // @ts-ignore
+       readonly dnsRefreshRate: Duration;
+      // The flag to disable report batch.
+       // @ts-ignore
+       readonly disableReportBatch: boolean;
+      // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
+       // @ts-ignore
+       readonly reportBatchMaxEntries: number;
+       // @ts-ignore
+       readonly reportBatchMaxTime: Duration;
     }
-
+    // @ts-ignore
+    export type IngressControllerMode = 'OFF' | 'DEFAULT' | 'STRICT';
+    // @ts-ignore
+    export type AuthPolicy = 'NONE' | 'MUTUAL_TLS';
+    // @ts-ignore
+    export type AccessLogEncoding = 'TEXT' | 'JSON';
+    // @ts-ignore
+    export interface ProxyConfig {
+       // @ts-ignore
+       readonly connectTimeout: Duration;
+      // Path to the generated configuration file directory. Proxy agent generates the actual configuration and stores it in this directory.
+       // @ts-ignore
+       readonly configPath: string;
+      // Path to the proxy binary
+       // @ts-ignore
+       readonly binaryPath: string;
+      // Service cluster defines the name for the service_cluster that is shared by all Envoy instances. This setting corresponds to _--service-cluster_ flag in Envoy. In a typical Envoy deployment, the _service-cluster_ flag is used to identify the caller, for source-based routing scenarios.
+       // @ts-ignore
+       readonly serviceCluster: string;
+       // @ts-ignore
+       readonly drainDuration: Duration;
+       // @ts-ignore
+       readonly parentShutdownDuration: Duration;
+      // Address of the discovery service exposing xDS with mTLS connection.
+       // @ts-ignore
+       readonly discoveryAddress: string;
+       // @ts-ignore
+       readonly discoveryRefreshDelay: Duration;
+      // Address of the Zipkin service (e.g. _zipkin:9411_). DEPRECATED: Use [tracing][istio.mesh.v1alpha1.ProxyConfig.tracing] instead.
+       // @ts-ignore
+       readonly zipkinAddress: string;
+      // IP Address and Port of a statsd UDP listener (e.g. _10.75.241.127:9125_).
+       // @ts-ignore
+       readonly statsdUdpAddress: string;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly envoyMetricsServiceAddress: string;
+      // Port on which Envoy should listen for administrative commands.
+       // @ts-ignore
+       readonly proxyAdminPort: number;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly availabilityZone: string;
+       // @ts-ignore
+       readonly controlPlaneAuthPolicy: AuthenticationPolicy;
+      // File path of custom proxy configuration, currently used by proxies in front of Mixer and Pilot.
+       // @ts-ignore
+       readonly customConfigFile: string;
+      // Maximum length of name field in Envoy's metrics. The length of the name field is determined by the length of a name field in a service and the set of labels that comprise a particular version of the service. The default value is set to 189 characters. Envoy's internal metrics take up 67 characters, for a total of 256 character name per metric. Increase the value of this field if you find that the metrics from Envoys are truncated.
+       // @ts-ignore
+       readonly statNameLength: number;
+      // The number of worker threads to run. Default value is number of cores on the machine.
+       // @ts-ignore
+       readonly concurrency: number;
+      // Path to the proxy bootstrap template file
+       // @ts-ignore
+       readonly proxyBootstrapTemplatePath: string;
+       // @ts-ignore
+       readonly interceptionMode: InboundInterceptionMode;
+       // @ts-ignore
+       readonly tracing: Tracing;
+       // @ts-ignore
+       readonly sds: SDS;
+       // @ts-ignore
+       readonly envoyAccessLogService: RemoteService;
+       // @ts-ignore
+       readonly envoyMetricsService: RemoteService;
+    }
+    // @ts-ignore
+    export interface OutboundTrafficPolicy {
+       // @ts-ignore
+       readonly mode: Mode;
+    }
+    // @ts-ignore
+    export interface ConfigSource {
+      // Address of the server implementing the Istio Mesh Configuration protocol (MCP). Can be IP address or a fully qualified DNS name. Use fs:/// to specify a file-based backend with absolute path to the directory.
+       // @ts-ignore
+       readonly address: string;
+       // @ts-ignore
+       readonly tlsSettings: TLSSettings;
+    }
+    // @ts-ignore
+    export interface LocalityLoadBalancerSetting {
+      // Optional: only one of distribute or failover can be set. Explicitly specify loadbalancing weight across different zones and geographical locations. Refer to [Locality weighted load balancing](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/locality_weight) If empty, the locality weight is set according to the endpoints number within it.
+       // @ts-ignore
+       readonly distribute: Distribute[];
+      // Optional: only failover or distribute can be set. Explicitly specify the region traffic will land on when endpoints in local region becomes unhealthy. Should be used together with OutlierDetection to detect unhealthy endpoints. Note: if no OutlierDetection specified, this will not take effect.
+       // @ts-ignore
+       readonly failover: Failover[];
+    }
+    // @ts-ignore
+    export type H2UpgradePolicy = 'DO_NOT_UPGRADE' | 'UPGRADE';
+    // @ts-ignore
+    export type Mode = 'REGISTRY_ONLY' | 'ALLOW_ANY';
+    // @ts-ignore
+    export interface Distribute {
+      // Originating locality, '/' separated, e.g. 'region/zone/sub_zone'.
+       // @ts-ignore
+       readonly from: string;
+      // Map of upstream localities to traffic distribution weights. The sum of all weights should be == 100. Any locality not assigned a weight will receive no traffic.
+       // @ts-ignore
+       readonly to: Record<string, number>;
+    }
+    // @ts-ignore
+    export interface Failover {
+      // Originating region.
+       // @ts-ignore
+       readonly from: string;
+      // Destination region the traffic will fail over to when endpoints in the 'from' region becomes unhealthy.
+       // @ts-ignore
+       readonly to: string;
+    }
+    // @ts-ignore
+    export interface Network {
+      // REQUIRED: The list of endpoints in the network (obtained through the constituent service registries or from CIDR ranges). All endpoints in the network are directly accessible to one another.
+       // @ts-ignore
+       readonly endpoints: NetworkEndpoints[];
+      // REQUIRED: Set of gateways associated with the network.
+       // @ts-ignore
+       readonly gateways: IstioNetworkGateway[];
+    }
+    // @ts-ignore
+    export type NetworkEndpoints = { fromCidr: string } | { fromRegistry: string };
+    // @ts-ignore
+    export type IstioNetworkGateway = { port: number } | { locality: string } | { registryServiceName: string } | { port: number } | { address: string } | { locality: string };
+    // @ts-ignore
+    export interface MeshNetworks {
+      // REQUIRED: The set of networks inside this mesh. Each network should have a unique name and information about how to infer the endpoints in the network as well as the gateways associated with the network.
+       // @ts-ignore
+       readonly networks: Record<string, Network>;
+    }
+    // @ts-ignore
+    export type AuthenticationPolicy = 'NONE' | 'MUTUAL_TLS' | 'INHERIT';
+    // @ts-ignore
+    export type Tracing = { zipkin: Zipkin } | { lightstep: Lightstep } | { datadog: Datadog } | { stackdriver: Stackdriver };
+    // @ts-ignore
+    export interface Zipkin {
+      // Address of the Zipkin service (e.g. _zipkin:9411_).
+       // @ts-ignore
+       readonly address: string;
+    }
+    // @ts-ignore
+    export interface Lightstep {
+      // Address of the LightStep Satellite pool.
+       // @ts-ignore
+       readonly address: string;
+      // The LightStep access token.
+       // @ts-ignore
+       readonly accessToken: string;
+      // True if a secure connection should be used when communicating with the pool.
+       // @ts-ignore
+       readonly secure: boolean;
+      // Path to the trusted cacert used to authenticate the pool.
+       // @ts-ignore
+       readonly cacertPath: string;
+    }
+    // @ts-ignore
+    export interface Datadog {
+      // Address of the Datadog Agent.
+       // @ts-ignore
+       readonly address: string;
+    }
+    // @ts-ignore
+    export interface Stackdriver {
+      // debug enables trace output to stdout. $hide_from_docs
+       // @ts-ignore
+       readonly debug: boolean;
+       // @ts-ignore
+       readonly maxNumberOfAttributes: Int64Value;
+       // @ts-ignore
+       readonly maxNumberOfAnnotations: Int64Value;
+       // @ts-ignore
+       readonly maxNumberOfMessageEvents: Int64Value;
+    }
+    // @ts-ignore
+    export interface SDS {
+      // True if SDS is enabled.
+       // @ts-ignore
+       readonly enabled: boolean;
+      // Path of k8s service account JWT path.
+       // @ts-ignore
+       readonly k8sSaJwtPath: string;
+    }
+    // @ts-ignore
+    export type InboundInterceptionMode = 'REDIRECT' | 'TPROXY';
+    // @ts-ignore
+    export interface RemoteService {
+       // @ts-ignore
+       readonly tcpKeepalive: TcpKeepalive;
+      // Address of a remove service used for various purposes (access log receiver, metrics receiver, etc.). Can be IP address or a fully qualified DNS name.
+       // @ts-ignore
+       readonly address: string;
+       // @ts-ignore
+       readonly tlsSettings: TLSSettings;
+    }
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Int64Value {
+      // The int64 value.
+       // @ts-ignore
+       readonly value: number;
+    }
+    // @ts-ignore
+    export interface TcpKeepalive {
+       // @ts-ignore
+       readonly time: Duration;
+      // Maximum number of keepalive probes to send without response before deciding the connection is dead. Default is to use the OS level configuration (unless overridden, Linux defaults to 9.)
+       // @ts-ignore
+       readonly probes: number;
+       // @ts-ignore
+       readonly interval: Duration;
+    }
+    // @ts-ignore
+    export interface TLSSettings {
+       // @ts-ignore
+       readonly mode: TLSmode;
+      // REQUIRED if mode is `MUTUAL`. The path to the file holding the client-side TLS certificate to use. Should be empty if mode is `ISTIO_MUTUAL`.
+       // @ts-ignore
+       readonly clientCertificate: string;
+      // REQUIRED if mode is `MUTUAL`. The path to the file holding the client's private key. Should be empty if mode is `ISTIO_MUTUAL`.
+       // @ts-ignore
+       readonly privateKey: string;
+      // OPTIONAL: The path to the file containing certificate authority certificates to use in verifying a presented server certificate. If omitted, the proxy will not verify the server's certificate. Should be empty if mode is `ISTIO_MUTUAL`.
+       // @ts-ignore
+       readonly caCertificates: string;
+      // A list of alternate names to verify the subject identity in the certificate. If specified, the proxy will verify that the server certificate's subject alt name matches one of the specified values. If specified, this list overrides the value of subject_alt_names from the ServiceEntry.
+       // @ts-ignore
+       readonly subjectAltNames: string[];
+      // SNI string to present to the server during TLS handshake.
+       // @ts-ignore
+       readonly sni: string;
+    }
+    // @ts-ignore
+    export type TLSmode = 'DISABLE' | 'SIMPLE' | 'MUTUAL' | 'ISTIO_MUTUAL';
+  }
 }
 export namespace mixer {
-    export namespace v1 {
-        export interface Attributes {
-            // A map of attribute name to its value.
-            readonly attributes: Record<string, AttributeValue>;
-        }
-
-        export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
-
-        export interface StringMap {
-            // Holds a set of name/value pairs.
-            readonly entries: Record<string, string>;
-        }
-
-        export interface CompressedAttributes {
-            // Holds attributes of type STRING, DNS_NAME, EMAIL_ADDRESS, URI
-            readonly strings: Record<string, number>;
-            // Holds attributes of type BYTES
-            readonly bytes: Record<string, any>;
-            // The message-level dictionary.
-            readonly words: string[];
-            // Holds attributes of type INT64
-            readonly int64s: Record<string, number>;
-            // Holds attributes of type DOUBLE
-            readonly doubles: Record<string, number>;
-            // Holds attributes of type BOOL
-            readonly bools: Record<string, boolean>;
-            // Holds attributes of type TIMESTAMP
-            readonly timestamps: Record<string, Timestamp>;
-            // Holds attributes of type DURATION
-            readonly durations: Record<string, Duration>;
-            // Holds attributes of type STRING_MAP
-            readonly stringMaps: Record<string, StringMap>;
-        }
-
-        export interface StringMap {
-            // Holds a set of name/value pairs.
-            readonly entries: Record<string, number>;
-        }
-
-        export interface CheckRequest {
-            // The number of words in the global dictionary, used with to populate the attributes. This value is used as a quick way to determine whether the client is using a dictionary that the server understands.
-            readonly globalWordCount: number;
-            // Used for deduplicating `Check` calls in the case of failed RPCs and retries. This should be a UUID per call, where the same UUID is used for retries of the same call.
-            readonly deduplicationId: string;
-            // The individual quotas to allocate
-            readonly quotas: Record<string, QuotaParams>;
-        }
-
-        export interface QuotaParams {
-            // Amount of quota to allocate
-            readonly amount: number;
-            // When true, supports returning less quota than what was requested.
-            readonly bestEffort: boolean;
-        }
-
-        export interface CheckResponse {
-            // The resulting quota, one entry per requested quota.
-            readonly quotas: Record<string, QuotaResult>;
-        }
-
-        export interface QuotaResult {
-            // The amount of granted quota. When `QuotaParams.best_effort` is true, this will be >= 0. If `QuotaParams.best_effort` is false, this will be either 0 or >= `QuotaParams.amount`.
-            readonly grantedAmount: number;
-        }
-
-        export interface PreconditionResult {
-            // The number of uses for which this result can be considered valid.
-            readonly validUseCount: number;
-            readonly referencedAttributes: ReferencedAttributes;
-            readonly routeDirective: RouteDirective;
-        }
-
-        export interface ReferencedAttributes {
-            // The message-level dictionary. Refer to [CompressedAttributes][istio.mixer.v1.CompressedAttributes] for information on using dictionaries.
-            readonly words: string[];
-        }
-
-        export interface RouteDirective {
-            // If set, enables a direct response without proxying the request to the routing destination. Required to be a value in the 2xx or 3xx range.
-            readonly directResponseCode: number;
-            // Supplies the response body for the direct response. If this setting is omitted, no body is included in the generated response.
-            readonly directResponseBody: string;
-        }
-
-        export type Condition = 'CONDITION_UNSPECIFIED' | 'ABSENCE' | 'EXACT' | 'REGEX';
-
-        export interface AttributeMatch {
-            // The name of the attribute. This is a dictionary index encoded in a manner identical to all strings in the [CompressedAttributes][istio.mixer.v1.CompressedAttributes] message.
-            readonly name: number;
-            readonly condition: Condition;
-            // If a REGEX condition is provided for a STRING_MAP attribute, clients should use the regex value to match against map keys.
-            readonly regex: string;
-            // A key in a STRING_MAP. When multiple keys from a STRING_MAP attribute were referenced, there will be multiple AttributeMatch messages with different map_key values. Values for map_key SHOULD be ignored for attributes that are not STRING_MAP.
-            readonly mapKey: number;
-        }
-
-        export interface HeaderOperation {
-            // Header name.
-            readonly name: string;
-            // Header value.
-            readonly value: string;
-            readonly operation: Operation;
-        }
-
-        export type Operation = 'REPLACE' | 'REMOVE' | 'APPEND';
-
-        export interface ReportRequest {
-            // The number of words in the global dictionary. To detect global dictionary out of sync between client and server.
-            readonly globalWordCount: number;
-            readonly repeatedAttributesSemantics: RepeatedAttributesSemantics;
-            // The default message-level dictionary for all the attributes. Individual attribute messages can have their own dictionaries, but if they don't then this set of words, if it is provided, is used instead.
-            readonly defaultWords: string[];
-        }
-
-        export type RepeatedAttributesSemantics = 'DELTA_ENCODING' | 'INDEPENDENT_ENCODING';
-
-        export interface ReportResponse {
-        }
-
-        export interface Duration {
-            // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-            readonly seconds: number;
-            // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface Timestamp {
-            // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-            readonly seconds: number;
-            // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface HTTPAPISpecSpec {
-            readonly attributes: Attributes;
-            // List of HTTP patterns to match.
-            readonly patterns: HTTPAPISpecPattern[];
-            // List of APIKey that describes how to extract an API-KEY from an HTTP request. The first API-Key match found in the list is used, i.e. 'OR' semantics.
-            readonly apiKeys: APIKey[];
-        }
-
-        export type HTTPAPISpecPattern = { attributes: Attributes } | { httpMethod: string } | { uriTemplate: string } | { attributes: Attributes } | { regex: string } | { httpMethod: string };
-
-        export type APIKey = { query: string } | { header: string } | { cookie: string };
-
-        export interface HTTPAPISpecReference {
-            // REQUIRED. The short name of the HTTPAPISpec. This is the resource name defined by the metadata name field.
-            readonly name: string;
-            // Optional namespace of the HTTPAPISpec. Defaults to the encompassing HTTPAPISpecBinding's metadata namespace field.
-            readonly namespace: string;
-        }
-
-        export interface HTTPAPISpecBindingSpec {
-            // REQUIRED. One or more services to map the listed HTTPAPISpec onto.
-            readonly services: IstioService[];
-            // REQUIRED. One or more HTTPAPISpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the HTTPAPISpecs should not overlap.
-            readonly apiSpecs: HTTPAPISpecReference[];
-        }
-
-        export interface IstioService {
-            // The short name of the service such as "foo".
-            readonly name: string;
-            // Optional namespace of the service. Defaults to value of metadata namespace field.
-            readonly namespace: string;
-            // Domain suffix used to construct the service FQDN in implementations that support such specification.
-            readonly domain: string;
-            // The service FQDN.
-            readonly service: string;
-            // Optional one or more labels that uniquely identify the service version.
-            readonly labels: Record<string, string>;
-        }
-
-        export interface NetworkFailPolicy {
-            readonly policy: FailPolicy;
-            // Max retries on transport error.
-            readonly maxRetry: number;
-            readonly baseRetryWait: Duration;
-            readonly maxRetryWait: Duration;
-        }
-
-        export type FailPolicy = 'FAIL_OPEN' | 'FAIL_CLOSE';
-
-        export interface ServiceConfig {
-            // If true, do not call Mixer Check.
-            readonly disableCheckCalls: boolean;
-            // If true, do not call Mixer Report.
-            readonly disableReportCalls: boolean;
-            readonly mixerAttributes: Attributes;
-            // HTTP API specifications to generate API attributes.
-            readonly httpApiSpec: HTTPAPISpec[];
-            // Quota specifications to generate quota requirements.
-            readonly quotaSpec: QuotaSpec[];
-            readonly networkFailPolicy: NetworkFailPolicy;
-            readonly forwardAttributes: Attributes;
-        }
-
-        export interface QuotaSpec {
-            // A list of Quota rules.
-            readonly rules: QuotaRule[];
-        }
-
-        export interface TransportConfig {
-            readonly networkFailPolicy: NetworkFailPolicy;
-            // The flag to disable check cache.
-            readonly disableCheckCache: boolean;
-            // The flag to disable quota cache.
-            readonly disableQuotaCache: boolean;
-            // The flag to disable report batch.
-            readonly disableReportBatch: boolean;
-            readonly statsUpdateInterval: Duration;
-            // Name of the cluster that will forward check calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
-            readonly checkCluster: string;
-            // Name of the cluster that will forward report calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
-            readonly reportCluster: string;
-            readonly attributesForMixerProxy: Attributes;
-            // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
-            readonly reportBatchMaxEntries: number;
-            readonly reportBatchMaxTime: Duration;
-        }
-
-        export interface HttpClientConfig {
-            readonly mixerAttributes: Attributes;
-            readonly forwardAttributes: Attributes;
-            readonly transport: TransportConfig;
-            // Map of control configuration indexed by destination.service. This is used to support per-service configuration for cases where a mixerclient serves multiple services.
-            readonly serviceConfigs: Record<string, ServiceConfig>;
-            // Default destination service name if none was specified in the client request.
-            readonly defaultDestinationService: string;
-        }
-
-        export interface TcpClientConfig {
-            // If set to true, disables Mixer check calls.
-            readonly disableCheckCalls: boolean;
-            // If set to true, disables Mixer check calls.
-            readonly disableReportCalls: boolean;
-            readonly mixerAttributes: Attributes;
-            readonly transport: TransportConfig;
-            readonly connectionQuotaSpec: QuotaSpec;
-            readonly reportInterval: Duration;
-        }
-
-        export interface QuotaRule {
-            // The list of quotas to charge.
-            readonly quotas: Quota[];
-            // If empty, match all request. If any of match is true, it is matched.
-            readonly match: AttributeMatch[];
-        }
-
-        export interface AttributeMatch {
-            // Map of attribute names to StringMatch type. Each map element specifies one condition to match.
-            readonly clause: Record<string, StringMatch>;
-        }
-
-        export interface Quota {
-            // The quota name to charge
-            readonly quota: string;
-            // The quota amount to charge
-            readonly charge: number;
-        }
-
-        export type StringMatch = { exact: string } | { prefix: string } | { regex: string };
-
-        export interface QuotaSpecBinding {
-            // REQUIRED. One or more services to map the listed QuotaSpec onto.
-            readonly services: IstioService[];
-            // REQUIRED. One or more QuotaSpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the QuotaSpecs should not overlap.
-            readonly quotaSpecs: QuotaSpecReference[];
-        }
-
-        export interface QuotaSpecReference {
-            // REQUIRED. The short name of the QuotaSpec. This is the resource name defined by the metadata name field.
-            readonly name: string;
-            // Optional namespace of the QuotaSpec. Defaults to the value of the metadata namespace field.
-            readonly namespace: string;
-        }
-
-        export interface Duration {
-            // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-            readonly seconds: number;
-            // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface Attributes {
-            // A map of attribute name to its value.
-            readonly attributes: Record<string, AttributeValue>;
-        }
-
-        export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
-
-        export interface Timestamp {
-            // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-            readonly seconds: number;
-            // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface StringMap {
-            // Holds a set of name/value pairs.
-            readonly entries: Record<string, string>;
-        }
-
+  export namespace v1 {
+    // @ts-ignore
+    export interface Attributes {
+      // A map of attribute name to its value.
+       // @ts-ignore
+       readonly attributes: Record<string, AttributeValue>;
     }
-
-}
-export namespace policy {
-    export namespace v1beta1 {
-        export interface Duration {
-            readonly value: Duration;
-        }
-
-        export type Value = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { ipAddressValue: IPAddress } | { timestampValue: TimeStamp } | { durationValue: Duration } | { emailAddressValue: EmailAddress } | { dnsNameValue: DNSName } | { uriValue: Uri } | { stringMapValue: StringMap };
-
-        export interface AttributeManifest {
-            // Required. Name of the component producing these attributes. This can be the proxy (with the canonical name `istio-proxy`) or the name of an `attributes` kind adapter in Mixer.
-            readonly name: string;
-            // Optional. The revision of this document. Assigned by server.
-            readonly revision: string;
-            // The set of attributes this Istio component will be responsible for producing at runtime. We map from attribute name to the attribute's specification. The name of an attribute, which is how attributes are referred to in aspect configuration, must conform to: Name = IDENT { SEPARATOR IDENT };
-            readonly attributes: Record<string, AttributeInfo>;
-        }
-
-        export interface AttributeInfo {
-            // Optional. A human-readable description of the attribute's purpose.
-            readonly description: string;
-            readonly valueType: ValueType;
-        }
-
-        export type ValueType = 'VALUE_TYPE_UNSPECIFIED' | 'STRING' | 'INT64' | 'DOUBLE' | 'BOOL' | 'TIMESTAMP' | 'IP_ADDRESS' | 'EMAIL_ADDRESS' | 'URI' | 'DNS_NAME' | 'DURATION' | 'STRING_MAP';
-
-        export interface RuleSpec {
-            // Required. Match is an attribute based predicate. When Mixer receives a request it evaluates the match expression and executes all the associated `actions` if the match evaluates to true.
-            readonly match: string;
-            // Optional. The actions that will be executed when match evaluates to `true`.
-            readonly actions: Action[];
-            // Optional. Templatized operations on the request headers using values produced by the rule actions. Require the check action result to be OK.
-            readonly requestHeaderOperations: HeaderOperationTemplate[];
-            // Optional. Templatized operations on the response headers using values produced by the rule actions. Require the check action result to be OK.
-            readonly responseHeaderOperations: HeaderOperationTemplate[];
-            readonly sampling: Sampling;
-        }
-
-        export interface Action {
-            // Optional. A handle to refer to the results of the action.
-            readonly name: string;
-            // Required. Fully qualified name of the handler to invoke. Must match the `name` of a [Handler][istio.policy.v1beta1.Handler.name].
-            readonly handler: string;
-            // Required. Each value must match the fully qualified name of the [Instance][istio.policy.v1beta1.Instance.name]s. Referenced instances are evaluated by resolving the attributes/literals for all the fields. The constructed objects are then passed to the `handler` referenced within this action.
-            readonly instances: string[];
-        }
-
-        export interface HeaderOperationTemplate {
-            // Required. Header name literal value.
-            readonly name: string;
-            // Optional. Header value expressions.
-            readonly values: string[];
-            readonly operation: Operation;
-        }
-
-        export interface Sampling {
-            readonly random: RandomSampling;
-            readonly rateLimit: RateLimitSampling;
-        }
-
-        export type Operation = 'REPLACE' | 'REMOVE' | 'APPEND';
-
-        export interface InstanceSpec {
-            // Required. The name of this instance
-            readonly name: string;
-            // Required. The name of the compiled in template this instance creates instances for. For referencing non compiled-in templates, use the `template` field instead.
-            readonly compiledTemplate: string;
-            // Required. The name of the template this instance creates instances for. For referencing compiled-in templates, use the `compiled_template` field instead.
-            readonly template: string;
-            readonly params: Struct;
-            // Optional. Defines attribute bindings to map the output of attribute-producing adapters back into the attribute space. The variable `output` refers to the output template instance produced by the adapter. The following example derives `source.namespace` from `source.uid` in the context of Kubernetes: ```yaml params: # Pass the required attribute data to the adapter source_uid: source.uid | "" attribute_bindings: # Fill the new attributes from the adapter produced output source.namespace: output.source_namespace ```
-            readonly attributeBindings: Record<string, string>;
-        }
-
-        export interface HandlerSpec {
-            // Required. Must be unique in the entire Mixer configuration. Used by [Actions][istio.policy.v1beta1.Action.handler] to refer to this handler.
-            readonly name: string;
-            readonly params: Struct;
-            // Required. The name of the compiled in adapter this handler instantiates. For referencing non compiled-in adapters, use the `adapter` field instead.
-            readonly compiledAdapter: string;
-            // Required. The name of a specific adapter implementation. For referencing compiled-in adapters, use the `compiled_adapter` field instead.
-            readonly adapter: string;
-            readonly connection: Connection;
-        }
-
-        export interface Connection {
-            // The address of the backend.
-            readonly address: string;
-            readonly authentication: Authentication;
-        }
-
-        export type Authentication = { tls: Tls } | { mutual: Mutual };
-
-        export interface RandomSampling {
-            // Specifies an attribute expression to use to override the numerator in the `percent_sampled` field. If this value is set, but no value is found OR if that value is not a numeric value, then the derived sampling rate will be 0 (meaning no `Action`s are executed for a `Rule`).
-            readonly attributeExpression: string;
-            readonly percentSampled: FractionalPercent;
-            // By default sampling will be based on the value of the request header `x-request-id`. This behavior will cause consistent sampling across `Rule`s and for the full trace of a request through a mesh (across hosts). If that value is not present and/or `use_independent_randomness` is set to true, the sampling will be done based on the value of attribute specified in `attribute_epxression`. If that attribute does not exist, the system will behave as if the sampling rate was 0 (meaning no `Action`s are executed for a `Rule`).
-            readonly useIndependentRandomness: boolean;
-        }
-
-        export interface RateLimitSampling {
-            // Number of entries to allow during the `sampling_duration` before sampling is enforced.
-            readonly maxUnsampledEntries: number;
-            // The rate at which to sample entries once the unsampled limit has been reached. Sampling will be enforced as 1 per every `sampling_rate` entries allowed.
-            readonly samplingRate: number;
-        }
-
-        export interface FractionalPercent {
-            // Specifies the numerator. Defaults to 0.
-            readonly numerator: number;
-            readonly denominator: DenominatorType;
-        }
-
-        export type DenominatorType = 'HUNDRED' | 'TEN_THOUSAND';
-
-        export type Tls = { caCertificates: string } | { serverName: string } | { tokenPath: string } | { authHeader: AuthHeader } | { caCertificates: string } | { serverName: string } | { tokenPath: string } | { customHeader: string } | { caCertificates: string } | { serverName: string } | { oauth: OAuth } | { authHeader: AuthHeader } | { caCertificates: string } | { serverName: string } | { oauth: OAuth } | { customHeader: string };
-
-        export interface Mutual {
-            // The path to the file holding additional CA certificates that are needed to verify the presented adapter certificates. By default Mixer should already include Istio CA certificates and system certificates in cert pool.
-            readonly caCertificates: string;
-            // Used to configure mixer mutual TLS client to supply server name for SNI. It is not used to verify the hostname of the peer certificate, since Istio verifies whitelisted SAN fields in mutual TLS.
-            readonly serverName: string;
-            // The path to the file holding the private key for mutual TLS. If omitted, the default Mixer private key will be used.
-            readonly privateKey: string;
-            // The path to the file holding client certificate for mutual TLS. If omitted, the default Mixer certificates will be used.
-            readonly clientCertificate: string;
-        }
-
-        export interface OAuth {
-            // REQUIRED. OAuth client id for mixer.
-            readonly clientId: string;
-            // REQUIRED. The path to the file holding the client secret for oauth.
-            readonly clientSecret: string;
-            // REQUIRED. The Resource server's token endpoint URL.
-            readonly tokenUrl: string;
-            // List of requested permissions.
-            readonly scopes: string[];
-            // Additional parameters for requests to the token endpoint.
-            readonly endpointParams: Record<string, string>;
-        }
-
-        export type AuthHeader = 'PLAIN' | 'BEARER';
-
-        export interface DirectHttpResponse {
-            // HTTP response body.
-            readonly body: string;
-            readonly code: HttpStatusCode;
-            // Optional HTTP response headers.
-            readonly headers: Record<string, string>;
-        }
-
-        export type HttpStatusCode = 'Empty' | 'Continue' | 'OK' | 'Created' | 'Accepted' | 'NonAuthoritativeInformation' | 'NoContent' | 'ResetContent' | 'PartialContent' | 'MultiStatus' | 'AlreadyReported' | 'IMUsed' | 'MultipleChoices' | 'MovedPermanently' | 'Found' | 'SeeOther' | 'NotModified' | 'UseProxy' | 'TemporaryRedirect' | 'PermanentRedirect' | 'BadRequest' | 'Unauthorized' | 'PaymentRequired' | 'Forbidden' | 'NotFound' | 'MethodNotAllowed' | 'NotAcceptable' | 'ProxyAuthenticationRequired' | 'RequestTimeout' | 'Conflict' | 'Gone' | 'LengthRequired' | 'PreconditionFailed' | 'PayloadTooLarge' | 'URITooLong' | 'UnsupportedMediaType' | 'RangeNotSatisfiable' | 'ExpectationFailed' | 'MisdirectedRequest' | 'UnprocessableEntity' | 'Locked' | 'FailedDependency' | 'UpgradeRequired' | 'PreconditionRequired' | 'TooManyRequests' | 'RequestHeaderFieldsTooLarge' | 'InternalServerError' | 'NotImplemented' | 'BadGateway' | 'ServiceUnavailable' | 'GatewayTimeout' | 'HTTPVersionNotSupported' | 'VariantAlsoNegotiates' | 'InsufficientStorage' | 'LoopDetected' | 'NotExtended' | 'NetworkAuthenticationRequired';
-
-        export interface IPAddress {
-            // IPAddress encoded as bytes.
-            readonly value: string;
-        }
-
-        export interface TimeStamp {
-            readonly value: Timestamp;
-        }
-
-        export interface EmailAddress {
-            // EmailAddress encoded as string.
-            readonly value: string;
-        }
-
-        export interface DNSName {
-            // DNSName encoded as string.
-            readonly value: string;
-        }
-
-        export interface Uri {
-            // Uri encoded as string.
-            readonly value: string;
-        }
-
-        export interface StringMap {
-            // StringMap encoded as a map of strings
-            readonly value: Record<string, string>;
-        }
-
-        export interface Duration {
-            // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-            readonly seconds: number;
-            // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface Struct {
-            // Unordered map of dynamically typed values.
-            readonly fields: Record<string, Value>;
-        }
-
-        export interface Timestamp {
-            // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-            readonly seconds: number;
-            // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export type Value = { nullValue: NullValue } | { numberValue: number } | { stringValue: string } | { boolValue: boolean } | { structValue: Struct } | { listValue: ListValue };
-
-        export interface ListValue {
-            // Repeated field of dynamically typed values.
-            readonly values: Value[];
-        }
-
-        export type NullValue = 'NULL_VALUE';
-
+    // @ts-ignore
+    export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
+    // @ts-ignore
+    export interface StringMap {
+      // Holds a set of name/value pairs.
+       // @ts-ignore
+       readonly entries: Record<string, string>;
     }
-
+    // @ts-ignore
+    export interface CompressedAttributes {
+      // Holds attributes of type STRING, DNS_NAME, EMAIL_ADDRESS, URI
+       // @ts-ignore
+       readonly strings: Record<string, number>;
+      // Holds attributes of type BYTES
+       // @ts-ignore
+       readonly bytes: object;
+      // The message-level dictionary.
+       // @ts-ignore
+       readonly words: string[];
+      // Holds attributes of type INT64
+       // @ts-ignore
+       readonly int64s: Record<string, number>;
+      // Holds attributes of type DOUBLE
+       // @ts-ignore
+       readonly doubles: Record<string, number>;
+      // Holds attributes of type BOOL
+       // @ts-ignore
+       readonly bools: Record<string, boolean>;
+      // Holds attributes of type TIMESTAMP
+       // @ts-ignore
+       readonly timestamps: Record<string, Timestamp>;
+      // Holds attributes of type DURATION
+       // @ts-ignore
+       readonly durations: Record<string, Duration>;
+      // Holds attributes of type STRING_MAP
+       // @ts-ignore
+       readonly stringMaps: Record<string, StringMap>;
+    }
+    // @ts-ignore
+    export interface StringMap {
+      // Holds a set of name/value pairs.
+       // @ts-ignore
+       readonly entries: Record<string, number>;
+    }
+    // @ts-ignore
+    export interface CheckRequest {
+      // The number of words in the global dictionary, used with to populate the attributes. This value is used as a quick way to determine whether the client is using a dictionary that the server understands.
+       // @ts-ignore
+       readonly globalWordCount: number;
+      // Used for deduplicating `Check` calls in the case of failed RPCs and retries. This should be a UUID per call, where the same UUID is used for retries of the same call.
+       // @ts-ignore
+       readonly deduplicationId: string;
+      // The individual quotas to allocate
+       // @ts-ignore
+       readonly quotas: Record<string, QuotaParams>;
+    }
+    // @ts-ignore
+    export interface QuotaParams {
+      // Amount of quota to allocate
+       // @ts-ignore
+       readonly amount: number;
+      // When true, supports returning less quota than what was requested.
+       // @ts-ignore
+       readonly bestEffort: boolean;
+    }
+    // @ts-ignore
+    export interface CheckResponse {
+      // The resulting quota, one entry per requested quota.
+       // @ts-ignore
+       readonly quotas: Record<string, QuotaResult>;
+    }
+    // @ts-ignore
+    export interface QuotaResult {
+      // The amount of granted quota. When `QuotaParams.best_effort` is true, this will be >= 0. If `QuotaParams.best_effort` is false, this will be either 0 or >= `QuotaParams.amount`.
+       // @ts-ignore
+       readonly grantedAmount: number;
+    }
+    // @ts-ignore
+    export interface PreconditionResult {
+      // The number of uses for which this result can be considered valid.
+       // @ts-ignore
+       readonly validUseCount: number;
+       // @ts-ignore
+       readonly referencedAttributes: ReferencedAttributes;
+       // @ts-ignore
+       readonly routeDirective: RouteDirective;
+    }
+    // @ts-ignore
+    export interface ReferencedAttributes {
+      // The message-level dictionary. Refer to [CompressedAttributes][istio.mixer.v1.CompressedAttributes] for information on using dictionaries.
+       // @ts-ignore
+       readonly words: string[];
+    }
+    // @ts-ignore
+    export interface RouteDirective {
+      // If set, enables a direct response without proxying the request to the routing destination. Required to be a value in the 2xx or 3xx range.
+       // @ts-ignore
+       readonly directResponseCode: number;
+      // Supplies the response body for the direct response. If this setting is omitted, no body is included in the generated response.
+       // @ts-ignore
+       readonly directResponseBody: string;
+    }
+    // @ts-ignore
+    export type Condition = 'CONDITION_UNSPECIFIED' | 'ABSENCE' | 'EXACT' | 'REGEX';
+    // @ts-ignore
+    export interface AttributeMatch {
+      // The name of the attribute. This is a dictionary index encoded in a manner identical to all strings in the [CompressedAttributes][istio.mixer.v1.CompressedAttributes] message.
+       // @ts-ignore
+       readonly name: number;
+       // @ts-ignore
+       readonly condition: Condition;
+      // If a REGEX condition is provided for a STRING_MAP attribute, clients should use the regex value to match against map keys.
+       // @ts-ignore
+       readonly regex: string;
+      // A key in a STRING_MAP. When multiple keys from a STRING_MAP attribute were referenced, there will be multiple AttributeMatch messages with different map_key values. Values for map_key SHOULD be ignored for attributes that are not STRING_MAP.
+       // @ts-ignore
+       readonly mapKey: number;
+    }
+    // @ts-ignore
+    export interface HeaderOperation {
+      // Header name.
+       // @ts-ignore
+       readonly name: string;
+      // Header value.
+       // @ts-ignore
+       readonly value: string;
+       // @ts-ignore
+       readonly operation: Operation;
+    }
+    // @ts-ignore
+    export type Operation = 'REPLACE' | 'REMOVE' | 'APPEND';
+    // @ts-ignore
+    export interface ReportRequest {
+      // The number of words in the global dictionary. To detect global dictionary out of sync between client and server.
+       // @ts-ignore
+       readonly globalWordCount: number;
+       // @ts-ignore
+       readonly repeatedAttributesSemantics: RepeatedAttributesSemantics;
+      // The default message-level dictionary for all the attributes. Individual attribute messages can have their own dictionaries, but if they don't then this set of words, if it is provided, is used instead.
+       // @ts-ignore
+       readonly defaultWords: string[];
+    }
+    // @ts-ignore
+    export type RepeatedAttributesSemantics = 'DELTA_ENCODING' | 'INDEPENDENT_ENCODING';
+    // @ts-ignore
+    export interface ReportResponse {
+    }
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Timestamp {
+      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+       // @ts-ignore
+       readonly seconds: number;
+      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface HTTPAPISpec {
+       // @ts-ignore
+       readonly attributes: Attributes;
+      // List of HTTP patterns to match.
+       // @ts-ignore
+       readonly patterns: HTTPAPISpecPattern[];
+      // List of APIKey that describes how to extract an API-KEY from an HTTP request. The first API-Key match found in the list is used, i.e. 'OR' semantics.
+       // @ts-ignore
+       readonly apiKeys: APIKey[];
+    }
+    // @ts-ignore
+    export type HTTPAPISpecPattern = { attributes: Attributes } | { httpMethod: string } | { uriTemplate: string } | { attributes: Attributes } | { regex: string } | { httpMethod: string };
+    // @ts-ignore
+    export type APIKey = { query: string } | { header: string } | { cookie: string };
+    // @ts-ignore
+    export interface HTTPAPISpecReference {
+      // REQUIRED. The short name of the HTTPAPISpec. This is the resource name defined by the metadata name field.
+       // @ts-ignore
+       readonly name: string;
+      // Optional namespace of the HTTPAPISpec. Defaults to the encompassing HTTPAPISpecBinding's metadata namespace field.
+       // @ts-ignore
+       readonly namespace: string;
+    }
+    // @ts-ignore
+    export interface HTTPAPISpecBinding {
+      // REQUIRED. One or more services to map the listed HTTPAPISpec onto.
+       // @ts-ignore
+       readonly services: IstioService[];
+      // REQUIRED. One or more HTTPAPISpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the HTTPAPISpecs should not overlap.
+       // @ts-ignore
+       readonly apiSpecs: HTTPAPISpecReference[];
+    }
+    // @ts-ignore
+    export interface IstioService {
+      // The short name of the service such as "foo".
+       // @ts-ignore
+       readonly name: string;
+      // Optional namespace of the service. Defaults to value of metadata namespace field.
+       // @ts-ignore
+       readonly namespace: string;
+      // Domain suffix used to construct the service FQDN in implementations that support such specification.
+       // @ts-ignore
+       readonly domain: string;
+      // The service FQDN.
+       // @ts-ignore
+       readonly service: string;
+      // Optional one or more labels that uniquely identify the service version.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface NetworkFailPolicy {
+       // @ts-ignore
+       readonly policy: FailPolicy;
+      // Max retries on transport error.
+       // @ts-ignore
+       readonly maxRetry: number;
+       // @ts-ignore
+       readonly baseRetryWait: Duration;
+       // @ts-ignore
+       readonly maxRetryWait: Duration;
+    }
+    // @ts-ignore
+    export type FailPolicy = 'FAIL_OPEN' | 'FAIL_CLOSE';
+    // @ts-ignore
+    export interface ServiceConfig {
+      // If true, do not call Mixer Check.
+       // @ts-ignore
+       readonly disableCheckCalls: boolean;
+      // If true, do not call Mixer Report.
+       // @ts-ignore
+       readonly disableReportCalls: boolean;
+       // @ts-ignore
+       readonly mixerAttributes: Attributes;
+      // HTTP API specifications to generate API attributes.
+       // @ts-ignore
+       readonly httpApiSpec: HTTPAPISpec[];
+      // Quota specifications to generate quota requirements.
+       // @ts-ignore
+       readonly quotaSpec: QuotaSpec[];
+       // @ts-ignore
+       readonly networkFailPolicy: NetworkFailPolicy;
+       // @ts-ignore
+       readonly forwardAttributes: Attributes;
+    }
+    // @ts-ignore
+    export interface QuotaSpec {
+      // A list of Quota rules.
+       // @ts-ignore
+       readonly rules: QuotaRule[];
+    }
+    // @ts-ignore
+    export interface TransportConfig {
+       // @ts-ignore
+       readonly networkFailPolicy: NetworkFailPolicy;
+      // The flag to disable check cache.
+       // @ts-ignore
+       readonly disableCheckCache: boolean;
+      // The flag to disable quota cache.
+       // @ts-ignore
+       readonly disableQuotaCache: boolean;
+      // The flag to disable report batch.
+       // @ts-ignore
+       readonly disableReportBatch: boolean;
+       // @ts-ignore
+       readonly statsUpdateInterval: Duration;
+      // Name of the cluster that will forward check calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
+       // @ts-ignore
+       readonly checkCluster: string;
+      // Name of the cluster that will forward report calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
+       // @ts-ignore
+       readonly reportCluster: string;
+       // @ts-ignore
+       readonly attributesForMixerProxy: Attributes;
+      // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
+       // @ts-ignore
+       readonly reportBatchMaxEntries: number;
+       // @ts-ignore
+       readonly reportBatchMaxTime: Duration;
+    }
+    // @ts-ignore
+    export interface HttpClientConfig {
+       // @ts-ignore
+       readonly mixerAttributes: Attributes;
+       // @ts-ignore
+       readonly forwardAttributes: Attributes;
+       // @ts-ignore
+       readonly transport: TransportConfig;
+      // Map of control configuration indexed by destination.service. This is used to support per-service configuration for cases where a mixerclient serves multiple services.
+       // @ts-ignore
+       readonly serviceConfigs: Record<string, ServiceConfig>;
+      // Default destination service name if none was specified in the client request.
+       // @ts-ignore
+       readonly defaultDestinationService: string;
+    }
+    // @ts-ignore
+    export interface TcpClientConfig {
+      // If set to true, disables Mixer check calls.
+       // @ts-ignore
+       readonly disableCheckCalls: boolean;
+      // If set to true, disables Mixer check calls.
+       // @ts-ignore
+       readonly disableReportCalls: boolean;
+       // @ts-ignore
+       readonly mixerAttributes: Attributes;
+       // @ts-ignore
+       readonly transport: TransportConfig;
+       // @ts-ignore
+       readonly connectionQuotaSpec: QuotaSpec;
+       // @ts-ignore
+       readonly reportInterval: Duration;
+    }
+    // @ts-ignore
+    export interface QuotaRule {
+      // The list of quotas to charge.
+       // @ts-ignore
+       readonly quotas: Quota[];
+      // If empty, match all request. If any of match is true, it is matched.
+       // @ts-ignore
+       readonly match: AttributeMatch[];
+    }
+    // @ts-ignore
+    export interface AttributeMatch {
+      // Map of attribute names to StringMatch type. Each map element specifies one condition to match.
+       // @ts-ignore
+       readonly clause: Record<string, StringMatch>;
+    }
+    // @ts-ignore
+    export interface Quota {
+      // The quota name to charge
+       // @ts-ignore
+       readonly quota: string;
+      // The quota amount to charge
+       // @ts-ignore
+       readonly charge: number;
+    }
+    // @ts-ignore
+    export type StringMatch = { exact: string } | { prefix: string } | { regex: string };
+    // @ts-ignore
+    export interface QuotaSpecBinding {
+      // REQUIRED. One or more services to map the listed QuotaSpec onto.
+       // @ts-ignore
+       readonly services: IstioService[];
+      // REQUIRED. One or more QuotaSpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the QuotaSpecs should not overlap.
+       // @ts-ignore
+       readonly quotaSpecs: QuotaSpecReference[];
+    }
+    // @ts-ignore
+    export interface QuotaSpecReference {
+      // REQUIRED. The short name of the QuotaSpec. This is the resource name defined by the metadata name field.
+       // @ts-ignore
+       readonly name: string;
+      // Optional namespace of the QuotaSpec. Defaults to the value of the metadata namespace field.
+       // @ts-ignore
+       readonly namespace: string;
+    }
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Attributes {
+      // A map of attribute name to its value.
+       // @ts-ignore
+       readonly attributes: Record<string, AttributeValue>;
+    }
+    // @ts-ignore
+    export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
+    // @ts-ignore
+    export interface Timestamp {
+      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+       // @ts-ignore
+       readonly seconds: number;
+      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface StringMap {
+      // Holds a set of name/value pairs.
+       // @ts-ignore
+       readonly entries: Record<string, string>;
+    }
+  }
 }
 export namespace networking {
-    export namespace v1alpha3 {
-        export interface DestinationRuleSpec {
-            // REQUIRED. The name of a service from the service registry. Service names are looked up from the platform's service registry (e.g., Kubernetes services, Consul services, etc.) and from the hosts declared by [ServiceEntries](https://istio.io/docs/reference/config/networking/v1alpha3/service-entry/#ServiceEntry). Rules defined for services that do not exist in the service registry will be ignored.
-            readonly host: string;
-            readonly trafficPolicy: TrafficPolicy;
-            // One or more named sets that represent individual versions of a service. Traffic policies can be overridden at subset level.
-            readonly subsets: Subset[];
-            // A list of namespaces to which this destination rule is exported. The resolution of a destination rule to apply to a service occurs in the context of a hierarchy of namespaces. Exporting a destination rule allows it to be included in the resolution hierarchy for services in other namespaces. This feature provides a mechanism for service owners and mesh administrators to control the visibility of destination rules across namespace boundaries.
-            readonly exportTo: string[];
-        }
-
-        export interface TrafficPolicy {
-            readonly loadBalancer: LoadBalancerSettings;
-            readonly connectionPool: ConnectionPoolSettings;
-            readonly outlierDetection: OutlierDetection;
-            readonly tls: TLSSettings;
-            // Traffic policies specific to individual ports. Note that port level settings will override the destination-level settings. Traffic settings specified at the destination-level will not be inherited when overridden by port-level settings, i.e. default values will be applied to fields omitted in port-level traffic policies.
-            readonly portLevelSettings: PortTrafficPolicy[];
-        }
-
-        export interface Subset {
-            // REQUIRED. Name of the subset. The service name and the subset name can be used for traffic splitting in a route rule.
-            readonly name: string;
-            readonly trafficPolicy: TrafficPolicy;
-            // Labels apply a filter over the endpoints of a service in the service registry. See route rules for examples of usage.
-            readonly labels: Record<string, string>;
-        }
-
-        export type LoadBalancerSettings = { simple: SimpleLB } | { consistentHash: ConsistentHashLB };
-
-        export interface ConnectionPoolSettings {
-            readonly tcp: TCPSettings;
-            readonly http: HTTPSettings;
-        }
-
-        export interface OutlierDetection {
-            readonly interval: Duration;
-            // Number of errors before a host is ejected from the connection pool. Defaults to 5. When the upstream host is accessed over HTTP, a 502, 503 or 504 return code qualifies as an error. When the upstream host is accessed over an opaque TCP connection, connect timeouts and connection error/failure events qualify as an error.
-            readonly consecutiveErrors: number;
-            readonly baseEjectionTime: Duration;
-            // Maximum % of hosts in the load balancing pool for the upstream service that can be ejected. Defaults to 10%.
-            readonly maxEjectionPercent: number;
-            // Outlier detection will be enabled as long as the associated load balancing pool has at least min_health_percent hosts in healthy mode. When the percentage of healthy hosts in the load balancing pool drops below this threshold, outlier detection will be disabled and the proxy will load balance across all hosts in the pool (healthy and unhealthy). The threshold can be disabled by setting it to 0%. The default is 0% as it's not typically applicable in k8s environments with few pods per service.
-            readonly minHealthPercent: number;
-        }
-
-        export interface TLSSettings {
-            readonly mode: TLSmode;
-            // REQUIRED if mode is `MUTUAL`. The path to the file holding the client-side TLS certificate to use. Should be empty if mode is `ISTIO_MUTUAL`.
-            readonly clientCertificate: string;
-            // REQUIRED if mode is `MUTUAL`. The path to the file holding the client's private key. Should be empty if mode is `ISTIO_MUTUAL`.
-            readonly privateKey: string;
-            // OPTIONAL: The path to the file containing certificate authority certificates to use in verifying a presented server certificate. If omitted, the proxy will not verify the server's certificate. Should be empty if mode is `ISTIO_MUTUAL`.
-            readonly caCertificates: string;
-            // A list of alternate names to verify the subject identity in the certificate. If specified, the proxy will verify that the server certificate's subject alt name matches one of the specified values. If specified, this list overrides the value of subject_alt_names from the ServiceEntry.
-            readonly subjectAltNames: string[];
-            // SNI string to present to the server during TLS handshake.
-            readonly sni: string;
-        }
-
-        export interface PortTrafficPolicy {
-            readonly loadBalancer: LoadBalancerSettings;
-            readonly connectionPool: ConnectionPoolSettings;
-            readonly outlierDetection: OutlierDetection;
-            readonly tls: TLSSettings;
-            readonly port: PortSelector;
-        }
-
-        export type PortSelector = { number: number } | { name: string };
-
-        export type SimpleLB = 'ROUND_ROBIN' | 'LEAST_CONN' | 'RANDOM' | 'PASSTHROUGH';
-
-        export type ConsistentHashLB = { minimumRingSize: number } | { httpHeaderName: string } | { minimumRingSize: number } | { httpCookie: HTTPCookie } | { minimumRingSize: number } | { useSourceIp: boolean };
-
-        export interface HTTPCookie {
-            // Path to set for the cookie.
-            readonly path: string;
-            // REQUIRED. Name of the cookie.
-            readonly name: string;
-        }
-
-        export interface TCPSettings {
-            // Maximum number of HTTP1 /TCP connections to a destination host. Default 1024.
-            readonly maxConnections: number;
-            readonly connectTimeout: Duration;
-            readonly tcpKeepalive: TcpKeepalive;
-        }
-
-        export interface HTTPSettings {
-            // Maximum number of pending HTTP requests to a destination. Default 1024.
-            readonly http1MaxPendingRequests: number;
-            // Maximum number of requests to a backend. Default 1024.
-            readonly http2MaxRequests: number;
-            // Maximum number of requests per connection to a backend. Setting this parameter to 1 disables keep alive. Default 0, meaning "unlimited", up to 2^29.
-            readonly maxRequestsPerConnection: number;
-            // Maximum number of retries that can be outstanding to all hosts in a cluster at a given time. Defaults to 1024.
-            readonly maxRetries: number;
-            readonly idleTimeout: Duration;
-            readonly h2UpgradePolicy: H2UpgradePolicy;
-        }
-
-        export interface TcpKeepalive {
-            readonly time: Duration;
-            // Maximum number of keepalive probes to send without response before deciding the connection is dead. Default is to use the OS level configuration (unless overridden, Linux defaults to 9.)
-            readonly probes: number;
-            readonly interval: Duration;
-        }
-
-        export type H2UpgradePolicy = 'DEFAULT' | 'DO_NOT_UPGRADE' | 'UPGRADE';
-
-        export type TLSmode = 'DISABLE' | 'SIMPLE' | 'MUTUAL' | 'ISTIO_MUTUAL';
-
-        export interface Duration {
-            // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-            readonly seconds: number;
-            // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
-        export interface EnvoyFilterSpec {
-            // Deprecated. Use workload_selector instead. $hide_from_docs
-            readonly workloadLabels: Record<string, string>;
-            // $hide_from_docs
-            readonly filters: Filter[];
-            readonly workloadSelector: WorkloadSelector;
-            // REQUIRED. One or more patches with match conditions.
-            readonly configPatches: EnvoyConfigObjectPatch[];
-        }
-
-        export interface Filter {
-            readonly listenerMatch: DeprecatedListenerMatch;
-            readonly insertPosition: InsertPosition;
-            readonly filterType: FilterType;
-            // REQUIRED: The name of the filter to instantiate. The name must match a supported filter _compiled into_ Envoy.
-            readonly filterName: string;
-            readonly filterConfig: Struct;
-        }
-
-        export interface WorkloadSelector {
-            // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
-            readonly labels: Record<string, string>;
-        }
-
-        export interface EnvoyConfigObjectPatch {
-            readonly applyTo: ApplyTo;
-            readonly match: EnvoyConfigObjectMatch;
-            readonly patch: Patch;
-        }
-
-        export interface DeprecatedListenerMatch {
-            // The service port/gateway port to which traffic is being sent/received. If not specified, matches all listeners. Even though inbound listeners are generated for the instance/pod ports, only service ports should be used to match listeners.
-            readonly portNumber: number;
-            // Instead of using specific port numbers, a set of ports matching a given port name prefix can be selected. E.g., "mongo" selects ports named mongo-port, mongo, mongoDB, MONGO, etc. Matching is case insensitive.
-            readonly portNamePrefix: string;
-            readonly listenerType: ListenerType;
-            readonly listenerProtocol: ListenerProtocol;
-            // One or more IP addresses to which the listener is bound. If specified, should match at least one address in the list.
-            readonly address: string[];
-        }
-
-        export type ListenerType = 'ANY' | 'SIDECAR_INBOUND' | 'SIDECAR_OUTBOUND' | 'GATEWAY';
-
-        export type ListenerProtocol = 'ALL' | 'HTTP' | 'TCP';
-
-        export interface InsertPosition {
-            readonly index: Index;
-            // If BEFORE or AFTER position is specified, specify the name of the filter relative to which this filter should be inserted.
-            readonly relativeTo: string;
-        }
-
-        export type Index = 'FIRST' | 'LAST' | 'BEFORE' | 'AFTER';
-
-        export type FilterType = 'INVALID' | 'HTTP' | 'NETWORK';
-
-        export type ApplyTo = 'INVALID' | 'LISTENER' | 'FILTER_CHAIN' | 'NETWORK_FILTER' | 'HTTP_FILTER' | 'ROUTE_CONFIGURATION' | 'VIRTUAL_HOST' | 'HTTP_ROUTE' | 'CLUSTER';
-
-        export type PatchContext = 'ANY' | 'SIDECAR_INBOUND' | 'SIDECAR_OUTBOUND' | 'GATEWAY';
-
-        export interface ProxyMatch {
-            // A regular expression in golang regex format (RE2) that can be used to select proxies using a specific version of istio proxy. The Istio version for a given proxy is obtained from the node metadata field ISTIO_VERSION supplied by the proxy when connecting to Pilot. This value is embedded as an environment variable (ISTIO_META_ISTIO_VERSION) in the Istio proxy docker image. Custom proxy implementations should provide this metadata variable to take advantage of the Istio version check option.
-            readonly proxyVersion: string;
-            // Match on the node metadata supplied by a proxy when connecting to Istio Pilot. Note that while Envoy's node metadata is of type Struct, only string key-value pairs are processed by Pilot. All keys specified in the metadata must match with exact values. The match will fail if any of the specified keys are absent or the values fail to match.
-            readonly metadata: Record<string, string>;
-        }
-
-        export interface ClusterMatch {
-            // The exact name of the cluster to match. To match a specific cluster by name, such as the internally generated "Passthrough" cluster, leave all fields in clusterMatch empty, except the name.
-            readonly name: string;
-            // The service port for which this cluster was generated. If omitted, applies to clusters for any port.
-            readonly portNumber: number;
-            // The fully qualified service name for this cluster. If omitted, applies to clusters for any service. For services defined through service entries, the service name is same as the hosts defined in the service entry.
-            readonly service: string;
-            // The subset associated with the service. If omitted, applies to clusters for any subset of a service.
-            readonly subset: string;
-        }
-
-        export interface RouteConfigurationMatch {
-            // Route configuration name to match on. Can be used to match a specific route configuration by name, such as the internally generated "http_proxy" route configuration for all sidecars.
-            readonly name: string;
-            // The service port number or gateway server port number for which this route configuration was generated. If omitted, applies to route configurations for all ports.
-            readonly portNumber: number;
-            // Applicable only for GATEWAY context. The gateway server port name for which this route configuration was generated.
-            readonly portName: string;
-            // The Istio gateway config's namespace/name for which this route configuration was generated. Applies only if the context is GATEWAY. Should be in the namespace/name format. Use this field in conjunction with the portNumber and portName to accurately select the Envoy route configuration for a specific HTTPS server within a gateway config object.
-            readonly gateway: string;
-            readonly vhost: VirtualHostMatch;
-        }
-
-        export interface VirtualHostMatch {
-            // The VirtualHosts objects generated by Istio are named as host:port, where the host typically corresponds to the VirtualService's host field or the hostname of a service in the registry.
-            readonly name: string;
-            readonly route: RouteMatch;
-        }
-
-        export interface RouteMatch {
-            // The Route objects generated by default are named as "default". Route objects generated using a virtual service will carry the name used in the virtual service's HTTP routes.
-            readonly name: string;
-            readonly action: Action;
-        }
-
-        export type Action = 'ANY' | 'ROUTE' | 'REDIRECT' | 'DIRECT_RESPONSE';
-
-        export interface ListenerMatch {
-            // Match a specific listener by its name. The listeners generated by Pilot are typically named as IP:Port.
-            readonly name: string;
-            // The service port/gateway port to which traffic is being sent/received. If not specified, matches all listeners. Even though inbound listeners are generated for the instance/pod ports, only service ports should be used to match listeners.
-            readonly portNumber: number;
-            // Instead of using specific port numbers, a set of ports matching a given service's port name can be selected. Matching is case insensitive. Not implemented. $hide_from_docs
-            readonly portName: string;
-            readonly filterChain: FilterChainMatch;
-        }
-
-        export interface FilterChainMatch {
-            // The name assigned to the filter chain.
-            readonly name: string;
-            // The SNI value used by a filter chain's match condition. This condition will evaluate to false if the filter chain has no sni match.
-            readonly sni: string;
-            // Applies only to SIDECAR_INBOUND context. If non-empty, a transport protocol to consider when determining a filter chain match. This value will be compared against the transport protocol of a new connection, when it's detected by the tls_inspector listener filter.
-            readonly transportProtocol: string;
-            // Applies only to sidecars. If non-empty, a comma separated set of application protocols to consider when determining a filter chain match. This value will be compared against the application protocols of a new connection, when it's detected by one of the listener filters such as the http_inspector.
-            readonly applicationProtocols: string;
-            readonly filter: FilterMatch;
-        }
-
-        export interface FilterMatch {
-            // The filter name to match on.
-            readonly name: string;
-            readonly subFilter: SubFilterMatch;
-        }
-
-        export interface SubFilterMatch {
-            // The filter name to match on.
-            readonly name: string;
-        }
-
-        export interface Patch {
-            readonly operation: Operation;
-            readonly value: Struct;
-        }
-
-        export type Operation = 'INVALID' | 'MERGE' | 'ADD' | 'REMOVE' | 'INSERT_BEFORE' | 'INSERT_AFTER';
-
-        export type EnvoyConfigObjectMatch = { context: PatchContext } | { proxy: ProxyMatch } | { listener: ListenerMatch } | { context: PatchContext } | { proxy: ProxyMatch } | { routeConfiguration: RouteConfigurationMatch } | { context: PatchContext } | { proxy: ProxyMatch } | { cluster: ClusterMatch };
-
-        export interface Struct {
-            // Unordered map of dynamically typed values.
-            readonly fields: Record<string, Value>;
-        }
-
-        export type Value = { nullValue: NullValue } | { numberValue: number } | { stringValue: string } | { boolValue: boolean } | { structValue: Struct } | { listValue: ListValue };
-
-        export interface ListValue {
-            // Repeated field of dynamically typed values.
-            readonly values: Value[];
-        }
-
-        export type NullValue = 'NULL_VALUE';
-
-        export interface GatewaySpec {
-            // REQUIRED: A list of server specifications.
-            readonly servers: Server[];
-            // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this gateway configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present. In other words, the Gateway resource must reside in the same namespace as the gateway workload instance.
-            readonly selector: Record<string, string>;
-        }
-
-        export interface Server {
-            readonly tls: TLSOptions;
-            readonly port: Port;
-            // The ip or the Unix domain socket to which the listener should be bound to. Format: `x.x.x.x` or `unix:///path/to/uds` or `unix://@foobar` (Linux abstract namespace). When using Unix domain sockets, the port number should be 0.
-            readonly bind: string;
-            // REQUIRED. One or more hosts exposed by this gateway. While typically applicable to HTTP services, it can also be used for TCP services using TLS with SNI. A host is specified as a `dnsName` with an optional `namespace/` prefix. The `dnsName` should be specified using FQDN format, optionally including a wildcard character in the left-most component (e.g., `prod/*.example.com`). Set the `dnsName` to `*` to select all `VirtualService` hosts from the specified namespace (e.g.,`prod/*`). If no `namespace/` is specified, the `VirtualService` hosts will be selected from any available namespace. Any associated `DestinationRule` in the same namespace will also be used.
-            readonly hosts: string[];
-            // The loopback IP endpoint or Unix domain socket to which traffic should be forwarded to by default. Format should be `127.0.0.1:PORT` or `unix:///path/to/socket` or `unix://@foobar` (Linux abstract namespace).
-            readonly defaultEndpoint: string;
-        }
-
-        export interface Port {
-            // Label assigned to the port.
-            readonly name: string;
-            // REQUIRED: A valid non-negative integer port number.
-            readonly number: number;
-            // REQUIRED: The protocol exposed on the port. MUST BE one of HTTP|HTTPS|GRPC|HTTP2|MONGO|TCP|TLS. TLS implies the connection will be routed based on the SNI header to the destination without terminating the TLS connection.
-            readonly protocol: string;
-        }
-
-        export interface TLSOptions {
-            readonly mode: TLSmode;
-            // REQUIRED if mode is `SIMPLE` or `MUTUAL`. The path to the file holding the server's private key.
-            readonly privateKey: string;
-            // REQUIRED if mode is `MUTUAL`. The path to a file containing certificate authority certificates to use in verifying a presented client side certificate.
-            readonly caCertificates: string;
-            // A list of alternate names to verify the subject identity in the certificate presented by the client.
-            readonly subjectAltNames: string[];
-            // If set to true, the load balancer will send a 301 redirect for all http connections, asking the clients to use HTTPS.
-            readonly httpsRedirect: boolean;
-            // REQUIRED if mode is `SIMPLE` or `MUTUAL`. The path to the file holding the server-side TLS certificate to use.
-            readonly serverCertificate: string;
-            // The credentialName stands for a unique identifier that can be used to identify the serverCertificate and the privateKey. The credentialName appended with suffix "-cacert" is used to identify the CaCertificates associated with this server. Gateway workloads capable of fetching credentials from a remote credential store such as Kubernetes secrets, will be configured to retrieve the serverCertificate and the privateKey using credentialName, instead of using the file system paths specified above. If using mutual TLS, gateway workload instances will retrieve the CaCertificates using credentialName-cacert. The semantics of the name are platform dependent. In Kubernetes, the default Istio supplied credential server expects the credentialName to match the name of the Kubernetes secret that holds the server certificate, the private key, and the CA certificate (if using mutual TLS). Set the `ISTIO_META_USER_SDS` metadata variable in the gateway's proxy to enable the dynamic credential fetching feature.
-            readonly credentialName: string;
-            // An optional list of base64-encoded SHA-256 hashes of the SKPIs of authorized client certificates. Note: When both verify_certificate_hash and verify_certificate_spki are specified, a hash matching either value will result in the certificate being accepted.
-            readonly verifyCertificateSpki: string[];
-            // An optional list of hex-encoded SHA-256 hashes of the authorized client certificates. Both simple and colon separated formats are acceptable. Note: When both verify_certificate_hash and verify_certificate_spki are specified, a hash matching either value will result in the certificate being accepted.
-            readonly verifyCertificateHash: string[];
-            readonly minProtocolVersion: TLSProtocol;
-            readonly maxProtocolVersion: TLSProtocol;
-            // Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy.
-            readonly cipherSuites: string[];
-        }
-
-        export type TLSmode = 'PASSTHROUGH' | 'SIMPLE' | 'MUTUAL' | 'AUTO_PASSTHROUGH' | 'ISTIO_MUTUAL';
-
-        export type TLSProtocol = 'TLS_AUTO' | 'TLSV1_0' | 'TLSV1_1' | 'TLSV1_2' | 'TLSV1_3';
-
-        export interface Port {
-            // Label assigned to the port.
-            readonly name: string;
-            // REQUIRED: A valid non-negative integer port number.
-            readonly number: number;
-            // REQUIRED: The protocol exposed on the port. MUST BE one of HTTP|HTTPS|GRPC|HTTP2|MONGO|TCP|TLS. TLS implies the connection will be routed based on the SNI header to the destination without terminating the TLS connection.
-            readonly protocol: string;
-        }
-
-        export interface ServiceEntrySpec {
-            // A list of namespaces to which this service is exported. Exporting a service allows it to be used by sidecars, gateways and virtual services defined in other namespaces. This feature provides a mechanism for service owners and mesh administrators to control the visibility of services across namespace boundaries.
-            readonly exportTo: string[];
-            // The list of subject alternate names allowed for workload instances that implement this service. This information is used to enforce [secure-naming](https://istio.io/docs/concepts/security/#secure-naming). If specified, the proxy will verify that the server certificate's subject alternate name matches one of the specified values.
-            readonly subjectAltNames: string[];
-            // REQUIRED. The hosts associated with the ServiceEntry. Could be a DNS name with wildcard prefix.
-            readonly hosts: string[];
-            // The virtual IP addresses associated with the service. Could be CIDR prefix. For HTTP traffic, generated route configurations will include http route domains for both the `addresses` and `hosts` field values and the destination will be identified based on the HTTP Host/Authority header. If one or more IP addresses are specified, the incoming traffic will be identified as belonging to this service if the destination IP matches the IP/CIDRs specified in the addresses field. If the Addresses field is empty, traffic will be identified solely based on the destination port. In such scenarios, the port on which the service is being accessed must not be shared by any other service in the mesh. In other words, the sidecar will behave as a simple TCP proxy, forwarding incoming traffic on a specified port to the specified destination endpoint IP/host. Unix domain socket addresses are not supported in this field.
-            readonly addresses: string[];
-            // REQUIRED. The ports associated with the external service. If the Endpoints are Unix domain socket addresses, there must be exactly one port.
-            readonly ports: Port[];
-            readonly location: Location;
-            readonly resolution: Resolution;
-            // One or more endpoints associated with the service.
-            readonly endpoints: Endpoint[];
-        }
-
-        export type Location = 'MESH_EXTERNAL' | 'MESH_INTERNAL';
-
-        export type Resolution = 'NONE' | 'STATIC' | 'DNS';
-
-        export interface Endpoint {
-            // One or more labels associated with the endpoint.
-            readonly labels: Record<string, string>;
-            // REQUIRED: Address associated with the network endpoint without the port. Domain names can be used if and only if the resolution is set to DNS, and must be fully-qualified without wildcards. Use the form unix:///absolute/path/to/socket for Unix domain socket endpoints.
-            readonly address: string;
-            // Set of ports associated with the endpoint. The ports must be associated with a port name that was declared as part of the service. Do not use for `unix://` addresses.
-            readonly ports: Record<string, number>;
-            // Network enables Istio to group endpoints resident in the same L3 domain/network. All endpoints in the same network are assumed to be directly reachable from one another. When endpoints in different networks cannot reach each other directly, an Istio Gateway can be used to establish connectivity (usually using the AUTO_PASSTHROUGH mode in a Gateway Server). This is an advanced configuration used typically for spanning an Istio mesh over multiple clusters.
-            readonly network: string;
-            // The locality associated with the endpoint. A locality corresponds to a failure domain (e.g., country/region/zone). Arbitrary failure domain hierarchies can be represented by separating each encapsulating failure domain by /. For example, the locality of an an endpoint in US, in US-East-1 region, within availability zone az-1, in data center rack r11 can be represented as us/us-east-1/az-1/r11. Istio will configure the sidecar to route to endpoints within the same locality as the sidecar. If none of the endpoints in the locality are available, endpoints parent locality (but within the same network ID) will be chosen. For example, if there are two endpoints in same network (networkID "n1"), say e1 with locality us/us-east-1/az-1/r11 and e2 with locality us/us-east-1/az-2/r12, a sidecar from us/us-east-1/az-1/r11 locality will prefer e1 from the same locality over e2 from a different locality. Endpoint e2 could be the IP associated with a gateway (that bridges networks n1 and n2), or the IP associated with a standard service endpoint.
-            readonly locality: string;
-            // The load balancing weight associated with the endpoint. Endpoints with higher weights will receive proportionally higher traffic.
-            readonly weight: number;
-        }
-
-        export interface WorkloadSelector {
-            // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
-            readonly labels: Record<string, string>;
-        }
-
-        export interface Port {
-            // Label assigned to the port.
-            readonly name: string;
-            // REQUIRED: A valid non-negative integer port number.
-            readonly number: number;
-            // REQUIRED: The protocol exposed on the port. MUST BE one of HTTP|HTTPS|GRPC|HTTP2|MONGO|TCP|TLS. TLS implies the connection will be routed based on the SNI header to the destination without terminating the TLS connection.
-            readonly protocol: string;
-        }
-
-        export interface SidecarSpec {
-            readonly workloadSelector: WorkloadSelector;
-            // Ingress specifies the configuration of the sidecar for processing inbound traffic to the attached workload instance. If omitted, Istio will automatically configure the sidecar based on the information about the workload obtained from the orchestration platform (e.g., exposed ports, services, etc.). If specified, inbound ports are configured if and only if the workload instance is associated with a service.
-            readonly ingress: IstioIngressListener[];
-            // REQUIRED. Egress specifies the configuration of the sidecar for processing outbound traffic from the attached workload instance to other services in the mesh.
-            readonly egress: IstioEgressListener[];
-            readonly outboundTrafficPolicy: OutboundTrafficPolicy;
-        }
-
-        export interface IstioIngressListener {
-            readonly port: Port;
-            // The ip or the Unix domain socket to which the listener should be bound to. Format: `x.x.x.x` or `unix:///path/to/uds` or `unix://@foobar` (Linux abstract namespace). If omitted, Istio will automatically configure the defaults based on imported services and the workload instances to which this configuration is applied to.
-            readonly bind: string;
-            // REQUIRED: The loopback IP endpoint or Unix domain socket to which traffic should be forwarded to. This configuration can be used to redirect traffic arriving at the bind point on the sidecar to a port or Unix domain socket where the application workload instance is listening for connections. Format should be 127.0.0.1:PORT or `unix:///path/to/socket`
-            readonly defaultEndpoint: string;
-            readonly captureMode: CaptureMode;
-        }
-
-        export interface IstioEgressListener {
-            readonly port: Port;
-            // The ip or the Unix domain socket to which the listener should be bound to. Port MUST be specified if bind is not empty. Format: `x.x.x.x` or `unix:///path/to/uds` or `unix://@foobar` (Linux abstract namespace). If omitted, Istio will automatically configure the defaults based on imported services, the workload instances to which this configuration is applied to and the captureMode. If captureMode is NONE, bind will default to 127.0.0.1.
-            readonly bind: string;
-            // REQUIRED: One or more service hosts exposed by the listener in `namespace/dnsName` format. Services in the specified namespace matching `dnsName` will be exposed. The corresponding service can be a service in the service registry (e.g., a Kubernetes or cloud foundry service) or a service specified using a `ServiceEntry` or `VirtualService` configuration. Any associated `DestinationRule` in the same namespace will also be used.
-            readonly hosts: string[];
-            readonly captureMode: CaptureMode;
-        }
-
-        export interface OutboundTrafficPolicy {
-            readonly mode: Mode;
-        }
-
-        export type CaptureMode = 'DEFAULT' | 'IPTABLES' | 'NONE';
-
-        export type Mode = 'REGISTRY_ONLY' | 'ALLOW_ANY';
-
-        export type PortSelector = { number: number } | { name: string };
-
-        export interface VirtualServiceSpec {
-            // A list of namespaces to which this virtual service is exported. Exporting a virtual service allows it to be used by sidecars and gateways defined in other namespaces. This feature provides a mechanism for service owners and mesh administrators to control the visibility of virtual services across namespace boundaries.
-            readonly exportTo: string[];
-            // An ordered list of route rule for non-terminated TLS & HTTPS traffic. Routing is typically performed using the SNI value presented by the ClientHello message. TLS routes will be applied to platform service ports named 'https-*', 'tls-*', unterminated gateway ports using HTTPS/TLS protocols (i.e. with "passthrough" TLS mode) and service entry ports using HTTPS/TLS protocols. The first rule matching an incoming request is used. NOTE: Traffic 'https-*' or 'tls-*' ports without associated virtual service will be treated as opaque TCP traffic.
-            readonly tls: TLSRoute[];
-            // An ordered list of route rules for opaque TCP traffic. TCP routes will be applied to any port that is not a HTTP or TLS port. The first rule matching an incoming request is used.
-            readonly tcp: TCPRoute[];
-            // An ordered list of route rules for HTTP traffic. HTTP routes will be applied to platform service ports named 'http-*'/'http2-*'/'grpc-*', gateway ports with protocol HTTP/HTTP2/GRPC/ TLS-terminated-HTTPS and service entry ports using HTTP/HTTP2/GRPC protocols. The first rule matching an incoming request is used.
-            readonly http: HTTPRoute[];
-            // REQUIRED. The destination hosts to which traffic is being sent. Could be a DNS name with wildcard prefix or an IP address. Depending on the platform, short-names can also be used instead of a FQDN (i.e. has no dots in the name). In such a scenario, the FQDN of the host would be derived based on the underlying platform.
-            readonly hosts: string[];
-            // The names of gateways and sidecars that should apply these routes. A single VirtualService is used for sidecars inside the mesh as well as for one or more gateways. The selection condition imposed by this field can be overridden using the source field in the match conditions of protocol-specific routes. The reserved word `mesh` is used to imply all the sidecars in the mesh. When this field is omitted, the default gateway (`mesh`) will be used, which would apply the rule to all sidecars in the mesh. If a list of gateway names is provided, the rules will apply only to the gateways. To apply the rules to both gateways and sidecars, specify `mesh` as one of the gateway names.
-            readonly gateways: string[];
-        }
-
-        export interface HTTPRoute {
-            // The name assigned to the route for debugging purposes. The route's name will be concatenated with the match's name and will be logged in the access logs for requests matching this route/match.
-            readonly name: string;
-            // A http rule can either redirect or forward (default) traffic. The forwarding target can be one of several versions of a service (see glossary in beginning of document). Weights associated with the service version determine the proportion of traffic it receives.
-            readonly route: HTTPRouteDestination[];
-            // Match conditions to be satisfied for the rule to be activated. All conditions inside a single match block have AND semantics, while the list of match blocks have OR semantics. The rule is matched if any one of the match blocks succeed.
-            readonly match: HTTPMatchRequest[];
-            readonly redirect: HTTPRedirect;
-            readonly rewrite: HTTPRewrite;
-            // Deprecated. Websocket upgrades are done automatically starting from Istio 1.0. $hide_from_docs
-            readonly websocketUpgrade: boolean;
-            readonly timeout: Duration;
-            readonly retries: HTTPRetry;
-            readonly fault: HTTPFaultInjection;
-            readonly mirror: Destination;
-            readonly corsPolicy: CorsPolicy;
-            // $hide_from_docs
-            readonly appendHeaders: Record<string, string>;
-            // $hide_from_docs
-            readonly removeResponseHeaders: string[];
-            // $hide_from_docs
-            readonly appendResponseHeaders: Record<string, string>;
-            // $hide_from_docs
-            readonly removeRequestHeaders: string[];
-            // $hide_from_docs
-            readonly appendRequestHeaders: Record<string, string>;
-            readonly headers: Headers;
-        }
-
-        export interface TLSRoute {
-            // The destination to which the connection should be forwarded to.
-            readonly route: RouteDestination[];
-            // REQUIRED. Match conditions to be satisfied for the rule to be activated. All conditions inside a single match block have AND semantics, while the list of match blocks have OR semantics. The rule is matched if any one of the match blocks succeed.
-            readonly match: TLSMatchAttributes[];
-        }
-
-        export interface TCPRoute {
-            // The destination to which the connection should be forwarded to.
-            readonly route: RouteDestination[];
-            // Match conditions to be satisfied for the rule to be activated. All conditions inside a single match block have AND semantics, while the list of match blocks have OR semantics. The rule is matched if any one of the match blocks succeed.
-            readonly match: L4MatchAttributes[];
-        }
-
-        export interface Destination {
-            // REQUIRED. The name of a service from the service registry. Service names are looked up from the platform's service registry (e.g., Kubernetes services, Consul services, etc.) and from the hosts declared by [ServiceEntry](https://istio.io/docs/reference/config/networking/v1alpha3/service-entry/#ServiceEntry). Traffic forwarded to destinations that are not found in either of the two, will be dropped.
-            readonly host: string;
-            readonly port: PortSelector;
-            // The name of a subset within the service. Applicable only to services within the mesh. The subset must be defined in a corresponding DestinationRule.
-            readonly subset: string;
-        }
-
-        export interface HTTPMatchRequest {
-            // The name assigned to a match. The match's name will be concatenated with the parent route's name and will be logged in the access logs for requests matching this route.
-            readonly name: string;
-            readonly method: StringMatch;
-            // Specifies the ports on the host that is being addressed. Many services only expose a single port or label ports with the protocols they support, in these cases it is not required to explicitly select the port.
-            readonly port: number;
-            // $hide_from_docs
-            readonly gateways: string[];
-            // The header keys must be lowercase and use hyphen as the separator, e.g. _x-request-id_.
-            readonly headers: Record<string, StringMatch>;
-            readonly uri: StringMatch;
-            readonly scheme: StringMatch;
-            readonly authority: StringMatch;
-            // $hide_from_docs
-            readonly sourceLabels: Record<string, string>;
-            // Query parameters for matching.
-            readonly queryParams: Record<string, StringMatch>;
-            // Flag to specify whether the URI matching should be case-insensitive.
-            readonly ignoreUriCase: boolean;
-        }
-
-        export interface HTTPRouteDestination {
-            // REQUIRED. The proportion of traffic to be forwarded to the service version. (0-100). Sum of weights across destinations SHOULD BE == 100. If there is only one destination in a rule, the weight value is assumed to be 100.
-            readonly weight: number;
-            // Use of `remove_response_header` is deprecated. Use the `headers` field instead.
-            readonly removeResponseHeaders: string[];
-            // Use of `append_response_headers` is deprecated. Use the `headers` field instead.
-            readonly appendResponseHeaders: Record<string, string>;
-            // Use of `remove_request_headers` is deprecated. Use the `headers` field instead.
-            readonly removeRequestHeaders: string[];
-            // Use of `append_request_headers` is deprecated. Use the `headers` field instead.
-            readonly appendRequestHeaders: Record<string, string>;
-            readonly headers: Headers;
-            readonly destination: Destination;
-        }
-
-        export interface HTTPRedirect {
-            // On a redirect, overwrite the Path portion of the URL with this value. Note that the entire path will be replaced, irrespective of the request URI being matched as an exact path or prefix.
-            readonly uri: string;
-            // On a redirect, overwrite the Authority/Host portion of the URL with this value.
-            readonly authority: string;
-            // On a redirect, Specifies the HTTP status code to use in the redirect response. The default response code is MOVED_PERMANENTLY (301).
-            readonly redirectCode: number;
-        }
-
-        export interface HTTPRewrite {
-            // rewrite the path (or the prefix) portion of the URI with this value. If the original URI was matched based on prefix, the value provided in this field will replace the corresponding matched prefix.
-            readonly uri: string;
-            // rewrite the Authority/Host header with this value.
-            readonly authority: string;
-        }
-
-        export interface HTTPRetry {
-            // REQUIRED. Number of retries for a given request. The interval between retries will be determined automatically (25ms+). Actual number of retries attempted depends on the httpReqTimeout.
-            readonly attempts: number;
-            readonly perTryTimeout: Duration;
-            // Specifies the conditions under which retry takes place. One or more policies can be specified using a ‘,’ delimited list. See the [supported policies](https://www.envoyproxy.io/docs/envoy/latest/configuration/http_filters/router_filter#x-envoy-retry-on) and [here](https://www.envoyproxy.io/docs/envoy/latest/configuration/http_filters/router_filter#x-envoy-retry-grpc-on) for more details.
-            readonly retryOn: string;
-        }
-
-        export interface HTTPFaultInjection {
-            readonly delay: Delay;
-            readonly abort: Abort;
-        }
-
-        export interface CorsPolicy {
-            // The list of origins that are allowed to perform CORS requests. The content will be serialized into the Access-Control-Allow-Origin header. Wildcard * will allow all origins.
-            readonly allowOrigin: string[];
-            // List of HTTP methods allowed to access the resource. The content will be serialized into the Access-Control-Allow-Methods header.
-            readonly allowMethods: string[];
-            // List of HTTP headers that can be used when requesting the resource. Serialized to Access-Control-Allow-Headers header.
-            readonly allowHeaders: string[];
-            // A white list of HTTP headers that the browsers are allowed to access. Serialized into Access-Control-Expose-Headers header.
-            readonly exposeHeaders: string[];
-            readonly maxAge: Duration;
-            readonly allowCredentials: BoolValue;
-        }
-
-        export interface Headers {
-            readonly response: HeaderOperations;
-            readonly request: HeaderOperations;
-        }
-
-        export interface HeaderOperations {
-            // Overwrite the headers specified by key with the given values
-            readonly set: Record<string, string>;
-            // Append the given values to the headers specified by keys (will create a comma-separated list of values)
-            readonly add: Record<string, string>;
-            // Remove a the specified headers
-            readonly remove: string[];
-        }
-
-        export interface TLSMatchAttributes {
-            // Specifies the port on the host that is being addressed. Many services only expose a single port or label ports with the protocols they support, in these cases it is not required to explicitly select the port.
-            readonly port: number;
-            // Names of gateways where the rule should be applied to. Gateway names at the top of the VirtualService (if any) are overridden. The gateway match is independent of sourceLabels.
-            readonly gateways: string[];
-            // One or more labels that constrain the applicability of a rule to workloads with the given labels. If the VirtualService has a list of gateways specified at the top, it should include the reserved gateway `mesh` in order for this field to be applicable.
-            readonly sourceLabels: Record<string, string>;
-            // IPv4 or IPv6 ip addresses of destination with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d.
-            readonly destinationSubnets: string[];
-            // IPv4 or IPv6 ip address of source with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d $hide_from_docs
-            readonly sourceSubnet: string;
-            // REQUIRED. SNI (server name indicator) to match on. Wildcard prefixes can be used in the SNI value, e.g., *.com will match foo.example.com as well as example.com. An SNI value must be a subset (i.e., fall within the domain) of the corresponding virtual serivce's hosts.
-            readonly sniHosts: string[];
-        }
-
-        export interface RouteDestination {
-            // REQUIRED. The proportion of traffic to be forwarded to the service version. If there is only one destination in a rule, all traffic will be routed to it irrespective of the weight.
-            readonly weight: number;
-            readonly destination: Destination;
-        }
-
-        export interface L4MatchAttributes {
-            // Specifies the port on the host that is being addressed. Many services only expose a single port or label ports with the protocols they support, in these cases it is not required to explicitly select the port.
-            readonly port: number;
-            // Names of gateways where the rule should be applied to. Gateway names at the top of the VirtualService (if any) are overridden. The gateway match is independent of sourceLabels.
-            readonly gateways: string[];
-            // One or more labels that constrain the applicability of a rule to workloads with the given labels. If the VirtualService has a list of gateways specified at the top, it should include the reserved gateway `mesh` in order for this field to be applicable.
-            readonly sourceLabels: Record<string, string>;
-            // IPv4 or IPv6 ip addresses of destination with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d.
-            readonly destinationSubnets: string[];
-            // IPv4 or IPv6 ip address of source with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d $hide_from_docs
-            readonly sourceSubnet: string;
-        }
-
-        export type StringMatch = { exact: string } | { prefix: string } | { regex: string };
-
-        export type Delay = { percent: number } | { percentage: Percent } | { fixedDelay: Duration } | { percent: number } | { percentage: Percent } | { exponentialDelay: Duration };
-
-        export type Abort = { percent: number } | { percentage: Percent } | { httpStatus: number } | { percent: number } | { percentage: Percent } | { grpcStatus: string } | { percent: number } | { percentage: Percent } | { http2Error: string };
-
-        export interface Percent {
-            readonly value: number;
-        }
-
-        export interface BoolValue {
-            // The bool value.
-            readonly value: boolean;
-        }
-
-        export interface Duration {
-            // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-            readonly seconds: number;
-            // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-            readonly nanos: number;
-        }
-
+  export namespace v1alpha3 {
+    // @ts-ignore
+    export interface DestinationRule {
+      // REQUIRED. The name of a service from the service registry. Service names are looked up from the platform's service registry (e.g., Kubernetes services, Consul services, etc.) and from the hosts declared by [ServiceEntries](https://istio.io/docs/reference/config/networking/v1alpha3/service-entry/#ServiceEntry). Rules defined for services that do not exist in the service registry will be ignored.
+       // @ts-ignore
+       readonly host: string;
+       // @ts-ignore
+       readonly trafficPolicy: TrafficPolicy;
+      // One or more named sets that represent individual versions of a service. Traffic policies can be overridden at subset level.
+       // @ts-ignore
+       readonly subsets: Subset[];
+      // A list of namespaces to which this destination rule is exported. The resolution of a destination rule to apply to a service occurs in the context of a hierarchy of namespaces. Exporting a destination rule allows it to be included in the resolution hierarchy for services in other namespaces. This feature provides a mechanism for service owners and mesh administrators to control the visibility of destination rules across namespace boundaries.
+       // @ts-ignore
+       readonly exportTo: string[];
     }
-
+    // @ts-ignore
+    export interface TrafficPolicy {
+       // @ts-ignore
+       readonly loadBalancer: LoadBalancerSettings;
+       // @ts-ignore
+       readonly connectionPool: ConnectionPoolSettings;
+       // @ts-ignore
+       readonly outlierDetection: OutlierDetection;
+       // @ts-ignore
+       readonly tls: TLSSettings;
+      // Traffic policies specific to individual ports. Note that port level settings will override the destination-level settings. Traffic settings specified at the destination-level will not be inherited when overridden by port-level settings, i.e. default values will be applied to fields omitted in port-level traffic policies.
+       // @ts-ignore
+       readonly portLevelSettings: PortTrafficPolicy[];
+    }
+    // @ts-ignore
+    export interface Subset {
+      // REQUIRED. Name of the subset. The service name and the subset name can be used for traffic splitting in a route rule.
+       // @ts-ignore
+       readonly name: string;
+       // @ts-ignore
+       readonly trafficPolicy: TrafficPolicy;
+      // Labels apply a filter over the endpoints of a service in the service registry. See route rules for examples of usage.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+    // @ts-ignore
+    export type LoadBalancerSettings = { simple: SimpleLB } | { consistentHash: ConsistentHashLB };
+    // @ts-ignore
+    export interface ConnectionPoolSettings {
+       // @ts-ignore
+       readonly tcp: TCPSettings;
+       // @ts-ignore
+       readonly http: HTTPSettings;
+    }
+    // @ts-ignore
+    export interface OutlierDetection {
+       // @ts-ignore
+       readonly interval: Duration;
+      // Number of errors before a host is ejected from the connection pool. Defaults to 5. When the upstream host is accessed over HTTP, a 502, 503 or 504 return code qualifies as an error. When the upstream host is accessed over an opaque TCP connection, connect timeouts and connection error/failure events qualify as an error.
+       // @ts-ignore
+       readonly consecutiveErrors: number;
+       // @ts-ignore
+       readonly baseEjectionTime: Duration;
+      // Maximum % of hosts in the load balancing pool for the upstream service that can be ejected. Defaults to 10%.
+       // @ts-ignore
+       readonly maxEjectionPercent: number;
+      // Outlier detection will be enabled as long as the associated load balancing pool has at least min_health_percent hosts in healthy mode. When the percentage of healthy hosts in the load balancing pool drops below this threshold, outlier detection will be disabled and the proxy will load balance across all hosts in the pool (healthy and unhealthy). The threshold can be disabled by setting it to 0%. The default is 0% as it's not typically applicable in k8s environments with few pods per service.
+       // @ts-ignore
+       readonly minHealthPercent: number;
+    }
+    // @ts-ignore
+    export interface TLSSettings {
+       // @ts-ignore
+       readonly mode: TLSmode;
+      // REQUIRED if mode is `MUTUAL`. The path to the file holding the client-side TLS certificate to use. Should be empty if mode is `ISTIO_MUTUAL`.
+       // @ts-ignore
+       readonly clientCertificate: string;
+      // REQUIRED if mode is `MUTUAL`. The path to the file holding the client's private key. Should be empty if mode is `ISTIO_MUTUAL`.
+       // @ts-ignore
+       readonly privateKey: string;
+      // OPTIONAL: The path to the file containing certificate authority certificates to use in verifying a presented server certificate. If omitted, the proxy will not verify the server's certificate. Should be empty if mode is `ISTIO_MUTUAL`.
+       // @ts-ignore
+       readonly caCertificates: string;
+      // A list of alternate names to verify the subject identity in the certificate. If specified, the proxy will verify that the server certificate's subject alt name matches one of the specified values. If specified, this list overrides the value of subject_alt_names from the ServiceEntry.
+       // @ts-ignore
+       readonly subjectAltNames: string[];
+      // SNI string to present to the server during TLS handshake.
+       // @ts-ignore
+       readonly sni: string;
+    }
+    // @ts-ignore
+    export interface PortTrafficPolicy {
+       // @ts-ignore
+       readonly loadBalancer: LoadBalancerSettings;
+       // @ts-ignore
+       readonly connectionPool: ConnectionPoolSettings;
+       // @ts-ignore
+       readonly outlierDetection: OutlierDetection;
+       // @ts-ignore
+       readonly tls: TLSSettings;
+       // @ts-ignore
+       readonly port: PortSelector;
+    }
+    // @ts-ignore
+    export type PortSelector = { number: number } | { name: string };
+    // @ts-ignore
+    export type SimpleLB = 'ROUND_ROBIN' | 'LEAST_CONN' | 'RANDOM' | 'PASSTHROUGH';
+    // @ts-ignore
+    export type ConsistentHashLB = { minimumRingSize: number } | { httpHeaderName: string } | { minimumRingSize: number } | { httpCookie: HTTPCookie } | { minimumRingSize: number } | { useSourceIp: boolean };
+    // @ts-ignore
+    export interface HTTPCookie {
+      // Path to set for the cookie.
+       // @ts-ignore
+       readonly path: string;
+      // REQUIRED. Name of the cookie.
+       // @ts-ignore
+       readonly name: string;
+    }
+    // @ts-ignore
+    export interface TCPSettings {
+      // Maximum number of HTTP1 /TCP connections to a destination host. Default 1024.
+       // @ts-ignore
+       readonly maxConnections: number;
+       // @ts-ignore
+       readonly connectTimeout: Duration;
+       // @ts-ignore
+       readonly tcpKeepalive: TcpKeepalive;
+    }
+    // @ts-ignore
+    export interface HTTPSettings {
+      // Maximum number of pending HTTP requests to a destination. Default 1024.
+       // @ts-ignore
+       readonly http1MaxPendingRequests: number;
+      // Maximum number of requests to a backend. Default 1024.
+       // @ts-ignore
+       readonly http2MaxRequests: number;
+      // Maximum number of requests per connection to a backend. Setting this parameter to 1 disables keep alive. Default 0, meaning "unlimited", up to 2^29.
+       // @ts-ignore
+       readonly maxRequestsPerConnection: number;
+      // Maximum number of retries that can be outstanding to all hosts in a cluster at a given time. Defaults to 1024.
+       // @ts-ignore
+       readonly maxRetries: number;
+       // @ts-ignore
+       readonly idleTimeout: Duration;
+       // @ts-ignore
+       readonly h2UpgradePolicy: H2UpgradePolicy;
+    }
+    // @ts-ignore
+    export interface TcpKeepalive {
+       // @ts-ignore
+       readonly time: Duration;
+      // Maximum number of keepalive probes to send without response before deciding the connection is dead. Default is to use the OS level configuration (unless overridden, Linux defaults to 9.)
+       // @ts-ignore
+       readonly probes: number;
+       // @ts-ignore
+       readonly interval: Duration;
+    }
+    // @ts-ignore
+    export type H2UpgradePolicy = 'DEFAULT' | 'DO_NOT_UPGRADE' | 'UPGRADE';
+    // @ts-ignore
+    export type TLSmode = 'DISABLE' | 'SIMPLE' | 'MUTUAL' | 'ISTIO_MUTUAL';
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface EnvoyFilter {
+      // Deprecated. Use workload_selector instead. $hide_from_docs
+       // @ts-ignore
+       readonly workloadLabels: Record<string, string>;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly filters: Filter[];
+       // @ts-ignore
+       readonly workloadSelector: WorkloadSelector;
+      // REQUIRED. One or more patches with match conditions.
+       // @ts-ignore
+       readonly configPatches: EnvoyConfigObjectPatch[];
+    }
+    // @ts-ignore
+    export interface Filter {
+       // @ts-ignore
+       readonly listenerMatch: DeprecatedListenerMatch;
+       // @ts-ignore
+       readonly insertPosition: InsertPosition;
+       // @ts-ignore
+       readonly filterType: FilterType;
+      // REQUIRED: The name of the filter to instantiate. The name must match a supported filter _compiled into_ Envoy.
+       // @ts-ignore
+       readonly filterName: string;
+       // @ts-ignore
+       readonly filterConfig: Struct;
+    }
+    // @ts-ignore
+    export interface WorkloadSelector {
+      // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface EnvoyConfigObjectPatch {
+       // @ts-ignore
+       readonly applyTo: ApplyTo;
+       // @ts-ignore
+       readonly match: EnvoyConfigObjectMatch;
+       // @ts-ignore
+       readonly patch: Patch;
+    }
+    // @ts-ignore
+    export interface DeprecatedListenerMatch {
+      // The service port/gateway port to which traffic is being sent/received. If not specified, matches all listeners. Even though inbound listeners are generated for the instance/pod ports, only service ports should be used to match listeners.
+       // @ts-ignore
+       readonly portNumber: number;
+      // Instead of using specific port numbers, a set of ports matching a given port name prefix can be selected. E.g., "mongo" selects ports named mongo-port, mongo, mongoDB, MONGO, etc. Matching is case insensitive.
+       // @ts-ignore
+       readonly portNamePrefix: string;
+       // @ts-ignore
+       readonly listenerType: ListenerType;
+       // @ts-ignore
+       readonly listenerProtocol: ListenerProtocol;
+      // One or more IP addresses to which the listener is bound. If specified, should match at least one address in the list.
+       // @ts-ignore
+       readonly address: string[];
+    }
+    // @ts-ignore
+    export type ListenerType = 'ANY' | 'SIDECAR_INBOUND' | 'SIDECAR_OUTBOUND' | 'GATEWAY';
+    // @ts-ignore
+    export type ListenerProtocol = 'ALL' | 'HTTP' | 'TCP';
+    // @ts-ignore
+    export interface InsertPosition {
+       // @ts-ignore
+       readonly index: Index;
+      // If BEFORE or AFTER position is specified, specify the name of the filter relative to which this filter should be inserted.
+       // @ts-ignore
+       readonly relativeTo: string;
+    }
+    // @ts-ignore
+    export type Index = 'FIRST' | 'LAST' | 'BEFORE' | 'AFTER';
+    // @ts-ignore
+    export type FilterType = 'INVALID' | 'HTTP' | 'NETWORK';
+    // @ts-ignore
+    export type ApplyTo = 'INVALID' | 'LISTENER' | 'FILTER_CHAIN' | 'NETWORK_FILTER' | 'HTTP_FILTER' | 'ROUTE_CONFIGURATION' | 'VIRTUAL_HOST' | 'HTTP_ROUTE' | 'CLUSTER';
+    // @ts-ignore
+    export type PatchContext = 'ANY' | 'SIDECAR_INBOUND' | 'SIDECAR_OUTBOUND' | 'GATEWAY';
+    // @ts-ignore
+    export interface ProxyMatch {
+      // A regular expression in golang regex format (RE2) that can be used to select proxies using a specific version of istio proxy. The Istio version for a given proxy is obtained from the node metadata field ISTIO_VERSION supplied by the proxy when connecting to Pilot. This value is embedded as an environment variable (ISTIO_META_ISTIO_VERSION) in the Istio proxy docker image. Custom proxy implementations should provide this metadata variable to take advantage of the Istio version check option.
+       // @ts-ignore
+       readonly proxyVersion: string;
+      // Match on the node metadata supplied by a proxy when connecting to Istio Pilot. Note that while Envoy's node metadata is of type Struct, only string key-value pairs are processed by Pilot. All keys specified in the metadata must match with exact values. The match will fail if any of the specified keys are absent or the values fail to match.
+       // @ts-ignore
+       readonly metadata: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface ClusterMatch {
+      // The exact name of the cluster to match. To match a specific cluster by name, such as the internally generated "Passthrough" cluster, leave all fields in clusterMatch empty, except the name.
+       // @ts-ignore
+       readonly name: string;
+      // The service port for which this cluster was generated. If omitted, applies to clusters for any port.
+       // @ts-ignore
+       readonly portNumber: number;
+      // The fully qualified service name for this cluster. If omitted, applies to clusters for any service. For services defined through service entries, the service name is same as the hosts defined in the service entry.
+       // @ts-ignore
+       readonly service: string;
+      // The subset associated with the service. If omitted, applies to clusters for any subset of a service.
+       // @ts-ignore
+       readonly subset: string;
+    }
+    // @ts-ignore
+    export interface RouteConfigurationMatch {
+      // Route configuration name to match on. Can be used to match a specific route configuration by name, such as the internally generated "http_proxy" route configuration for all sidecars.
+       // @ts-ignore
+       readonly name: string;
+      // The service port number or gateway server port number for which this route configuration was generated. If omitted, applies to route configurations for all ports.
+       // @ts-ignore
+       readonly portNumber: number;
+      // Applicable only for GATEWAY context. The gateway server port name for which this route configuration was generated.
+       // @ts-ignore
+       readonly portName: string;
+      // The Istio gateway config's namespace/name for which this route configuration was generated. Applies only if the context is GATEWAY. Should be in the namespace/name format. Use this field in conjunction with the portNumber and portName to accurately select the Envoy route configuration for a specific HTTPS server within a gateway config object.
+       // @ts-ignore
+       readonly gateway: string;
+       // @ts-ignore
+       readonly vhost: VirtualHostMatch;
+    }
+    // @ts-ignore
+    export interface VirtualHostMatch {
+      // The VirtualHosts objects generated by Istio are named as host:port, where the host typically corresponds to the VirtualService's host field or the hostname of a service in the registry.
+       // @ts-ignore
+       readonly name: string;
+       // @ts-ignore
+       readonly route: RouteMatch;
+    }
+    // @ts-ignore
+    export interface RouteMatch {
+      // The Route objects generated by default are named as "default". Route objects generated using a virtual service will carry the name used in the virtual service's HTTP routes.
+       // @ts-ignore
+       readonly name: string;
+       // @ts-ignore
+       readonly action: Action;
+    }
+    // @ts-ignore
+    export type Action = 'ANY' | 'ROUTE' | 'REDIRECT' | 'DIRECT_RESPONSE';
+    // @ts-ignore
+    export interface ListenerMatch {
+      // Match a specific listener by its name. The listeners generated by Pilot are typically named as IP:Port.
+       // @ts-ignore
+       readonly name: string;
+      // The service port/gateway port to which traffic is being sent/received. If not specified, matches all listeners. Even though inbound listeners are generated for the instance/pod ports, only service ports should be used to match listeners.
+       // @ts-ignore
+       readonly portNumber: number;
+      // Instead of using specific port numbers, a set of ports matching a given service's port name can be selected. Matching is case insensitive. Not implemented. $hide_from_docs
+       // @ts-ignore
+       readonly portName: string;
+       // @ts-ignore
+       readonly filterChain: FilterChainMatch;
+    }
+    // @ts-ignore
+    export interface FilterChainMatch {
+      // The name assigned to the filter chain.
+       // @ts-ignore
+       readonly name: string;
+      // The SNI value used by a filter chain's match condition. This condition will evaluate to false if the filter chain has no sni match.
+       // @ts-ignore
+       readonly sni: string;
+      // Applies only to SIDECAR_INBOUND context. If non-empty, a transport protocol to consider when determining a filter chain match. This value will be compared against the transport protocol of a new connection, when it's detected by the tls_inspector listener filter.
+       // @ts-ignore
+       readonly transportProtocol: string;
+      // Applies only to sidecars. If non-empty, a comma separated set of application protocols to consider when determining a filter chain match. This value will be compared against the application protocols of a new connection, when it's detected by one of the listener filters such as the http_inspector.
+       // @ts-ignore
+       readonly applicationProtocols: string;
+       // @ts-ignore
+       readonly filter: FilterMatch;
+    }
+    // @ts-ignore
+    export interface FilterMatch {
+      // The filter name to match on.
+       // @ts-ignore
+       readonly name: string;
+       // @ts-ignore
+       readonly subFilter: SubFilterMatch;
+    }
+    // @ts-ignore
+    export interface SubFilterMatch {
+      // The filter name to match on.
+       // @ts-ignore
+       readonly name: string;
+    }
+    // @ts-ignore
+    export interface Patch {
+       // @ts-ignore
+       readonly operation: Operation;
+       // @ts-ignore
+       readonly value: Struct;
+    }
+    // @ts-ignore
+    export type Operation = 'INVALID' | 'MERGE' | 'ADD' | 'REMOVE' | 'INSERT_BEFORE' | 'INSERT_AFTER';
+    // @ts-ignore
+    export type EnvoyConfigObjectMatch = { context: PatchContext } | { proxy: ProxyMatch } | { listener: ListenerMatch } | { context: PatchContext } | { proxy: ProxyMatch } | { routeConfiguration: RouteConfigurationMatch } | { context: PatchContext } | { proxy: ProxyMatch } | { cluster: ClusterMatch };
+    // @ts-ignore
+    export interface Struct {
+      // Unordered map of dynamically typed values.
+       // @ts-ignore
+       readonly fields: Record<string, Value>;
+    }
+    // @ts-ignore
+    export type Value = { nullValue: NullValue } | { numberValue: number } | { stringValue: string } | { boolValue: boolean } | { structValue: Struct } | { listValue: ListValue };
+    // @ts-ignore
+    export interface ListValue {
+      // Repeated field of dynamically typed values.
+       // @ts-ignore
+       readonly values: Value[];
+    }
+    // @ts-ignore
+    export type NullValue = 'NULL_VALUE';
+    // @ts-ignore
+    export interface Gateway {
+      // REQUIRED: A list of server specifications.
+       // @ts-ignore
+       readonly servers: Server[];
+      // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this gateway configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present. In other words, the Gateway resource must reside in the same namespace as the gateway workload instance.
+       // @ts-ignore
+       readonly selector: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface Server {
+       // @ts-ignore
+       readonly tls: TLSOptions;
+       // @ts-ignore
+       readonly port: Port;
+      // The ip or the Unix domain socket to which the listener should be bound to. Format: `x.x.x.x` or `unix:///path/to/uds` or `unix://@foobar` (Linux abstract namespace). When using Unix domain sockets, the port number should be 0.
+       // @ts-ignore
+       readonly bind: string;
+      // REQUIRED. One or more hosts exposed by this gateway. While typically applicable to HTTP services, it can also be used for TCP services using TLS with SNI. A host is specified as a `dnsName` with an optional `namespace/` prefix. The `dnsName` should be specified using FQDN format, optionally including a wildcard character in the left-most component (e.g., `prod/*.example.com`). Set the `dnsName` to `*` to select all `VirtualService` hosts from the specified namespace (e.g.,`prod/*`). If no `namespace/` is specified, the `VirtualService` hosts will be selected from any available namespace. Any associated `DestinationRule` in the same namespace will also be used.
+       // @ts-ignore
+       readonly hosts: string[];
+      // The loopback IP endpoint or Unix domain socket to which traffic should be forwarded to by default. Format should be `127.0.0.1:PORT` or `unix:///path/to/socket` or `unix://@foobar` (Linux abstract namespace).
+       // @ts-ignore
+       readonly defaultEndpoint: string;
+    }
+    // @ts-ignore
+    export interface Port {
+      // Label assigned to the port.
+       // @ts-ignore
+       readonly name: string;
+      // REQUIRED: A valid non-negative integer port number.
+       // @ts-ignore
+       readonly number: number;
+      // REQUIRED: The protocol exposed on the port. MUST BE one of HTTP|HTTPS|GRPC|HTTP2|MONGO|TCP|TLS. TLS implies the connection will be routed based on the SNI header to the destination without terminating the TLS connection.
+       // @ts-ignore
+       readonly protocol: string;
+    }
+    // @ts-ignore
+    export interface TLSOptions {
+       // @ts-ignore
+       readonly mode: TLSmode;
+      // REQUIRED if mode is `SIMPLE` or `MUTUAL`. The path to the file holding the server's private key.
+       // @ts-ignore
+       readonly privateKey: string;
+      // REQUIRED if mode is `MUTUAL`. The path to a file containing certificate authority certificates to use in verifying a presented client side certificate.
+       // @ts-ignore
+       readonly caCertificates: string;
+      // A list of alternate names to verify the subject identity in the certificate presented by the client.
+       // @ts-ignore
+       readonly subjectAltNames: string[];
+      // If set to true, the load balancer will send a 301 redirect for all http connections, asking the clients to use HTTPS.
+       // @ts-ignore
+       readonly httpsRedirect: boolean;
+      // REQUIRED if mode is `SIMPLE` or `MUTUAL`. The path to the file holding the server-side TLS certificate to use.
+       // @ts-ignore
+       readonly serverCertificate: string;
+      // The credentialName stands for a unique identifier that can be used to identify the serverCertificate and the privateKey. The credentialName appended with suffix "-cacert" is used to identify the CaCertificates associated with this server. Gateway workloads capable of fetching credentials from a remote credential store such as Kubernetes secrets, will be configured to retrieve the serverCertificate and the privateKey using credentialName, instead of using the file system paths specified above. If using mutual TLS, gateway workload instances will retrieve the CaCertificates using credentialName-cacert. The semantics of the name are platform dependent. In Kubernetes, the default Istio supplied credential server expects the credentialName to match the name of the Kubernetes secret that holds the server certificate, the private key, and the CA certificate (if using mutual TLS). Set the `ISTIO_META_USER_SDS` metadata variable in the gateway's proxy to enable the dynamic credential fetching feature.
+       // @ts-ignore
+       readonly credentialName: string;
+      // An optional list of base64-encoded SHA-256 hashes of the SKPIs of authorized client certificates. Note: When both verify_certificate_hash and verify_certificate_spki are specified, a hash matching either value will result in the certificate being accepted.
+       // @ts-ignore
+       readonly verifyCertificateSpki: string[];
+      // An optional list of hex-encoded SHA-256 hashes of the authorized client certificates. Both simple and colon separated formats are acceptable. Note: When both verify_certificate_hash and verify_certificate_spki are specified, a hash matching either value will result in the certificate being accepted.
+       // @ts-ignore
+       readonly verifyCertificateHash: string[];
+       // @ts-ignore
+       readonly minProtocolVersion: TLSProtocol;
+       // @ts-ignore
+       readonly maxProtocolVersion: TLSProtocol;
+      // Optional: If specified, only support the specified cipher list. Otherwise default to the default cipher list supported by Envoy.
+       // @ts-ignore
+       readonly cipherSuites: string[];
+    }
+    // @ts-ignore
+    export type TLSmode = 'PASSTHROUGH' | 'SIMPLE' | 'MUTUAL' | 'AUTO_PASSTHROUGH' | 'ISTIO_MUTUAL';
+    // @ts-ignore
+    export type TLSProtocol = 'TLS_AUTO' | 'TLSV1_0' | 'TLSV1_1' | 'TLSV1_2' | 'TLSV1_3';
+    // @ts-ignore
+    export interface Port {
+      // Label assigned to the port.
+       // @ts-ignore
+       readonly name: string;
+      // REQUIRED: A valid non-negative integer port number.
+       // @ts-ignore
+       readonly number: number;
+      // REQUIRED: The protocol exposed on the port. MUST BE one of HTTP|HTTPS|GRPC|HTTP2|MONGO|TCP|TLS. TLS implies the connection will be routed based on the SNI header to the destination without terminating the TLS connection.
+       // @ts-ignore
+       readonly protocol: string;
+    }
+    // @ts-ignore
+    export interface ServiceEntry {
+      // A list of namespaces to which this service is exported. Exporting a service allows it to be used by sidecars, gateways and virtual services defined in other namespaces. This feature provides a mechanism for service owners and mesh administrators to control the visibility of services across namespace boundaries.
+       // @ts-ignore
+       readonly exportTo: string[];
+      // The list of subject alternate names allowed for workload instances that implement this service. This information is used to enforce [secure-naming](https://istio.io/docs/concepts/security/#secure-naming). If specified, the proxy will verify that the server certificate's subject alternate name matches one of the specified values.
+       // @ts-ignore
+       readonly subjectAltNames: string[];
+      // REQUIRED. The hosts associated with the ServiceEntry. Could be a DNS name with wildcard prefix.
+       // @ts-ignore
+       readonly hosts: string[];
+      // The virtual IP addresses associated with the service. Could be CIDR prefix. For HTTP traffic, generated route configurations will include http route domains for both the `addresses` and `hosts` field values and the destination will be identified based on the HTTP Host/Authority header. If one or more IP addresses are specified, the incoming traffic will be identified as belonging to this service if the destination IP matches the IP/CIDRs specified in the addresses field. If the Addresses field is empty, traffic will be identified solely based on the destination port. In such scenarios, the port on which the service is being accessed must not be shared by any other service in the mesh. In other words, the sidecar will behave as a simple TCP proxy, forwarding incoming traffic on a specified port to the specified destination endpoint IP/host. Unix domain socket addresses are not supported in this field.
+       // @ts-ignore
+       readonly addresses: string[];
+      // REQUIRED. The ports associated with the external service. If the Endpoints are Unix domain socket addresses, there must be exactly one port.
+       // @ts-ignore
+       readonly ports: Port[];
+       // @ts-ignore
+       readonly location: Location;
+       // @ts-ignore
+       readonly resolution: Resolution;
+      // One or more endpoints associated with the service.
+       // @ts-ignore
+       readonly endpoints: Endpoint[];
+    }
+    // @ts-ignore
+    export type Location = 'MESH_EXTERNAL' | 'MESH_INTERNAL';
+    // @ts-ignore
+    export type Resolution = 'NONE' | 'STATIC' | 'DNS';
+    // @ts-ignore
+    export interface Endpoint {
+      // One or more labels associated with the endpoint.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+      // REQUIRED: Address associated with the network endpoint without the port. Domain names can be used if and only if the resolution is set to DNS, and must be fully-qualified without wildcards. Use the form unix:///absolute/path/to/socket for Unix domain socket endpoints.
+       // @ts-ignore
+       readonly address: string;
+      // Set of ports associated with the endpoint. The ports must be associated with a port name that was declared as part of the service. Do not use for `unix://` addresses.
+       // @ts-ignore
+       readonly ports: Record<string, number>;
+      // Network enables Istio to group endpoints resident in the same L3 domain/network. All endpoints in the same network are assumed to be directly reachable from one another. When endpoints in different networks cannot reach each other directly, an Istio Gateway can be used to establish connectivity (usually using the AUTO_PASSTHROUGH mode in a Gateway Server). This is an advanced configuration used typically for spanning an Istio mesh over multiple clusters.
+       // @ts-ignore
+       readonly network: string;
+      // The locality associated with the endpoint. A locality corresponds to a failure domain (e.g., country/region/zone). Arbitrary failure domain hierarchies can be represented by separating each encapsulating failure domain by /. For example, the locality of an an endpoint in US, in US-East-1 region, within availability zone az-1, in data center rack r11 can be represented as us/us-east-1/az-1/r11. Istio will configure the sidecar to route to endpoints within the same locality as the sidecar. If none of the endpoints in the locality are available, endpoints parent locality (but within the same network ID) will be chosen. For example, if there are two endpoints in same network (networkID "n1"), say e1 with locality us/us-east-1/az-1/r11 and e2 with locality us/us-east-1/az-2/r12, a sidecar from us/us-east-1/az-1/r11 locality will prefer e1 from the same locality over e2 from a different locality. Endpoint e2 could be the IP associated with a gateway (that bridges networks n1 and n2), or the IP associated with a standard service endpoint.
+       // @ts-ignore
+       readonly locality: string;
+      // The load balancing weight associated with the endpoint. Endpoints with higher weights will receive proportionally higher traffic.
+       // @ts-ignore
+       readonly weight: number;
+    }
+    // @ts-ignore
+    export interface WorkloadSelector {
+      // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface Port {
+      // Label assigned to the port.
+       // @ts-ignore
+       readonly name: string;
+      // REQUIRED: A valid non-negative integer port number.
+       // @ts-ignore
+       readonly number: number;
+      // REQUIRED: The protocol exposed on the port. MUST BE one of HTTP|HTTPS|GRPC|HTTP2|MONGO|TCP|TLS. TLS implies the connection will be routed based on the SNI header to the destination without terminating the TLS connection.
+       // @ts-ignore
+       readonly protocol: string;
+    }
+    // @ts-ignore
+    export interface Sidecar {
+       // @ts-ignore
+       readonly workloadSelector: WorkloadSelector;
+      // Ingress specifies the configuration of the sidecar for processing inbound traffic to the attached workload instance. If omitted, Istio will automatically configure the sidecar based on the information about the workload obtained from the orchestration platform (e.g., exposed ports, services, etc.). If specified, inbound ports are configured if and only if the workload instance is associated with a service.
+       // @ts-ignore
+       readonly ingress: IstioIngressListener[];
+      // REQUIRED. Egress specifies the configuration of the sidecar for processing outbound traffic from the attached workload instance to other services in the mesh.
+       // @ts-ignore
+       readonly egress: IstioEgressListener[];
+       // @ts-ignore
+       readonly outboundTrafficPolicy: OutboundTrafficPolicy;
+    }
+    // @ts-ignore
+    export interface IstioIngressListener {
+       // @ts-ignore
+       readonly port: Port;
+      // The ip or the Unix domain socket to which the listener should be bound to. Format: `x.x.x.x` or `unix:///path/to/uds` or `unix://@foobar` (Linux abstract namespace). If omitted, Istio will automatically configure the defaults based on imported services and the workload instances to which this configuration is applied to.
+       // @ts-ignore
+       readonly bind: string;
+      // REQUIRED: The loopback IP endpoint or Unix domain socket to which traffic should be forwarded to. This configuration can be used to redirect traffic arriving at the bind point on the sidecar to a port or Unix domain socket where the application workload instance is listening for connections. Format should be 127.0.0.1:PORT or `unix:///path/to/socket`
+       // @ts-ignore
+       readonly defaultEndpoint: string;
+       // @ts-ignore
+       readonly captureMode: CaptureMode;
+    }
+    // @ts-ignore
+    export interface IstioEgressListener {
+       // @ts-ignore
+       readonly port: Port;
+      // The ip or the Unix domain socket to which the listener should be bound to. Port MUST be specified if bind is not empty. Format: `x.x.x.x` or `unix:///path/to/uds` or `unix://@foobar` (Linux abstract namespace). If omitted, Istio will automatically configure the defaults based on imported services, the workload instances to which this configuration is applied to and the captureMode. If captureMode is NONE, bind will default to 127.0.0.1.
+       // @ts-ignore
+       readonly bind: string;
+      // REQUIRED: One or more service hosts exposed by the listener in `namespace/dnsName` format. Services in the specified namespace matching `dnsName` will be exposed. The corresponding service can be a service in the service registry (e.g., a Kubernetes or cloud foundry service) or a service specified using a `ServiceEntry` or `VirtualService` configuration. Any associated `DestinationRule` in the same namespace will also be used.
+       // @ts-ignore
+       readonly hosts: string[];
+       // @ts-ignore
+       readonly captureMode: CaptureMode;
+    }
+    // @ts-ignore
+    export interface OutboundTrafficPolicy {
+       // @ts-ignore
+       readonly mode: Mode;
+    }
+    // @ts-ignore
+    export type CaptureMode = 'DEFAULT' | 'IPTABLES' | 'NONE';
+    // @ts-ignore
+    export type Mode = 'REGISTRY_ONLY' | 'ALLOW_ANY';
+    // @ts-ignore
+    export type PortSelector = { number: number } | { name: string };
+    // @ts-ignore
+    export interface VirtualService {
+      // A list of namespaces to which this virtual service is exported. Exporting a virtual service allows it to be used by sidecars and gateways defined in other namespaces. This feature provides a mechanism for service owners and mesh administrators to control the visibility of virtual services across namespace boundaries.
+       // @ts-ignore
+       readonly exportTo: string[];
+      // An ordered list of route rule for non-terminated TLS & HTTPS traffic. Routing is typically performed using the SNI value presented by the ClientHello message. TLS routes will be applied to platform service ports named 'https-*', 'tls-*', unterminated gateway ports using HTTPS/TLS protocols (i.e. with "passthrough" TLS mode) and service entry ports using HTTPS/TLS protocols. The first rule matching an incoming request is used. NOTE: Traffic 'https-*' or 'tls-*' ports without associated virtual service will be treated as opaque TCP traffic.
+       // @ts-ignore
+       readonly tls: TLSRoute[];
+      // An ordered list of route rules for opaque TCP traffic. TCP routes will be applied to any port that is not a HTTP or TLS port. The first rule matching an incoming request is used.
+       // @ts-ignore
+       readonly tcp: TCPRoute[];
+      // An ordered list of route rules for HTTP traffic. HTTP routes will be applied to platform service ports named 'http-*'/'http2-*'/'grpc-*', gateway ports with protocol HTTP/HTTP2/GRPC/ TLS-terminated-HTTPS and service entry ports using HTTP/HTTP2/GRPC protocols. The first rule matching an incoming request is used.
+       // @ts-ignore
+       readonly http: HTTPRoute[];
+      // REQUIRED. The destination hosts to which traffic is being sent. Could be a DNS name with wildcard prefix or an IP address. Depending on the platform, short-names can also be used instead of a FQDN (i.e. has no dots in the name). In such a scenario, the FQDN of the host would be derived based on the underlying platform.
+       // @ts-ignore
+       readonly hosts: string[];
+      // The names of gateways and sidecars that should apply these routes. A single VirtualService is used for sidecars inside the mesh as well as for one or more gateways. The selection condition imposed by this field can be overridden using the source field in the match conditions of protocol-specific routes. The reserved word `mesh` is used to imply all the sidecars in the mesh. When this field is omitted, the default gateway (`mesh`) will be used, which would apply the rule to all sidecars in the mesh. If a list of gateway names is provided, the rules will apply only to the gateways. To apply the rules to both gateways and sidecars, specify `mesh` as one of the gateway names.
+       // @ts-ignore
+       readonly gateways: string[];
+    }
+    // @ts-ignore
+    export interface HTTPRoute {
+      // The name assigned to the route for debugging purposes. The route's name will be concatenated with the match's name and will be logged in the access logs for requests matching this route/match.
+       // @ts-ignore
+       readonly name: string;
+      // A http rule can either redirect or forward (default) traffic. The forwarding target can be one of several versions of a service (see glossary in beginning of document). Weights associated with the service version determine the proportion of traffic it receives.
+       // @ts-ignore
+       readonly route: HTTPRouteDestination[];
+      // Match conditions to be satisfied for the rule to be activated. All conditions inside a single match block have AND semantics, while the list of match blocks have OR semantics. The rule is matched if any one of the match blocks succeed.
+       // @ts-ignore
+       readonly match: HTTPMatchRequest[];
+       // @ts-ignore
+       readonly redirect: HTTPRedirect;
+       // @ts-ignore
+       readonly rewrite: HTTPRewrite;
+      // Deprecated. Websocket upgrades are done automatically starting from Istio 1.0. $hide_from_docs
+       // @ts-ignore
+       readonly websocketUpgrade: boolean;
+       // @ts-ignore
+       readonly timeout: Duration;
+       // @ts-ignore
+       readonly retries: HTTPRetry;
+       // @ts-ignore
+       readonly fault: HTTPFaultInjection;
+       // @ts-ignore
+       readonly mirror: Destination;
+       // @ts-ignore
+       readonly corsPolicy: CorsPolicy;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly appendHeaders: Record<string, string>;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly removeResponseHeaders: string[];
+      // $hide_from_docs
+       // @ts-ignore
+       readonly appendResponseHeaders: Record<string, string>;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly removeRequestHeaders: string[];
+      // $hide_from_docs
+       // @ts-ignore
+       readonly appendRequestHeaders: Record<string, string>;
+       // @ts-ignore
+       readonly headers: Headers;
+    }
+    // @ts-ignore
+    export interface TLSRoute {
+      // The destination to which the connection should be forwarded to.
+       // @ts-ignore
+       readonly route: RouteDestination[];
+      // REQUIRED. Match conditions to be satisfied for the rule to be activated. All conditions inside a single match block have AND semantics, while the list of match blocks have OR semantics. The rule is matched if any one of the match blocks succeed.
+       // @ts-ignore
+       readonly match: TLSMatchAttributes[];
+    }
+    // @ts-ignore
+    export interface TCPRoute {
+      // The destination to which the connection should be forwarded to.
+       // @ts-ignore
+       readonly route: RouteDestination[];
+      // Match conditions to be satisfied for the rule to be activated. All conditions inside a single match block have AND semantics, while the list of match blocks have OR semantics. The rule is matched if any one of the match blocks succeed.
+       // @ts-ignore
+       readonly match: L4MatchAttributes[];
+    }
+    // @ts-ignore
+    export interface Destination {
+      // REQUIRED. The name of a service from the service registry. Service names are looked up from the platform's service registry (e.g., Kubernetes services, Consul services, etc.) and from the hosts declared by [ServiceEntry](https://istio.io/docs/reference/config/networking/v1alpha3/service-entry/#ServiceEntry). Traffic forwarded to destinations that are not found in either of the two, will be dropped.
+       // @ts-ignore
+       readonly host: string;
+       // @ts-ignore
+       readonly port: PortSelector;
+      // The name of a subset within the service. Applicable only to services within the mesh. The subset must be defined in a corresponding DestinationRule.
+       // @ts-ignore
+       readonly subset: string;
+    }
+    // @ts-ignore
+    export interface HTTPMatchRequest {
+      // The name assigned to a match. The match's name will be concatenated with the parent route's name and will be logged in the access logs for requests matching this route.
+       // @ts-ignore
+       readonly name: string;
+       // @ts-ignore
+       readonly method: StringMatch;
+      // Specifies the ports on the host that is being addressed. Many services only expose a single port or label ports with the protocols they support, in these cases it is not required to explicitly select the port.
+       // @ts-ignore
+       readonly port: number;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly gateways: string[];
+      // The header keys must be lowercase and use hyphen as the separator, e.g. _x-request-id_.
+       // @ts-ignore
+       readonly headers: Record<string, StringMatch>;
+       // @ts-ignore
+       readonly uri: StringMatch;
+       // @ts-ignore
+       readonly scheme: StringMatch;
+       // @ts-ignore
+       readonly authority: StringMatch;
+      // $hide_from_docs
+       // @ts-ignore
+       readonly sourceLabels: Record<string, string>;
+      // Query parameters for matching.
+       // @ts-ignore
+       readonly queryParams: Record<string, StringMatch>;
+      // Flag to specify whether the URI matching should be case-insensitive.
+       // @ts-ignore
+       readonly ignoreUriCase: boolean;
+    }
+    // @ts-ignore
+    export interface HTTPRouteDestination {
+      // REQUIRED. The proportion of traffic to be forwarded to the service version. (0-100). Sum of weights across destinations SHOULD BE == 100. If there is only one destination in a rule, the weight value is assumed to be 100.
+       // @ts-ignore
+       readonly weight: number;
+      // Use of `remove_response_header` is deprecated. Use the `headers` field instead.
+       // @ts-ignore
+       readonly removeResponseHeaders: string[];
+      // Use of `append_response_headers` is deprecated. Use the `headers` field instead.
+       // @ts-ignore
+       readonly appendResponseHeaders: Record<string, string>;
+      // Use of `remove_request_headers` is deprecated. Use the `headers` field instead.
+       // @ts-ignore
+       readonly removeRequestHeaders: string[];
+      // Use of `append_request_headers` is deprecated. Use the `headers` field instead.
+       // @ts-ignore
+       readonly appendRequestHeaders: Record<string, string>;
+       // @ts-ignore
+       readonly headers: Headers;
+       // @ts-ignore
+       readonly destination: Destination;
+    }
+    // @ts-ignore
+    export interface HTTPRedirect {
+      // On a redirect, overwrite the Path portion of the URL with this value. Note that the entire path will be replaced, irrespective of the request URI being matched as an exact path or prefix.
+       // @ts-ignore
+       readonly uri: string;
+      // On a redirect, overwrite the Authority/Host portion of the URL with this value.
+       // @ts-ignore
+       readonly authority: string;
+      // On a redirect, Specifies the HTTP status code to use in the redirect response. The default response code is MOVED_PERMANENTLY (301).
+       // @ts-ignore
+       readonly redirectCode: number;
+    }
+    // @ts-ignore
+    export interface HTTPRewrite {
+      // rewrite the path (or the prefix) portion of the URI with this value. If the original URI was matched based on prefix, the value provided in this field will replace the corresponding matched prefix.
+       // @ts-ignore
+       readonly uri: string;
+      // rewrite the Authority/Host header with this value.
+       // @ts-ignore
+       readonly authority: string;
+    }
+    // @ts-ignore
+    export interface HTTPRetry {
+      // REQUIRED. Number of retries for a given request. The interval between retries will be determined automatically (25ms+). Actual number of retries attempted depends on the httpReqTimeout.
+       // @ts-ignore
+       readonly attempts: number;
+       // @ts-ignore
+       readonly perTryTimeout: Duration;
+      // Specifies the conditions under which retry takes place. One or more policies can be specified using a ‘,’ delimited list. See the [supported policies](https://www.envoyproxy.io/docs/envoy/latest/configuration/http_filters/router_filter#x-envoy-retry-on) and [here](https://www.envoyproxy.io/docs/envoy/latest/configuration/http_filters/router_filter#x-envoy-retry-grpc-on) for more details.
+       // @ts-ignore
+       readonly retryOn: string;
+    }
+    // @ts-ignore
+    export interface HTTPFaultInjection {
+       // @ts-ignore
+       readonly delay: Delay;
+       // @ts-ignore
+       readonly abort: Abort;
+    }
+    // @ts-ignore
+    export interface CorsPolicy {
+      // The list of origins that are allowed to perform CORS requests. The content will be serialized into the Access-Control-Allow-Origin header. Wildcard * will allow all origins.
+       // @ts-ignore
+       readonly allowOrigin: string[];
+      // List of HTTP methods allowed to access the resource. The content will be serialized into the Access-Control-Allow-Methods header.
+       // @ts-ignore
+       readonly allowMethods: string[];
+      // List of HTTP headers that can be used when requesting the resource. Serialized to Access-Control-Allow-Headers header.
+       // @ts-ignore
+       readonly allowHeaders: string[];
+      // A white list of HTTP headers that the browsers are allowed to access. Serialized into Access-Control-Expose-Headers header.
+       // @ts-ignore
+       readonly exposeHeaders: string[];
+       // @ts-ignore
+       readonly maxAge: Duration;
+       // @ts-ignore
+       readonly allowCredentials: BoolValue;
+    }
+    // @ts-ignore
+    export interface Headers {
+       // @ts-ignore
+       readonly response: HeaderOperations;
+       // @ts-ignore
+       readonly request: HeaderOperations;
+    }
+    // @ts-ignore
+    export interface HeaderOperations {
+      // Overwrite the headers specified by key with the given values
+       // @ts-ignore
+       readonly set: Record<string, string>;
+      // Append the given values to the headers specified by keys (will create a comma-separated list of values)
+       // @ts-ignore
+       readonly add: Record<string, string>;
+      // Remove a the specified headers
+       // @ts-ignore
+       readonly remove: string[];
+    }
+    // @ts-ignore
+    export interface TLSMatchAttributes {
+      // Specifies the port on the host that is being addressed. Many services only expose a single port or label ports with the protocols they support, in these cases it is not required to explicitly select the port.
+       // @ts-ignore
+       readonly port: number;
+      // Names of gateways where the rule should be applied to. Gateway names at the top of the VirtualService (if any) are overridden. The gateway match is independent of sourceLabels.
+       // @ts-ignore
+       readonly gateways: string[];
+      // One or more labels that constrain the applicability of a rule to workloads with the given labels. If the VirtualService has a list of gateways specified at the top, it should include the reserved gateway `mesh` in order for this field to be applicable.
+       // @ts-ignore
+       readonly sourceLabels: Record<string, string>;
+      // IPv4 or IPv6 ip addresses of destination with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d.
+       // @ts-ignore
+       readonly destinationSubnets: string[];
+      // IPv4 or IPv6 ip address of source with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d $hide_from_docs
+       // @ts-ignore
+       readonly sourceSubnet: string;
+      // REQUIRED. SNI (server name indicator) to match on. Wildcard prefixes can be used in the SNI value, e.g., *.com will match foo.example.com as well as example.com. An SNI value must be a subset (i.e., fall within the domain) of the corresponding virtual serivce's hosts.
+       // @ts-ignore
+       readonly sniHosts: string[];
+    }
+    // @ts-ignore
+    export interface RouteDestination {
+      // REQUIRED. The proportion of traffic to be forwarded to the service version. If there is only one destination in a rule, all traffic will be routed to it irrespective of the weight.
+       // @ts-ignore
+       readonly weight: number;
+       // @ts-ignore
+       readonly destination: Destination;
+    }
+    // @ts-ignore
+    export interface L4MatchAttributes {
+      // Specifies the port on the host that is being addressed. Many services only expose a single port or label ports with the protocols they support, in these cases it is not required to explicitly select the port.
+       // @ts-ignore
+       readonly port: number;
+      // Names of gateways where the rule should be applied to. Gateway names at the top of the VirtualService (if any) are overridden. The gateway match is independent of sourceLabels.
+       // @ts-ignore
+       readonly gateways: string[];
+      // One or more labels that constrain the applicability of a rule to workloads with the given labels. If the VirtualService has a list of gateways specified at the top, it should include the reserved gateway `mesh` in order for this field to be applicable.
+       // @ts-ignore
+       readonly sourceLabels: Record<string, string>;
+      // IPv4 or IPv6 ip addresses of destination with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d.
+       // @ts-ignore
+       readonly destinationSubnets: string[];
+      // IPv4 or IPv6 ip address of source with optional subnet. E.g., a.b.c.d/xx form or just a.b.c.d $hide_from_docs
+       // @ts-ignore
+       readonly sourceSubnet: string;
+    }
+    // @ts-ignore
+    export type StringMatch = { exact: string } | { prefix: string } | { regex: string };
+    // @ts-ignore
+    export type Delay = { percent: number } | { percentage: Percent } | { fixedDelay: Duration } | { percent: number } | { percentage: Percent } | { exponentialDelay: Duration };
+    // @ts-ignore
+    export type Abort = { percent: number } | { percentage: Percent } | { httpStatus: number } | { percent: number } | { percentage: Percent } | { grpcStatus: string } | { percent: number } | { percentage: Percent } | { http2Error: string };
+    // @ts-ignore
+    export interface Percent {
+       // @ts-ignore
+       readonly value: number;
+    }
+    // @ts-ignore
+    export interface BoolValue {
+      // The bool value.
+       // @ts-ignore
+       readonly value: boolean;
+    }
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+  }
+}
+export namespace policy {
+  export namespace v1beta1 {
+    // @ts-ignore
+    export interface Duration {
+       // @ts-ignore
+       readonly value: Duration;
+    }
+    // @ts-ignore
+    export type Value = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { ipAddressValue: IPAddress } | { timestampValue: TimeStamp } | { durationValue: Duration } | { emailAddressValue: EmailAddress } | { dnsNameValue: DNSName } | { uriValue: Uri } | { stringMapValue: StringMap };
+    // @ts-ignore
+    export interface AttributeManifest {
+      // Required. Name of the component producing these attributes. This can be the proxy (with the canonical name `istio-proxy`) or the name of an `attributes` kind adapter in Mixer.
+       // @ts-ignore
+       readonly name: string;
+      // Optional. The revision of this document. Assigned by server.
+       // @ts-ignore
+       readonly revision: string;
+      // The set of attributes this Istio component will be responsible for producing at runtime. We map from attribute name to the attribute's specification. The name of an attribute, which is how attributes are referred to in aspect configuration, must conform to: Name = IDENT { SEPARATOR IDENT };
+       // @ts-ignore
+       readonly attributes: Record<string, AttributeInfo>;
+    }
+    // @ts-ignore
+    export interface AttributeInfo {
+      // Optional. A human-readable description of the attribute's purpose.
+       // @ts-ignore
+       readonly description: string;
+       // @ts-ignore
+       readonly valueType: ValueType;
+    }
+    // @ts-ignore
+    export type ValueType = 'VALUE_TYPE_UNSPECIFIED' | 'STRING' | 'INT64' | 'DOUBLE' | 'BOOL' | 'TIMESTAMP' | 'IP_ADDRESS' | 'EMAIL_ADDRESS' | 'URI' | 'DNS_NAME' | 'DURATION' | 'STRING_MAP';
+    // @ts-ignore
+    export interface Rule {
+      // Required. Match is an attribute based predicate. When Mixer receives a request it evaluates the match expression and executes all the associated `actions` if the match evaluates to true.
+       // @ts-ignore
+       readonly match: string;
+      // Optional. The actions that will be executed when match evaluates to `true`.
+       // @ts-ignore
+       readonly actions: Action[];
+      // Optional. Templatized operations on the request headers using values produced by the rule actions. Require the check action result to be OK.
+       // @ts-ignore
+       readonly requestHeaderOperations: HeaderOperationTemplate[];
+      // Optional. Templatized operations on the response headers using values produced by the rule actions. Require the check action result to be OK.
+       // @ts-ignore
+       readonly responseHeaderOperations: HeaderOperationTemplate[];
+       // @ts-ignore
+       readonly sampling: Sampling;
+    }
+    // @ts-ignore
+    export interface Action {
+      // Optional. A handle to refer to the results of the action.
+       // @ts-ignore
+       readonly name: string;
+      // Required. Fully qualified name of the handler to invoke. Must match the `name` of a [Handler][istio.policy.v1beta1.Handler.name].
+       // @ts-ignore
+       readonly handler: string;
+      // Required. Each value must match the fully qualified name of the [Instance][istio.policy.v1beta1.Instance.name]s. Referenced instances are evaluated by resolving the attributes/literals for all the fields. The constructed objects are then passed to the `handler` referenced within this action.
+       // @ts-ignore
+       readonly instances: string[];
+    }
+    // @ts-ignore
+    export interface HeaderOperationTemplate {
+      // Required. Header name literal value.
+       // @ts-ignore
+       readonly name: string;
+      // Optional. Header value expressions.
+       // @ts-ignore
+       readonly values: string[];
+       // @ts-ignore
+       readonly operation: Operation;
+    }
+    // @ts-ignore
+    export interface Sampling {
+       // @ts-ignore
+       readonly random: RandomSampling;
+       // @ts-ignore
+       readonly rateLimit: RateLimitSampling;
+    }
+    // @ts-ignore
+    export type Operation = 'REPLACE' | 'REMOVE' | 'APPEND';
+    // @ts-ignore
+    export interface Instance {
+      // Required. The name of this instance
+       // @ts-ignore
+       readonly name: string;
+      // Required. The name of the compiled in template this instance creates instances for. For referencing non compiled-in templates, use the `template` field instead.
+       // @ts-ignore
+       readonly compiledTemplate: string;
+      // Required. The name of the template this instance creates instances for. For referencing compiled-in templates, use the `compiled_template` field instead.
+       // @ts-ignore
+       readonly template: string;
+       // @ts-ignore
+       readonly params: Struct;
+      // Optional. Defines attribute bindings to map the output of attribute-producing adapters back into the attribute space. The variable `output` refers to the output template instance produced by the adapter. The following example derives `source.namespace` from `source.uid` in the context of Kubernetes: ```yaml params: # Pass the required attribute data to the adapter source_uid: source.uid | "" attribute_bindings: # Fill the new attributes from the adapter produced output source.namespace: output.source_namespace ```
+       // @ts-ignore
+       readonly attributeBindings: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface Handler {
+      // Required. Must be unique in the entire Mixer configuration. Used by [Actions][istio.policy.v1beta1.Action.handler] to refer to this handler.
+       // @ts-ignore
+       readonly name: string;
+       // @ts-ignore
+       readonly params: Struct;
+      // Required. The name of the compiled in adapter this handler instantiates. For referencing non compiled-in adapters, use the `adapter` field instead.
+       // @ts-ignore
+       readonly compiledAdapter: string;
+      // Required. The name of a specific adapter implementation. For referencing compiled-in adapters, use the `compiled_adapter` field instead.
+       // @ts-ignore
+       readonly adapter: string;
+       // @ts-ignore
+       readonly connection: Connection;
+    }
+    // @ts-ignore
+    export interface Connection {
+      // The address of the backend.
+       // @ts-ignore
+       readonly address: string;
+       // @ts-ignore
+       readonly authentication: Authentication;
+    }
+    // @ts-ignore
+    export type Authentication = { tls: Tls } | { mutual: Mutual };
+    // @ts-ignore
+    export interface RandomSampling {
+      // Specifies an attribute expression to use to override the numerator in the `percent_sampled` field. If this value is set, but no value is found OR if that value is not a numeric value, then the derived sampling rate will be 0 (meaning no `Action`s are executed for a `Rule`).
+       // @ts-ignore
+       readonly attributeExpression: string;
+       // @ts-ignore
+       readonly percentSampled: FractionalPercent;
+      // By default sampling will be based on the value of the request header `x-request-id`. This behavior will cause consistent sampling across `Rule`s and for the full trace of a request through a mesh (across hosts). If that value is not present and/or `use_independent_randomness` is set to true, the sampling will be done based on the value of attribute specified in `attribute_epxression`. If that attribute does not exist, the system will behave as if the sampling rate was 0 (meaning no `Action`s are executed for a `Rule`).
+       // @ts-ignore
+       readonly useIndependentRandomness: boolean;
+    }
+    // @ts-ignore
+    export interface RateLimitSampling {
+      // Number of entries to allow during the `sampling_duration` before sampling is enforced.
+       // @ts-ignore
+       readonly maxUnsampledEntries: number;
+      // The rate at which to sample entries once the unsampled limit has been reached. Sampling will be enforced as 1 per every `sampling_rate` entries allowed.
+       // @ts-ignore
+       readonly samplingRate: number;
+    }
+    // @ts-ignore
+    export interface FractionalPercent {
+      // Specifies the numerator. Defaults to 0.
+       // @ts-ignore
+       readonly numerator: number;
+       // @ts-ignore
+       readonly denominator: DenominatorType;
+    }
+    // @ts-ignore
+    export type DenominatorType = 'HUNDRED' | 'TEN_THOUSAND';
+    // @ts-ignore
+    export type Tls = { caCertificates: string } | { serverName: string } | { tokenPath: string } | { authHeader: AuthHeader } | { caCertificates: string } | { serverName: string } | { tokenPath: string } | { customHeader: string } | { caCertificates: string } | { serverName: string } | { oauth: OAuth } | { authHeader: AuthHeader } | { caCertificates: string } | { serverName: string } | { oauth: OAuth } | { customHeader: string };
+    // @ts-ignore
+    export interface Mutual {
+      // The path to the file holding additional CA certificates that are needed to verify the presented adapter certificates. By default Mixer should already include Istio CA certificates and system certificates in cert pool.
+       // @ts-ignore
+       readonly caCertificates: string;
+      // Used to configure mixer mutual TLS client to supply server name for SNI. It is not used to verify the hostname of the peer certificate, since Istio verifies whitelisted SAN fields in mutual TLS.
+       // @ts-ignore
+       readonly serverName: string;
+      // The path to the file holding the private key for mutual TLS. If omitted, the default Mixer private key will be used.
+       // @ts-ignore
+       readonly privateKey: string;
+      // The path to the file holding client certificate for mutual TLS. If omitted, the default Mixer certificates will be used.
+       // @ts-ignore
+       readonly clientCertificate: string;
+    }
+    // @ts-ignore
+    export interface OAuth {
+      // REQUIRED. OAuth client id for mixer.
+       // @ts-ignore
+       readonly clientId: string;
+      // REQUIRED. The path to the file holding the client secret for oauth.
+       // @ts-ignore
+       readonly clientSecret: string;
+      // REQUIRED. The Resource server's token endpoint URL.
+       // @ts-ignore
+       readonly tokenUrl: string;
+      // List of requested permissions.
+       // @ts-ignore
+       readonly scopes: string[];
+      // Additional parameters for requests to the token endpoint.
+       // @ts-ignore
+       readonly endpointParams: Record<string, string>;
+    }
+    // @ts-ignore
+    export type AuthHeader = 'PLAIN' | 'BEARER';
+    // @ts-ignore
+    export interface DirectHttpResponse {
+      // HTTP response body.
+       // @ts-ignore
+       readonly body: string;
+       // @ts-ignore
+       readonly code: HttpStatusCode;
+      // Optional HTTP response headers.
+       // @ts-ignore
+       readonly headers: Record<string, string>;
+    }
+    // @ts-ignore
+    export type HttpStatusCode = 'Empty' | 'Continue' | 'OK' | 'Created' | 'Accepted' | 'NonAuthoritativeInformation' | 'NoContent' | 'ResetContent' | 'PartialContent' | 'MultiStatus' | 'AlreadyReported' | 'IMUsed' | 'MultipleChoices' | 'MovedPermanently' | 'Found' | 'SeeOther' | 'NotModified' | 'UseProxy' | 'TemporaryRedirect' | 'PermanentRedirect' | 'BadRequest' | 'Unauthorized' | 'PaymentRequired' | 'Forbidden' | 'NotFound' | 'MethodNotAllowed' | 'NotAcceptable' | 'ProxyAuthenticationRequired' | 'RequestTimeout' | 'Conflict' | 'Gone' | 'LengthRequired' | 'PreconditionFailed' | 'PayloadTooLarge' | 'URITooLong' | 'UnsupportedMediaType' | 'RangeNotSatisfiable' | 'ExpectationFailed' | 'MisdirectedRequest' | 'UnprocessableEntity' | 'Locked' | 'FailedDependency' | 'UpgradeRequired' | 'PreconditionRequired' | 'TooManyRequests' | 'RequestHeaderFieldsTooLarge' | 'InternalServerError' | 'NotImplemented' | 'BadGateway' | 'ServiceUnavailable' | 'GatewayTimeout' | 'HTTPVersionNotSupported' | 'VariantAlsoNegotiates' | 'InsufficientStorage' | 'LoopDetected' | 'NotExtended' | 'NetworkAuthenticationRequired';
+    // @ts-ignore
+    export interface IPAddress {
+      // IPAddress encoded as bytes.
+       // @ts-ignore
+       readonly value: string;
+    }
+    // @ts-ignore
+    export interface TimeStamp {
+       // @ts-ignore
+       readonly value: Timestamp;
+    }
+    // @ts-ignore
+    export interface EmailAddress {
+      // EmailAddress encoded as string.
+       // @ts-ignore
+       readonly value: string;
+    }
+    // @ts-ignore
+    export interface DNSName {
+      // DNSName encoded as string.
+       // @ts-ignore
+       readonly value: string;
+    }
+    // @ts-ignore
+    export interface Uri {
+      // Uri encoded as string.
+       // @ts-ignore
+       readonly value: string;
+    }
+    // @ts-ignore
+    export interface StringMap {
+      // StringMap encoded as a map of strings
+       // @ts-ignore
+       readonly value: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface Duration {
+      // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+      // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Struct {
+      // Unordered map of dynamically typed values.
+       // @ts-ignore
+       readonly fields: Record<string, Value>;
+    }
+    // @ts-ignore
+    export interface Timestamp {
+      // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+       // @ts-ignore
+       readonly seconds: number;
+      // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export type Value = { nullValue: NullValue } | { numberValue: number } | { stringValue: string } | { boolValue: boolean } | { structValue: Struct } | { listValue: ListValue };
+    // @ts-ignore
+    export interface ListValue {
+      // Repeated field of dynamically typed values.
+       // @ts-ignore
+       readonly values: Value[];
+    }
+    // @ts-ignore
+    export type NullValue = 'NULL_VALUE';
+  }
 }
 export namespace rbac {
-    export namespace v1alpha1 {
-        export interface WorkloadSelector {
-            // One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
-            readonly labels: Record<string, string>;
-        }
-
-        export interface AuthorizationPolicy {
-            readonly workloadSelector: WorkloadSelector;
-            // A list of bindings that specify the subjects and permissions to the selected workload instance.
-            readonly allow: ServiceRoleBinding[];
-        }
-
-        export interface ServiceRoleBindingSpec {
-            // Required. List of subjects that are assigned the ServiceRole object.
-            readonly subjects: Subject[];
-            readonly roleRef: RoleRef;
-            readonly mode: EnforcementMode;
-            // Inline role definition. An inline role is a role that is defined inside an authorization policy, instead of explicitly defined in a ServiceRole object. Inline roles can be used for the role definitions that are not intended to be reused in other bindings, while explicit roles are reusable. Both inline roles (defined in "actions" field) and explicit roles (defined in ServiceRole) are supported. Users should use only one of them in a single binding. For example, the following “product-frontend” AuthorizationPolicy allows “frontend” service to view “product” service on “/info” path. ```yaml apiVersion: "rbac.istio.io/v1alpha1" kind: AuthorizationPolicy metadata: name: product-frontend namespace: ns1 spec: selector: labels: app: product allow: - subjects: - names: ["cluster.local/ns/default/sa/frontend"] actions: - paths: ["/info"] methods: ["GET"] Required. The set of access rules (permissions) that the role has.
-            readonly actions: AccessRule[];
-            // A `role` inside a ServiceRoleBinding refers to the ServiceRole that this ServiceRoleBinding binds to. A ServiceRoleBinding can bind to a ServiceRole in the same namespace or the root namespace. A ServiceRole in the root namespace represents a mesh global ServiceRole. The value of `role` is the name of the ServiceRole, and it can start with or without a forward slash ("/"). When a `role` starts with "/", e.g. "/service-viewer", it means that this ServiceRoleBinding refers to the ServiceRole in the configurable Istio root namespace. When a `role` starts without "/", this ServiceRoleBinding refers to the ServiceRole in the same namespace as the AuthorizationPolicy's, which contains said ServiceRoleBinding.
-            readonly role: string;
-        }
-
-        export interface ServiceRoleSpec {
-            // Required. The set of access rules (permissions) that the role has.
-            readonly rules: AccessRule[];
-        }
-
-        export interface AccessRule {
-            // Required. A list of service names. Exact match, prefix match, and suffix match are supported for service names. For example, the service name "bookstore.mtv.cluster.local" matches "bookstore.mtv.cluster.local" (exact match), or "bookstore*" (prefix match), or "*.mtv.cluster.local" (suffix match). If set to ["*"], it refers to all services in the namespace.
-            readonly services: string[];
-            // Optional. A list of HTTP hosts. This is matched against the HOST header in a HTTP request. Exact match, prefix match and suffix match are supported. For example, the host "test.abc.com" matches "test.abc.com" (exact match), or "*.abc.com" (prefix match), or "test.abc.*" (suffix match). If not specified, it matches to any host. This field should not be set for TCP services. The policy will be ignored.
-            readonly hosts: string[];
-            // Optional. A list of HTTP hosts that must not be matched.
-            readonly notHosts: string[];
-            // Optional. A list of HTTP paths or gRPC methods. gRPC methods must be presented as fully-qualified name in the form of "/packageName.serviceName/methodName" and are case sensitive. Exact match, prefix match, and suffix match are supported. For example, the path "/books/review" matches "/books/review" (exact match), or "/books/*" (prefix match), or "*/review" (suffix match). If not specified, it matches to any path. This field should not be set for TCP services. The policy will be ignored.
-            readonly paths: string[];
-            // Optional. A list of HTTP paths or gRPC methods that must not be matched.
-            readonly notPaths: string[];
-            // Optional. A list of HTTP methods (e.g., "GET", "POST"). If not specified or specified as "*", it matches to any methods. This field should not be set for TCP services. The policy will be ignored. For gRPC services, only `POST` is allowed; other methods will result in denying services.
-            readonly methods: string[];
-            // Optional. A list of HTTP methods that must not be matched. Note: It's an error to set methods and not_methods at the same time.
-            readonly notMethods: string[];
-            // Optional. A list of port numbers of the request. If not specified, it matches to any port number. Note: It's an error to set ports and not_ports at the same time.
-            readonly ports: number[];
-            // Optional. A list of port numbers that must not be matched. Note: It's an error to set ports and not_ports at the same time.
-            readonly notPorts: number[];
-            // Optional. Extra constraints in the ServiceRole specification.
-            readonly constraints: Constraint[];
-        }
-
-        export interface Constraint {
-            // Key of the constraint.
-            readonly key: string;
-            // List of valid values for the constraint. Exact match, prefix match, and suffix match are supported. For example, the value "v1alpha2" matches "v1alpha2" (exact match), or "v1*" (prefix match), or "*alpha2" (suffix match).
-            readonly values: string[];
-        }
-
-        export type EnforcementMode = 'ENFORCED' | 'PERMISSIVE';
-
-        export interface Subject {
-            // Optional. The user name/ID that the subject represents.
-            readonly user: string;
-            // Optional. A list of subject names. This is matched to the `source.principal` attribute. If one of subject names is "*", it matches to a subject with any name. Prefix and suffix matches are supported.
-            readonly names: string[];
-            // Optional. A list of subject names that must not be matched.
-            readonly notNames: string[];
-            // Optional. The group that the subject belongs to. Deprecated. Use groups and not_groups instead.
-            readonly group: string;
-            // Optional. A list of groups that the subject represents. This is matched to the `request.auth.claims[groups]` attribute. If not specified, it applies to any groups.
-            readonly groups: string[];
-            // Optional. A list of groups that must not be matched.
-            readonly notGroups: string[];
-            // Optional. A list of namespaces that the subject represents. This is matched to the `source.namespace` attribute. If not specified, it applies to any namespaces.
-            readonly namespaces: string[];
-            // Optional. A list of namespaces that must not be matched.
-            readonly notNamespaces: string[];
-            // Optional. A list of IP address or CIDR ranges that the subject represents. E.g. 192.168.100.2 or 10.1.0.0/16. If not specified, it applies to any IP addresses.
-            readonly ips: string[];
-            // Optional. A list of IP addresses or CIDR ranges that must not be matched.
-            readonly notIps: string[];
-            // Optional. The set of properties that identify the subject.
-            readonly properties: Record<string, string>;
-        }
-
-        export interface RoleRef {
-            // Required. The name of the ServiceRole object being referenced. The ServiceRole object must be in the same namespace as the ServiceRoleBinding object.
-            readonly name: string;
-            // Required. The type of the role being referenced. Currently, "ServiceRole" is the only supported value for "kind".
-            readonly kind: string;
-        }
-
-        export interface RbacConfig {
-            readonly mode: Mode;
-            readonly inclusion: Target;
-            readonly exclusion: Target;
-            readonly enforcementMode: EnforcementMode;
-        }
-
-        export type Mode = 'OFF' | 'ON' | 'ON_WITH_INCLUSION' | 'ON_WITH_EXCLUSION';
-
-        export interface Target {
-            // A list of services.
-            readonly services: string[];
-            // A list of namespaces.
-            readonly namespaces: string[];
-            // A list of workload instances.
-            readonly workloadSelectors: WorkloadSelector[];
-        }
-
+  export namespace v1alpha1 {
+    // @ts-ignore
+    export interface WorkloadSelector {
+      // One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
     }
-
+    // @ts-ignore
+    export interface AuthorizationPolicy {
+       // @ts-ignore
+       readonly workloadSelector: WorkloadSelector;
+      // A list of bindings that specify the subjects and permissions to the selected workload instance.
+       // @ts-ignore
+       readonly allow: ServiceRoleBinding[];
+    }
+    // @ts-ignore
+    export interface ServiceRoleBinding {
+      // Required. List of subjects that are assigned the ServiceRole object.
+       // @ts-ignore
+       readonly subjects: Subject[];
+       // @ts-ignore
+       readonly roleRef: RoleRef;
+       // @ts-ignore
+       readonly mode: EnforcementMode;
+      // Inline role definition. An inline role is a role that is defined inside an authorization policy, instead of explicitly defined in a ServiceRole object. Inline roles can be used for the role definitions that are not intended to be reused in other bindings, while explicit roles are reusable. Both inline roles (defined in "actions" field) and explicit roles (defined in ServiceRole) are supported. Users should use only one of them in a single binding. For example, the following “product-frontend” AuthorizationPolicy allows “frontend” service to view “product” service on “/info” path. ```yaml apiVersion: "rbac.istio.io/v1alpha1" kind: AuthorizationPolicy metadata: name: product-frontend namespace: ns1 spec: selector: labels: app: product allow: - subjects: - names: ["cluster.local/ns/default/sa/frontend"] actions: - paths: ["/info"] methods: ["GET"] Required. The set of access rules (permissions) that the role has.
+       // @ts-ignore
+       readonly actions: AccessRule[];
+      // A `role` inside a ServiceRoleBinding refers to the ServiceRole that this ServiceRoleBinding binds to. A ServiceRoleBinding can bind to a ServiceRole in the same namespace or the root namespace. A ServiceRole in the root namespace represents a mesh global ServiceRole. The value of `role` is the name of the ServiceRole, and it can start with or without a forward slash ("/"). When a `role` starts with "/", e.g. "/service-viewer", it means that this ServiceRoleBinding refers to the ServiceRole in the configurable Istio root namespace. When a `role` starts without "/", this ServiceRoleBinding refers to the ServiceRole in the same namespace as the AuthorizationPolicy's, which contains said ServiceRoleBinding.
+       // @ts-ignore
+       readonly role: string;
+    }
+    // @ts-ignore
+    export interface ServiceRole {
+      // Required. The set of access rules (permissions) that the role has.
+       // @ts-ignore
+       readonly rules: AccessRule[];
+    }
+    // @ts-ignore
+    export interface AccessRule {
+      // Required. A list of service names. Exact match, prefix match, and suffix match are supported for service names. For example, the service name "bookstore.mtv.cluster.local" matches "bookstore.mtv.cluster.local" (exact match), or "bookstore*" (prefix match), or "*.mtv.cluster.local" (suffix match). If set to ["*"], it refers to all services in the namespace.
+       // @ts-ignore
+       readonly services: string[];
+      // Optional. A list of HTTP hosts. This is matched against the HOST header in a HTTP request. Exact match, prefix match and suffix match are supported. For example, the host "test.abc.com" matches "test.abc.com" (exact match), or "*.abc.com" (prefix match), or "test.abc.*" (suffix match). If not specified, it matches to any host. This field should not be set for TCP services. The policy will be ignored.
+       // @ts-ignore
+       readonly hosts: string[];
+      // Optional. A list of HTTP hosts that must not be matched.
+       // @ts-ignore
+       readonly notHosts: string[];
+      // Optional. A list of HTTP paths or gRPC methods. gRPC methods must be presented as fully-qualified name in the form of "/packageName.serviceName/methodName" and are case sensitive. Exact match, prefix match, and suffix match are supported. For example, the path "/books/review" matches "/books/review" (exact match), or "/books/*" (prefix match), or "*/review" (suffix match). If not specified, it matches to any path. This field should not be set for TCP services. The policy will be ignored.
+       // @ts-ignore
+       readonly paths: string[];
+      // Optional. A list of HTTP paths or gRPC methods that must not be matched.
+       // @ts-ignore
+       readonly notPaths: string[];
+      // Optional. A list of HTTP methods (e.g., "GET", "POST"). If not specified or specified as "*", it matches to any methods. This field should not be set for TCP services. The policy will be ignored. For gRPC services, only `POST` is allowed; other methods will result in denying services.
+       // @ts-ignore
+       readonly methods: string[];
+      // Optional. A list of HTTP methods that must not be matched. Note: It's an error to set methods and not_methods at the same time.
+       // @ts-ignore
+       readonly notMethods: string[];
+      // Optional. A list of port numbers of the request. If not specified, it matches to any port number. Note: It's an error to set ports and not_ports at the same time.
+       // @ts-ignore
+       readonly ports: number[];
+      // Optional. A list of port numbers that must not be matched. Note: It's an error to set ports and not_ports at the same time.
+       // @ts-ignore
+       readonly notPorts: number[];
+      // Optional. Extra constraints in the ServiceRole specification.
+       // @ts-ignore
+       readonly constraints: Constraint[];
+    }
+    // @ts-ignore
+    export interface Constraint {
+      // Key of the constraint.
+       // @ts-ignore
+       readonly key: string;
+      // List of valid values for the constraint. Exact match, prefix match, and suffix match are supported. For example, the value "v1alpha2" matches "v1alpha2" (exact match), or "v1*" (prefix match), or "*alpha2" (suffix match).
+       // @ts-ignore
+       readonly values: string[];
+    }
+    // @ts-ignore
+    export type EnforcementMode = 'ENFORCED' | 'PERMISSIVE';
+    // @ts-ignore
+    export interface Subject {
+      // Optional. The user name/ID that the subject represents.
+       // @ts-ignore
+       readonly user: string;
+      // Optional. A list of subject names. This is matched to the `source.principal` attribute. If one of subject names is "*", it matches to a subject with any name. Prefix and suffix matches are supported.
+       // @ts-ignore
+       readonly names: string[];
+      // Optional. A list of subject names that must not be matched.
+       // @ts-ignore
+       readonly notNames: string[];
+      // Optional. The group that the subject belongs to. Deprecated. Use groups and not_groups instead.
+       // @ts-ignore
+       readonly group: string;
+      // Optional. A list of groups that the subject represents. This is matched to the `request.auth.claims[groups]` attribute. If not specified, it applies to any groups.
+       // @ts-ignore
+       readonly groups: string[];
+      // Optional. A list of groups that must not be matched.
+       // @ts-ignore
+       readonly notGroups: string[];
+      // Optional. A list of namespaces that the subject represents. This is matched to the `source.namespace` attribute. If not specified, it applies to any namespaces.
+       // @ts-ignore
+       readonly namespaces: string[];
+      // Optional. A list of namespaces that must not be matched.
+       // @ts-ignore
+       readonly notNamespaces: string[];
+      // Optional. A list of IP address or CIDR ranges that the subject represents. E.g. 192.168.100.2 or 10.1.0.0/16. If not specified, it applies to any IP addresses.
+       // @ts-ignore
+       readonly ips: string[];
+      // Optional. A list of IP addresses or CIDR ranges that must not be matched.
+       // @ts-ignore
+       readonly notIps: string[];
+      // Optional. The set of properties that identify the subject.
+       // @ts-ignore
+       readonly properties: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface RoleRef {
+      // Required. The name of the ServiceRole object being referenced. The ServiceRole object must be in the same namespace as the ServiceRoleBinding object.
+       // @ts-ignore
+       readonly name: string;
+      // Required. The type of the role being referenced. Currently, "ServiceRole" is the only supported value for "kind".
+       // @ts-ignore
+       readonly kind: string;
+    }
+    // @ts-ignore
+    export interface RbacConfig {
+       // @ts-ignore
+       readonly mode: Mode;
+       // @ts-ignore
+       readonly inclusion: Target;
+       // @ts-ignore
+       readonly exclusion: Target;
+       // @ts-ignore
+       readonly enforcementMode: EnforcementMode;
+    }
+    // @ts-ignore
+    export type Mode = 'OFF' | 'ON' | 'ON_WITH_INCLUSION' | 'ON_WITH_EXCLUSION';
+    // @ts-ignore
+    export interface Target {
+      // A list of services.
+       // @ts-ignore
+       readonly services: string[];
+      // A list of namespaces.
+       // @ts-ignore
+       readonly namespaces: string[];
+      // A list of workload instances.
+       // @ts-ignore
+       readonly workloadSelectors: WorkloadSelector[];
+    }
+  }
 }
 export namespace security {
-    export namespace v1beta1 {
-        export interface AuthorizationPolicy {
-            readonly selector: WorkloadSelector;
-            // Optional. A list of rules to specify the allowed access to the workload.
-            readonly rules: Rule[];
-        }
-
-        export interface RuleSpec {
-            // Optional. from specifies the source of a request.
-            readonly from: From[];
-            // Optional. to specifies the operation of a request.
-            readonly to: To[];
-            // Optional. when specifies a list of additional conditions of a request.
-            readonly when: Condition[];
-        }
-
-        export interface From {
-            readonly source: Source;
-        }
-
-        export interface To {
-            readonly operation: Operation;
-        }
-
-        export interface Condition {
-            // Required. The allowed values for the attribute.
-            readonly values: string[];
-            // Required. The name of an Istio attribute. Note: Check https://istio.io/docs/reference/config/ for the list of supported attribute name.
-            readonly key: string;
-        }
-
-        export interface Source {
-            // Optional. A list of source peer identities (i.e. service account), which matches to the "source.principal" attribute.
-            readonly principals: string[];
-            // Optional. A list of request identities (i.e. “iss/sub” claims), which matches to the “request.auth.principal” attribute.
-            readonly requestPrincipals: string[];
-            // Optional. A list of namespaces, which matches to the “source.namespace” attribute.
-            readonly namespaces: string[];
-            // Optional. A list of IP blocks, which matches to the “source.ip” attribute. Single IP (e.g. "1.2.3.4") and CIDR (e.g. "1.2.3.0/24") are supported.
-            readonly ipBlocks: string[];
-        }
-
-        export interface Operation {
-            // Optional. A list of hosts, which matches to the “request.host” attribute.
-            readonly hosts: string[];
-            // Optional. A list of ports, which matches to the “destination.port” attribute.
-            readonly ports: string[];
-            // Optional. A list of methods, which matches to the “request.method” attribute. For gRPC service, this should be the fully-qualified name in the form of "/package.service/method"
-            readonly methods: string[];
-            // Optional. A list of paths, which matches to the “request.url_path” attribute.
-            readonly paths: string[];
-        }
-
-        export interface WorkloadSelector {
-            // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
-            readonly labels: Record<string, string>;
-        }
-
+  export namespace v1beta1 {
+    // @ts-ignore
+    export interface AuthorizationPolicy {
+       // @ts-ignore
+       readonly selector: WorkloadSelector;
+      // Optional. A list of rules to specify the allowed access to the workload.
+       // @ts-ignore
+       readonly rules: Rule[];
     }
-
+    // @ts-ignore
+    export interface Rule {
+      // Optional. from specifies the source of a request.
+       // @ts-ignore
+       readonly from: From[];
+      // Optional. to specifies the operation of a request.
+       // @ts-ignore
+       readonly to: To[];
+      // Optional. when specifies a list of additional conditions of a request.
+       // @ts-ignore
+       readonly when: Condition[];
+    }
+    // @ts-ignore
+    export interface From {
+       // @ts-ignore
+       readonly source: Source;
+    }
+    // @ts-ignore
+    export interface To {
+       // @ts-ignore
+       readonly operation: Operation;
+    }
+    // @ts-ignore
+    export interface Condition {
+      // Required. The allowed values for the attribute.
+       // @ts-ignore
+       readonly values: string[];
+      // Required. The name of an Istio attribute. Note: Check https://istio.io/docs/reference/config/ for the list of supported attribute name.
+       // @ts-ignore
+       readonly key: string;
+    }
+    // @ts-ignore
+    export interface Source {
+      // Optional. A list of source peer identities (i.e. service account), which matches to the "source.principal" attribute.
+       // @ts-ignore
+       readonly principals: string[];
+      // Optional. A list of request identities (i.e. “iss/sub” claims), which matches to the “request.auth.principal” attribute.
+       // @ts-ignore
+       readonly requestPrincipals: string[];
+      // Optional. A list of namespaces, which matches to the “source.namespace” attribute.
+       // @ts-ignore
+       readonly namespaces: string[];
+      // Optional. A list of IP blocks, which matches to the “source.ip” attribute. Single IP (e.g. "1.2.3.4") and CIDR (e.g. "1.2.3.0/24") are supported.
+       // @ts-ignore
+       readonly ipBlocks: string[];
+    }
+    // @ts-ignore
+    export interface Operation {
+      // Optional. A list of hosts, which matches to the “request.host” attribute.
+       // @ts-ignore
+       readonly hosts: string[];
+      // Optional. A list of ports, which matches to the “destination.port” attribute.
+       // @ts-ignore
+       readonly ports: string[];
+      // Optional. A list of methods, which matches to the “request.method” attribute. For gRPC service, this should be the fully-qualified name in the form of "/package.service/method"
+       // @ts-ignore
+       readonly methods: string[];
+      // Optional. A list of paths, which matches to the “request.url_path” attribute.
+       // @ts-ignore
+       readonly paths: string[];
+    }
+    // @ts-ignore
+    export interface WorkloadSelector {
+      // REQUIRED: One or more labels that indicate a specific set of pods/VMs on which this sidecar configuration should be applied. The scope of label search is restricted to the configuration namespace in which the the resource is present.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+  }
 }

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getGroupVersions should combine all paths into a group -> versions with no duplicates 1`] = `
+Array [
+  Object {
+    "group": "authentication",
+    "versions": Array [
+      "v1alpha1",
+    ],
+  },
+  Object {
+    "group": "networking",
+    "versions": Array [
+      "v1alpha3",
+    ],
+  },
+  Object {
+    "group": "policy",
+    "versions": Array [
+      "v1beta1",
+    ],
+  },
+  Object {
+    "group": "rbac",
+    "versions": Array [
+      "v1alpha1",
+      "v1alpha2",
+    ],
+  },
+]
+`;

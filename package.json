@@ -7,7 +7,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-push": "yarn test",
+      "pre-commit": "yarn gen:sdk:nodejs && pretty-quick --staged"
     }
   },
   "devDependencies": {
