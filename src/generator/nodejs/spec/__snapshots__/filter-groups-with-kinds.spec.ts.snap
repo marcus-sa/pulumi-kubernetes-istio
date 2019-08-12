@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`filterGroupsWithKinds should filter groups -> versions -> schemas -> kind 1`] = `
+Array [
+  Object {
+    "group": "networking",
+    "versions": Array [
+      Object {
+        "schemas": Array [
+          Object {
+            "apiVersion": "networking.istio.io/v1alpha3",
+            "description": null,
+            "isKind": true,
+            "schema": "DestinationRule",
+          },
+        ],
+        "version": "v1alpha3",
+      },
+    ],
+  },
+  Object {
+    "group": "authentication",
+    "versions": Array [
+      Object {
+        "schemas": Array [
+          Object {
+            "apiVersion": "authentication.istio.io/v1alpha1",
+            "description": null,
+            "isKind": true,
+            "schema": "Policy",
+          },
+        ],
+        "version": "v1alpha1",
+      },
+    ],
+  },
+]
+`;

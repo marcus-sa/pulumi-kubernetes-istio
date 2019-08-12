@@ -1,8 +1,9 @@
-import { isReferenceObject, isSchemaObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
+import { isReferenceObject, isSchemaObject, SchemaObject } from 'openapi3-ts';
 
 import { getSchemaName } from '../../utils';
 
-export function createSchemaType(schema: SchemaObject): string {
+// @TODO: Create schemas based on input/output
+export function createSchemaType(schema: SchemaObject, isInput?: boolean): string {
   if (isReferenceObject(schema)) {
     return getSchemaName(schema.$ref);
   }
@@ -12,11 +13,11 @@ export function createSchemaType(schema: SchemaObject): string {
   }
 
   if (schema.oneOf) {
-    return schema.oneOf.map(nextSchema => createSchemaType(nextSchema)).join(' | ');
+    return schema.oneOf.map(nextSchema => createSchemaType(nextSchema, isInput)).join(' | ');
   }
 
   if (schema.allOf) {
-    return schema.allOf.map(nextSchema => createSchemaType(nextSchema)).join(' & ');
+    return schema.allOf.map(nextSchema => createSchemaType(nextSchema, isInput)).join(' & ');
   }
 
   switch (schema.type) {
@@ -24,47 +25,47 @@ export function createSchemaType(schema: SchemaObject): string {
       return 'number';
 
     case 'object': {
-      if (schema.additionalProperties) {
-        if (isSchemaObject(schema.additionalProperties as any)) {
-          switch ((schema.additionalProperties as SchemaObject).type) {
+      if (!!schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
+        if (isSchemaObject(schema.additionalProperties)) {
+          switch (schema.additionalProperties.type) {
             case 'number':
             case 'integer':
-              return 'Record<string, number>';
+              return isInput ? 'Record<Input<string>, Input<number>>' : 'Record<string, number>';
 
             case 'boolean':
-              return 'Record<string, boolean>';
+              return isInput ? 'Record<Input<string>, Input<boolean>>' : 'Record<string, boolean>';
 
             case 'string':
-              return 'Record<string, string>';
+              return isInput ? 'Record<Input<string>, Input<string>>' : 'Record<string, string>';
 
             default:
-              return 'Record<string, any>';
+              // return 'Record<Input<string>, Input<any>>';
+              return 'object';
           }
-        } else if (isReferenceObject(schema.additionalProperties as any)) {
-          const type = getSchemaName((schema.additionalProperties as ReferenceObject).$ref);
-          return `Record<string, ${type}>`;
+        } else if (isReferenceObject(schema.additionalProperties)) {
+          const type = getSchemaName(schema.additionalProperties.$ref);
+          return isInput ? `Record<Input<string>, Input<${type}>>` : `Record<string, ${type}>`;
         }
       } else if (schema.properties) {
-        return Object.keys(schema.properties).map(name => {
-          const type = createSchemaType(schema.properties[name]);
-          return `{ ${name}: ${type} }`;
-        }).join(' | ');
+        return Object.keys(schema.properties)
+          .map(name => {
+            const type = createSchemaType(schema.properties[name], isInput);
+            return isInput ? `{ ${name}: Input<${type}> }` : `{ ${name}: ${type} }`;
+          })
+          .join(' | ');
       }
 
-      // TODO:
-      console.error(schema);
-      break;
-      //process.exit(1);
+      return 'object';
     }
 
     case 'array':
       const type = isReferenceObject(schema.items)
         ? getSchemaName(schema.items.$ref)
         : schema.items.type === 'integer'
-          ? 'number'
-          : schema.items.type;
+        ? 'number'
+        : schema.items.type;
 
-      return `${type}[]`;
+      return isInput ? `Input<${type}>[]` : `${type}[]`;
 
     default:
       return schema.type;
