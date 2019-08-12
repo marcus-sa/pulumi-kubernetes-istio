@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "bookinfo",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@pulumi/kubernetes": "^0.25.6",
+    "@pulumi/pulumi": "^0.17.28",
+    "pulumi-k8s-istio": "file:../../sdk/nodejs",
+    "@pulumi/random": "^0.5.8",
+    "@pulumi/gcp": "^0.18.16"
+  },
+  "pulumi": {
+    "resource": true
+  }
+}

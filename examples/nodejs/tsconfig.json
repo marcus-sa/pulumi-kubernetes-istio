@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "pulumi-k8s-istio": ["../../sdk/nodejs/src"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["lib", "**/*.spec.ts", "node_modules"]
+}

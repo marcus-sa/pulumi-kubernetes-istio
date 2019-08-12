@@ -1,66 +1,55 @@
-import { readFile, outputFile } from 'fs-extra';
-import { join } from 'path';
 import * as mustache from 'mustache';
 import * as execa from 'execa';
 import paramCase = require('param-case');
 
-import { Generator, Options } from '../../interfaces';
+import { AbstractGenerator } from '../../abstract-generator';
+import { TemplateHandler } from '../../template-handler';
+import { createApiVersion } from '../../utils';
+import { Options } from '../../interfaces';
+
 import { filterGroupsWithKinds } from './filter-groups-with-kinds';
 import { getGroupVersions } from './get-group-versions';
 import { createGroups } from './create-groups';
-import { GroupTS, KindTS, MemberTS } from './interfaces';
-import { createApiVersion } from '../../utils';
+import { GroupTS, KindTS } from './interfaces';
 
-export class TemplateHandler {
-	constructor(private readonly options: Options) {}
-
-	read(...templatePaths: string[]) {
-    return readFile(join(this.options.templateDir, ...templatePaths), 'utf8');
-	}
-
-	write(data: string, outPaths: string[]) {
-		return outputFile(join(this.options.outDir, ...outPaths), data, 'utf8');
-	}
-}
-
-export class NodeGenerator implements Generator {
-	private async generateInputTypes(groups: GroupTS[], template: TemplateHandler) {
-    const typesInputTemplate = await template.read('types', 'input.ts.mustache');
+export class NodeGenerator extends AbstractGenerator {
+	private async generateInputTypes(groups: GroupTS[]) {
+    const typesInputTemplate = await this.template.read('types', 'input.ts.mustache');
     const typesInputTs = mustache.render(typesInputTemplate, { groups });
 
-    await template.write(typesInputTs, ['types', 'input.ts']);
+    await this.template.write(typesInputTs, ['types', 'input.ts']);
 	}
 
-	private async generateOutputTypes(groups: GroupTS[], template: TemplateHandler) {
-    const typesOutputTemplate = await template.read('types', 'output.ts.mustache');
+	private async generateOutputTypes(groups: GroupTS[]) {
+    const typesOutputTemplate = await this.template.read('types', 'output.ts.mustache');
     const typesOutputTs = mustache.render(typesOutputTemplate, { groups });
 
-    await template.write(typesOutputTs, ['types', 'output.ts']);
+    await this.template.write(typesOutputTs, ['types', 'output.ts']);
 	}
 
-	private async generateTypesIndex(template: TemplateHandler) {
-	  const typesIndexTemplate = await template.read('types', 'index.ts.tpl');
+	private async generateTypesIndex() {
+	  const typesIndexTemplate = await this.template.read('types', 'index.ts.tpl');
 
-    await template.write(typesIndexTemplate, ['types', 'index.ts']);
+    await this.template.write(typesIndexTemplate, ['types', 'index.ts']);
   }
 
-	private async generateIndexes(groups: GroupTS[], template: TemplateHandler) {
-    const indexTemplate = await template.read('index.ts.mustache');
-    const versionIndexTemplate = await template.read('versionIndex.ts.mustache');
-    const kindIndexTemplate = await template.read('kindIndex.ts.mustache');
+	private async generateIndexes(groups: GroupTS[]) {
+    const indexTemplate = await this.template.read('index.ts.mustache');
+    const versionIndexTemplate = await this.template.read('versionIndex.ts.mustache');
+    const kindIndexTemplate = await this.template.read('kindIndex.ts.mustache');
+    const kindTemplate = await this.template.read('kind.ts.mustache');
 
-    await this.generateTypesIndex(template);
-
-
-    const indexTs = mustache.render(indexTemplate, { groups });
-    await template.write(indexTs, ['index.ts']);
+    await this.generateTypesIndex();
 
     const groupsWithKinds = filterGroupsWithKinds(groups);
+
+    const indexTs = mustache.render(indexTemplate, { groups: groupsWithKinds });
+    await this.template.write(indexTs, ['index.ts']);
 
 
 		for (const { group, versions } of groupsWithKinds) {
       const groupIndexTs = mustache.render(versionIndexTemplate, { versions });
-      await template.write(groupIndexTs, [group, 'index.ts']);
+      await this.template.write(groupIndexTs, [group, 'index.ts']);
 
       for (const { version, schemas } of versions) {
         const kinds = schemas.map(({ schema }) => ({
@@ -69,10 +58,9 @@ export class NodeGenerator implements Generator {
 
         const versionIndexTs = mustache.render(kindIndexTemplate, { kinds });
 
-        await template.write(versionIndexTs, [group, version, 'index.ts']);
+        await this.template.write(versionIndexTs, [group, version, 'index.ts']);
 
         for (const schema of schemas) {
-          const kindTemplate = await template.read('kind.ts.mustache');
           const apiVersion = createApiVersion(group, version);
 
           const kind: KindTS = {
@@ -86,26 +74,22 @@ export class NodeGenerator implements Generator {
           const kindTs = mustache.render(kindTemplate, kind);
           const kindFileName = paramCase(schema.schema) + '.ts';
 
-          await template.write(kindTs, [group, version, kindFileName]);
+          await this.template.write(kindTs, [group, version, kindFileName]);
         }
       }
 		}
 	}
 
-  async generate(options: Options) {
-    const groupVersions = getGroupVersions(options.jsonPaths);
-    const groups = await createGroups(groupVersions, options.jsonPaths, options.istioApiPath);
-
-    const template = new TemplateHandler(options);
-
+  async generate() {
+    const groupVersions = getGroupVersions(this.options.jsonPaths);
+    const groups = await createGroups(groupVersions, this.options.jsonPaths, this.options.istioApiPath);
     // Clean outDir
-    await execa('rm', ['-rf', options.outDir]);
-
+    await execa('rm', ['-rf', this.options.outDir]);
     // Generate input types
-    await this.generateInputTypes(groups, template);
+    await this.generateInputTypes(groups);
     // Generate output types
-    await this.generateOutputTypes(groups, template);
+    await this.generateOutputTypes(groups);
     // Generate indexes
-    await this.generateIndexes(groups, template);
+    await this.generateIndexes(groups);
   }
 }

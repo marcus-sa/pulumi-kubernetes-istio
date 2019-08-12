@@ -3,11 +3,13 @@
   "scripts": {
     "gen:sdk:nodejs": "ts-node src/gen.ts nodejs",
     "gen:sdk:python": "ts-node src/gen.ts python",
+    "publish:sdk:nodejs": "yarn test && yarn gen:sdk:nodejs && cd sdk/nodejs && yarn build && yarn publish",
     "test": "jest"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-push": "yarn test",
+      "pre-commit": "yarn gen:sdk:nodejs && pretty-quick --staged"
     }
   },
   "devDependencies": {

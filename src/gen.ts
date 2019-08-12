@@ -29,8 +29,8 @@ import { createGenerator } from './generator/create';
     cwd: options.istioApiPath,
   });
 
-  const generator = await createGenerator(options.sdk);
-  await generator.generate(options);
+  const generator = await createGenerator(options);
+  await generator.generate();
 
   await execa('rm', ['-rf', istioApiPath]);
 })();
