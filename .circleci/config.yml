@@ -73,6 +73,9 @@ jobs:
       - run:
           name: Build SDKs
           command: yarn run build
+      - persist_to_workspace:
+          root: ~/repo
+          paths: ./sdk
 
   publish:
     <<: *defaults

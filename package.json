@@ -6,9 +6,9 @@
     "generate:nodejs": "ts-node src/cli.ts nodejs",
     "generate:python": "ts-node src/cli.ts python",
     "build": "yarn build:nodejs",
-    "build:nodejs": "cd sdk/nodejs && yarn build",
+    "build:nodejs": "cd sdk/nodejs && yarn run build",
     "publish": "yarn publish:nodejs",
-    "publish:nodejs": "cd sdk/nodejs && yarn publish"
+    "publish:nodejs": "cd sdk/nodejs && yarn run publish"
   },
   "husky": {
     "hooks": {
