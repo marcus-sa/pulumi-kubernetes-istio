@@ -13,7 +13,7 @@ export namespace {{group}} {
         export type {{schema}} = {{{type}}};
         {{/isEnum}}
         {{^isEnum}}
-        export interface {{schema}} {
+        export interface {{schema}}{{#isKind}}Spec{{/isKind}} {
         {{#properties}}
             {{#description}}
             // {{{description}}}

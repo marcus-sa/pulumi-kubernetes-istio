@@ -20,7 +20,7 @@ export class Handler extends CustomResource {
     /**
      * Spec holds information about the request being evaluated
      */
-    public readonly spec: Output<output.policy.v1beta1.Handler>;
+    public readonly spec: Output<output.policy.v1beta1.HandlerSpec>;
 
     public static get(name: string, id: Input<ID>, opts: CustomResourceOptions = {}): Handler {
         return new Handler(name, undefined, { ...opts, id });
@@ -42,12 +42,11 @@ export class Handler extends CustomResource {
      * @param opts A bag of options that control this resource's behavior.
      */
     // @TODO: Generate input types for args
-    constructor(name: string, args: { metadata: types.input.meta.v1.ObjectMeta, spec: input.policy.v1beta1.Handler }, opts: CustomResourceOptions = {}) {
+    constructor(name: string, args: input.policy.v1beta1.Handler, opts: CustomResourceOptions = {}) {
         const inputs: Inputs = {
             apiVersion: 'policy.istio.io/v1beta1',
             kind: 'Handler',
-            metadata: args.metadata,
-            spec: args.spec,
+            ...args,
         };
 
         //if (!opts.version) {

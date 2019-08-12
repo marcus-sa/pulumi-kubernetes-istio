@@ -20,7 +20,7 @@ export class VirtualService extends CustomResource {
     /**
      * Spec holds information about the request being evaluated
      */
-    public readonly spec: Output<output.networking.v1alpha3.VirtualService>;
+    public readonly spec: Output<output.networking.v1alpha3.VirtualServiceSpec>;
 
     public static get(name: string, id: Input<ID>, opts: CustomResourceOptions = {}): VirtualService {
         return new VirtualService(name, undefined, { ...opts, id });
@@ -42,12 +42,11 @@ export class VirtualService extends CustomResource {
      * @param opts A bag of options that control this resource's behavior.
      */
     // @TODO: Generate input types for args
-    constructor(name: string, args: { metadata: types.input.meta.v1.ObjectMeta, spec: input.networking.v1alpha3.VirtualService }, opts: CustomResourceOptions = {}) {
+    constructor(name: string, args: input.networking.v1alpha3.VirtualService, opts: CustomResourceOptions = {}) {
         const inputs: Inputs = {
             apiVersion: 'networking.istio.io/v1alpha3',
             kind: 'VirtualService',
-            metadata: args.metadata,
-            spec: args.spec,
+            ...args,
         };
 
         //if (!opts.version) {

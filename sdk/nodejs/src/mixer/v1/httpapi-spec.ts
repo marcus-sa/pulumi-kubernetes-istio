@@ -20,7 +20,7 @@ export class HTTPAPISpec extends CustomResource {
     /**
      * Spec holds information about the request being evaluated
      */
-    public readonly spec: Output<output.mixer.v1.HTTPAPISpec>;
+    public readonly spec: Output<output.mixer.v1.HTTPAPISpecSpec>;
 
     public static get(name: string, id: Input<ID>, opts: CustomResourceOptions = {}): HTTPAPISpec {
         return new HTTPAPISpec(name, undefined, { ...opts, id });
@@ -42,12 +42,11 @@ export class HTTPAPISpec extends CustomResource {
      * @param opts A bag of options that control this resource's behavior.
      */
     // @TODO: Generate input types for args
-    constructor(name: string, args: { metadata: types.input.meta.v1.ObjectMeta, spec: input.mixer.v1.HTTPAPISpec }, opts: CustomResourceOptions = {}) {
+    constructor(name: string, args: input.mixer.v1.HTTPAPISpec, opts: CustomResourceOptions = {}) {
         const inputs: Inputs = {
             apiVersion: 'mixer.istio.io/v1',
             kind: 'HTTPAPISpec',
-            metadata: args.metadata,
-            spec: args.spec,
+            ...args,
         };
 
         //if (!opts.version) {

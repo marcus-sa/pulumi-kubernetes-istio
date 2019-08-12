@@ -20,7 +20,7 @@ export class Sidecar extends CustomResource {
     /**
      * Spec holds information about the request being evaluated
      */
-    public readonly spec: Output<output.networking.v1alpha3.Sidecar>;
+    public readonly spec: Output<output.networking.v1alpha3.SidecarSpec>;
 
     public static get(name: string, id: Input<ID>, opts: CustomResourceOptions = {}): Sidecar {
         return new Sidecar(name, undefined, { ...opts, id });
@@ -42,12 +42,11 @@ export class Sidecar extends CustomResource {
      * @param opts A bag of options that control this resource's behavior.
      */
     // @TODO: Generate input types for args
-    constructor(name: string, args: { metadata: types.input.meta.v1.ObjectMeta, spec: input.networking.v1alpha3.Sidecar }, opts: CustomResourceOptions = {}) {
+    constructor(name: string, args: input.networking.v1alpha3.Sidecar, opts: CustomResourceOptions = {}) {
         const inputs: Inputs = {
             apiVersion: 'networking.istio.io/v1alpha3',
             kind: 'Sidecar',
-            metadata: args.metadata,
-            spec: args.spec,
+            ...args,
         };
 
         //if (!opts.version) {

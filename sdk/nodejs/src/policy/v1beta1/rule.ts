@@ -20,7 +20,7 @@ export class Rule extends CustomResource {
     /**
      * Spec holds information about the request being evaluated
      */
-    public readonly spec: Output<output.policy.v1beta1.Rule>;
+    public readonly spec: Output<output.policy.v1beta1.RuleSpec>;
 
     public static get(name: string, id: Input<ID>, opts: CustomResourceOptions = {}): Rule {
         return new Rule(name, undefined, { ...opts, id });
@@ -42,12 +42,11 @@ export class Rule extends CustomResource {
      * @param opts A bag of options that control this resource's behavior.
      */
     // @TODO: Generate input types for args
-    constructor(name: string, args: { metadata: types.input.meta.v1.ObjectMeta, spec: input.policy.v1beta1.Rule }, opts: CustomResourceOptions = {}) {
+    constructor(name: string, args: input.policy.v1beta1.Rule, opts: CustomResourceOptions = {}) {
         const inputs: Inputs = {
             apiVersion: 'policy.istio.io/v1beta1',
             kind: 'Rule',
-            metadata: args.metadata,
-            spec: args.spec,
+            ...args,
         };
 
         //if (!opts.version) {
