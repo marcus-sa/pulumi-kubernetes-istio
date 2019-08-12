@@ -3,20 +3,20 @@ import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 import { getSchemaName, isKind } from './utils';
 import { addRequiredDescription } from './add-required-desc'
 import { createSchemaType } from './create-schema-type';
-import { Property, Schema } from './interfaces';
+import { PropertyTS, SchemaTS } from './interfaces';
 
-export function createSchemas(definition: OpenAPIObject): Schema[] {
+export function createSchemas(definition: OpenAPIObject): SchemaTS[] {
   const { schemas: schemaDefs } = definition.components;
 
   return Object.keys(schemaDefs).map(name => {
     const schemaDef = schemaDefs[name] as SchemaObject;
-    const schema = {} as Schema;
+    const schema = {} as SchemaTS;
 
     if (schemaDef.type === 'object') {
       if (schemaDef.properties) {
         schema.properties = Object.keys(schemaDef.properties).map(name => {
           const schemaPropertyDef = schemaDef.properties[name];
-          const schemaProperty = { property: name } as Property;
+          const schemaProperty = { property: name } as PropertyTS;
 
           addRequiredDescription(schemaPropertyDef, schemaProperty);
           schemaProperty.type = createSchemaType(schemaPropertyDef);

@@ -1,9 +1,9 @@
 import { SchemaObject } from 'openapi3-ts';
 
 import { includes } from './utils';
-import { Property } from './interfaces';
+import { PropertyTS } from './interfaces';
 
-export function addRequiredDescription({ description }: SchemaObject, property: Property) {
+export function addRequiredDescription({ description }: SchemaObject, property: PropertyTS) {
   if (description) {
     property.description = description;
 

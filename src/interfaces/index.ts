@@ -1,4 +1,2 @@
-export * from './schema.interface';
-export * from './property.interface';
-export * from './group.interface';
-export * from './version.interface';
+export * from './generator.interface';
+export * from './options.interface';

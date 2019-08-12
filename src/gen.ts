@@ -4,45 +4,39 @@ import { join } from 'path';
 import { readFile, writeFile } from 'fs-extra';
 import * as mustache from 'mustache';
 
-import { getGroupVersions } from './get-group-versions';
-import { createGroups } from './create-groups';
+import { Options, Generator } from './interfaces/options.interface';
+import { createGenerator } from './generator/create';
+import { SDK } from './enums';
 
 // Usage: <language> <istio-api-repo-url> <istio-api-path> <template-dir> <out-dir>
 (async () => {
   const [
-    language,
-    istioApiRepoUrl = 'https://github.com/istio/api',
-    istioApiClonePath = 'istio-api',
-    templateDir = `src/templates/${language}`,
-    outDir = `sdk/${language}/src`,
+    sdk,
+    istioApiRepo = 'https://github.com/istio/api',
+    istioApiPath = 'istio-api',
+    templateDir = `src/templates/${sdk}`,
+    outDir = `sdk/${sdk}/src`,
   ] = process.argv.slice(2);
-  const istioApiPath = join(process.cwd(), istioApiClonePath);
-
+  const options = {
+    istioApiPath: join(process.cwd(), istioApiPath),
+    istioApiRepo,
+    templateDir,
+    outDir,
+    sdk,
+  } as Options;
   // console.log('Emptying Istio API...');
-  await execa('rm', ['-rf', istioApiPath]);
+  await execa('rm', ['-rf', options.istioApiPath]);
 
   // console.log('Cloning Istio API...');
-  await execa('git', ['clone', istioApiRepoUrl, istioApiPath]);
+  await execa('git', ['clone', options.istioApiRepo, options.istioApiPath]);
 
   // console.log('Globbing all JSON files');
-  const jsonPaths = await glob(['**/*.json'], {
-    cwd: istioApiPath,
+  options.jsonPaths = await glob(['**/*.json'], {
+    cwd: options.istioApiPath,
   });
 
-  const groupVersions = getGroupVersions(jsonPaths);
-  const groups = await createGroups(groupVersions, jsonPaths, istioApiPath);
-
-  // Generate input types
-  const typesInputTemplate = await readFile(join(templateDir, 'typesInput.ts.mustache'), 'utf8');
-  const typesInputTs = mustache.render(typesInputTemplate, { groups });
-
-  await writeFile(join(outDir, 'types', 'input.ts'), typesInputTs, 'utf8');
-
-  // Generate output types
-  const typesOutputTemplate = await readFile(join(templateDir, 'typesOutput.ts.mustache'), 'utf8');
-  const typesOutputTs = mustache.render(typesOutputTemplate, { groups });
-
-  await writeFile(join(outDir, 'types', 'output.ts'), typesOutputTs, 'utf8');
+  const generator = await createGenerator(options.sdk);
+  await generator.generate(options);
 
   /*const outputTypes = groups.map(({ schemaConfigs: schemas }) => {
     const template = readFileSync(join(templateDir, 'typesTest.ts.mustache')).toString();

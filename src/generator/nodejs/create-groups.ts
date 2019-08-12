@@ -1,4 +1,4 @@
-import { Group } from './interfaces';
+import { GroupTS } from './interfaces';
 import { getDefinitions } from './get-definitions';
 import { createSchemas } from './create-schemas';
 
@@ -7,8 +7,8 @@ export async function createGroups(
   groupVersions: { group: string, versions: string[] }[],
   paths: string[],
   istioApiPath: string,
-): Promise<Group[]> {
-  const groups: Group[] = [];
+): Promise<GroupTS[]> {
+  const groups: GroupTS[] = [];
   for (const { group, versions } of groupVersions) {
     const groupIndex = groups.push({
       group,

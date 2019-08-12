@@ -1,9 +1,9 @@
-import { Kind } from '../enums';
+import { Kind } from '../../../enums';
 
-import { Property } from './property.interface';
+import { PropertyTS } from './property.interface';
 // import { GroupVersionKind } from './group-version-kind.interface';
 
-export interface Schema {
+export interface SchemaTS {
   schema: string;
   apiVersion: string;
   description: string;
@@ -11,6 +11,6 @@ export interface Schema {
   isEnum?: boolean;
   isKind?: boolean;
   type?: string;
-  properties?: Property[];
+  properties?: PropertyTS[];
   // kind?: Kind;
 }
