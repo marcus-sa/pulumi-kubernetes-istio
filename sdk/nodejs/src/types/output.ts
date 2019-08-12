@@ -94,167 +94,6 @@ export namespace authentication {
   }
 }
 
-export namespace mcp {
-  export namespace v1alpha1 {
-    // @ts-ignore
-    export interface SinkNode {
-       // An opaque identifier for the MCP node.
-       // @ts-ignore
-       readonly id: string;
-       // Opaque annotations extending the node identifier.
-       // @ts-ignore
-       readonly annotations: Record<string, string>;
-    }
-    // @ts-ignore
-    export interface MeshConfigRequest {
-       // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
-       // @ts-ignore
-       readonly typeUrl: string;
-       // The version_info provided in the request messages will be the version_info received with the most recent successfully processed response or empty on the first request. It is expected that no new request is sent after a response is received until the client instance is ready to ACK/NACK the new configuration. ACK/NACK takes place by returning the new API config version as applied or the previous API config version respectively. Each type_url (see below) has an independent version associated with it.
-       // @ts-ignore
-       readonly versionInfo: string;
-       // @ts-ignore
-       readonly sinkNode: SinkNode;
-       // The nonce corresponding to MeshConfigResponse being ACK/NACKed. See above discussion on version_info and the MeshConfigResponse nonce comment. This may be empty if no nonce is available, e.g. at startup.
-       // @ts-ignore
-       readonly responseNonce: string;
-       // @ts-ignore
-       readonly errorDetail: Status;
-    }
-    // @ts-ignore
-    export interface MeshConfigResponse {
-       // Type URL for resources wrapped in the provided resources(s). This must be consistent with the type_url in the wrapper messages if resources is non-empty.
-       // @ts-ignore
-       readonly typeUrl: string;
-       // The version of the response data.
-       // @ts-ignore
-       readonly versionInfo: string;
-       // The nonce provides a way to explicitly ack a specific MeshConfigResponse in a following MeshConfigRequest. Additional messages may have been sent by client to the management server for the previous version on the stream prior to this MeshConfigResponse, that were unprocessed at response send time. The nonce allows the management server to ignore any further MeshConfigRequests for the previous version until a MeshConfigRequest bearing the nonce.
-       // @ts-ignore
-       readonly nonce: string;
-    }
-    // @ts-ignore
-    export interface IncrementalMeshConfigRequest {
-       // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
-       // @ts-ignore
-       readonly typeUrl: string;
-       // @ts-ignore
-       readonly sinkNode: SinkNode;
-       // When the IncrementalMeshConfigRequest is a ACK or NACK message in response to a previous IncrementalMeshConfigResponse, the response_nonce must be the nonce in the IncrementalMeshConfigResponse. Otherwise response_nonce must be omitted.
-       // @ts-ignore
-       readonly responseNonce: string;
-       // @ts-ignore
-       readonly errorDetail: Status;
-       // When the IncrementalMeshConfigRequest is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
-       // @ts-ignore
-       readonly initialResourceVersions: Record<string, string>;
-    }
-    // @ts-ignore
-    export interface IncrementalMeshConfigResponse {
-       // The nonce provides a way for IncrementalMeshConfigRequests to uniquely reference an IncrementalMeshConfigResponse. The nonce is required.
-       // @ts-ignore
-       readonly nonce: string;
-       // The version of the response data (used for debugging).
-       // @ts-ignore
-       readonly systemVersionInfo: string;
-       // Resources names of resources that have be deleted and to be removed from the MCP Client. Removed resources for missing resources can be ignored.
-       // @ts-ignore
-       readonly removedResources: string[];
-    }
-    // @ts-ignore
-    export interface RequestResources {
-       // @ts-ignore
-       readonly sinkNode: SinkNode;
-       // When the RequestResources is an ACK or NACK message in response to a previous RequestResources, the response_nonce must be the nonce in the RequestResources. Otherwise response_nonce must be omitted.
-       // @ts-ignore
-       readonly responseNonce: string;
-       // @ts-ignore
-       readonly errorDetail: Status;
-       // When the RequestResources is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
-       // @ts-ignore
-       readonly initialResourceVersions: Record<string, string>;
-       // Type of resource collection that is being requested, e.g.
-       // @ts-ignore
-       readonly collection: string;
-       // Request an incremental update for the specified collection. The source may choose to honor this request or ignore and and provide a full-state update in the corresponding `Resource` response.
-       // @ts-ignore
-       readonly incremental: boolean;
-    }
-    // @ts-ignore
-    export interface Resources {
-       // Required. The nonce provides a way for RequestChange to uniquely reference a RequestResources.
-       // @ts-ignore
-       readonly nonce: string;
-       // The version of the response data (used for debugging).
-       // @ts-ignore
-       readonly systemVersionInfo: string;
-       // Names of resources that have been deleted and to be removed from the MCP sink node. Removed resources for missing resources can be ignored.
-       // @ts-ignore
-       readonly removedResources: string[];
-       // Type of resource collection that is being requested, e.g.
-       // @ts-ignore
-       readonly collection: string;
-       // This resource response is an incremental update. The source should only send incremental updates if the sink requested them.
-       // @ts-ignore
-       readonly incremental: boolean;
-    }
-    // @ts-ignore
-    export interface Metadata {
-       // Fully qualified name of the resource. Unique in context of a collection.
-       // @ts-ignore
-       readonly name: string;
-       // Map of string keys and values that can be used by source and sink to communicate arbitrary metadata about this resource.
-       // @ts-ignore
-       readonly annotations: Record<string, string>;
-       // @ts-ignore
-       readonly createTime: Timestamp;
-       // Resource version. This is used to determine when resources change across resource updates. It should be treated as opaque by consumers/sinks.
-       // @ts-ignore
-       readonly version: string;
-       // Map of string keys and values that can be used to organize and categorize resources within a collection.
-       // @ts-ignore
-       readonly labels: Record<string, string>;
-    }
-    // @ts-ignore
-    export interface Resource {
-       // @ts-ignore
-       readonly body: Any;
-       // @ts-ignore
-       readonly metadata: Metadata;
-    }
-    // @ts-ignore
-    export interface Any {
-       // A URL/resource name that uniquely identifies the type of the serialized protocol buffer message. This string must contain at least one "/" character. The last segment of the URL's path must represent the fully qualified name of the type (as in `path/google.protobuf.Duration`). The name should be in a canonical form (e.g., leading "." is not accepted).
-       // @ts-ignore
-       readonly typeUrl: string;
-       // Must be a valid serialized protocol buffer of the above specified type.
-       // @ts-ignore
-       readonly value: string;
-    }
-    // @ts-ignore
-    export interface Timestamp {
-       // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-       // @ts-ignore
-       readonly seconds: number;
-       // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-       // @ts-ignore
-       readonly nanos: number;
-    }
-    // @ts-ignore
-    export interface Status {
-       // The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
-       // @ts-ignore
-       readonly code: number;
-       // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
-       // @ts-ignore
-       readonly message: string;
-       // A list of messages that carry the error details. There is a common set of message types for APIs to use.
-       // @ts-ignore
-       readonly details: Any[];
-    }
-  }
-}
-
 export namespace mesh {
   export namespace v1alpha1 {
     // @ts-ignore
@@ -606,6 +445,572 @@ export namespace mesh {
     }
     // @ts-ignore
     export type TLSmode = 'DISABLE' | 'SIMPLE' | 'MUTUAL' | 'ISTIO_MUTUAL';
+  }
+}
+
+export namespace mixer {
+  export namespace v1 {
+    // @ts-ignore
+    export interface Attributes {
+       // A map of attribute name to its value.
+       // @ts-ignore
+       readonly attributes: Record<string, AttributeValue>;
+    }
+    // @ts-ignore
+    export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
+    // @ts-ignore
+    export interface StringMap {
+       // Holds a set of name/value pairs.
+       // @ts-ignore
+       readonly entries: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface CompressedAttributes {
+       // Holds attributes of type STRING, DNS_NAME, EMAIL_ADDRESS, URI
+       // @ts-ignore
+       readonly strings: Record<string, number>;
+       // Holds attributes of type BYTES
+       // @ts-ignore
+       readonly bytes: object;
+       // The message-level dictionary.
+       // @ts-ignore
+       readonly words: string[];
+       // Holds attributes of type INT64
+       // @ts-ignore
+       readonly int64s: Record<string, number>;
+       // Holds attributes of type DOUBLE
+       // @ts-ignore
+       readonly doubles: Record<string, number>;
+       // Holds attributes of type BOOL
+       // @ts-ignore
+       readonly bools: Record<string, boolean>;
+       // Holds attributes of type TIMESTAMP
+       // @ts-ignore
+       readonly timestamps: Record<string, Timestamp>;
+       // Holds attributes of type DURATION
+       // @ts-ignore
+       readonly durations: Record<string, Duration>;
+       // Holds attributes of type STRING_MAP
+       // @ts-ignore
+       readonly stringMaps: Record<string, StringMap>;
+    }
+    // @ts-ignore
+    export interface StringMap {
+       // Holds a set of name/value pairs.
+       // @ts-ignore
+       readonly entries: Record<string, number>;
+    }
+    // @ts-ignore
+    export interface CheckRequest {
+       // The number of words in the global dictionary, used with to populate the attributes. This value is used as a quick way to determine whether the client is using a dictionary that the server understands.
+       // @ts-ignore
+       readonly globalWordCount: number;
+       // Used for deduplicating `Check` calls in the case of failed RPCs and retries. This should be a UUID per call, where the same UUID is used for retries of the same call.
+       // @ts-ignore
+       readonly deduplicationId: string;
+       // The individual quotas to allocate
+       // @ts-ignore
+       readonly quotas: Record<string, QuotaParams>;
+    }
+    // @ts-ignore
+    export interface QuotaParams {
+       // Amount of quota to allocate
+       // @ts-ignore
+       readonly amount: number;
+       // When true, supports returning less quota than what was requested.
+       // @ts-ignore
+       readonly bestEffort: boolean;
+    }
+    // @ts-ignore
+    export interface CheckResponse {
+       // The resulting quota, one entry per requested quota.
+       // @ts-ignore
+       readonly quotas: Record<string, QuotaResult>;
+    }
+    // @ts-ignore
+    export interface QuotaResult {
+       // The amount of granted quota. When `QuotaParams.best_effort` is true, this will be >= 0. If `QuotaParams.best_effort` is false, this will be either 0 or >= `QuotaParams.amount`.
+       // @ts-ignore
+       readonly grantedAmount: number;
+    }
+    // @ts-ignore
+    export interface PreconditionResult {
+       // The number of uses for which this result can be considered valid.
+       // @ts-ignore
+       readonly validUseCount: number;
+       // @ts-ignore
+       readonly referencedAttributes: ReferencedAttributes;
+       // @ts-ignore
+       readonly routeDirective: RouteDirective;
+    }
+    // @ts-ignore
+    export interface ReferencedAttributes {
+       // The message-level dictionary. Refer to [CompressedAttributes][istio.mixer.v1.CompressedAttributes] for information on using dictionaries.
+       // @ts-ignore
+       readonly words: string[];
+    }
+    // @ts-ignore
+    export interface RouteDirective {
+       // If set, enables a direct response without proxying the request to the routing destination. Required to be a value in the 2xx or 3xx range.
+       // @ts-ignore
+       readonly directResponseCode: number;
+       // Supplies the response body for the direct response. If this setting is omitted, no body is included in the generated response.
+       // @ts-ignore
+       readonly directResponseBody: string;
+    }
+    // @ts-ignore
+    export type Condition = 'CONDITION_UNSPECIFIED' | 'ABSENCE' | 'EXACT' | 'REGEX';
+    // @ts-ignore
+    export interface AttributeMatch {
+       // The name of the attribute. This is a dictionary index encoded in a manner identical to all strings in the [CompressedAttributes][istio.mixer.v1.CompressedAttributes] message.
+       // @ts-ignore
+       readonly name: number;
+       // @ts-ignore
+       readonly condition: Condition;
+       // If a REGEX condition is provided for a STRING_MAP attribute, clients should use the regex value to match against map keys.
+       // @ts-ignore
+       readonly regex: string;
+       // A key in a STRING_MAP. When multiple keys from a STRING_MAP attribute were referenced, there will be multiple AttributeMatch messages with different map_key values. Values for map_key SHOULD be ignored for attributes that are not STRING_MAP.
+       // @ts-ignore
+       readonly mapKey: number;
+    }
+    // @ts-ignore
+    export interface HeaderOperation {
+       // Header name.
+       // @ts-ignore
+       readonly name: string;
+       // Header value.
+       // @ts-ignore
+       readonly value: string;
+       // @ts-ignore
+       readonly operation: Operation;
+    }
+    // @ts-ignore
+    export type Operation = 'REPLACE' | 'REMOVE' | 'APPEND';
+    // @ts-ignore
+    export interface ReportRequest {
+       // The number of words in the global dictionary. To detect global dictionary out of sync between client and server.
+       // @ts-ignore
+       readonly globalWordCount: number;
+       // @ts-ignore
+       readonly repeatedAttributesSemantics: RepeatedAttributesSemantics;
+       // The default message-level dictionary for all the attributes. Individual attribute messages can have their own dictionaries, but if they don't then this set of words, if it is provided, is used instead.
+       // @ts-ignore
+       readonly defaultWords: string[];
+    }
+    // @ts-ignore
+    export type RepeatedAttributesSemantics = 'DELTA_ENCODING' | 'INDEPENDENT_ENCODING';
+    // @ts-ignore
+    export interface ReportResponse {
+    }
+    // @ts-ignore
+    export interface Duration {
+       // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+       // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Timestamp {
+       // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+       // @ts-ignore
+       readonly seconds: number;
+       // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface HTTPAPISpec {
+       // @ts-ignore
+       readonly attributes: Attributes;
+       // List of HTTP patterns to match.
+       // @ts-ignore
+       readonly patterns: HTTPAPISpecPattern[];
+       // List of APIKey that describes how to extract an API-KEY from an HTTP request. The first API-Key match found in the list is used, i.e. 'OR' semantics.
+       // @ts-ignore
+       readonly apiKeys: APIKey[];
+    }
+    // @ts-ignore
+    export type HTTPAPISpecPattern = { attributes: Attributes } | { httpMethod: string } | { uriTemplate: string } | { attributes: Attributes } | { regex: string } | { httpMethod: string };
+    // @ts-ignore
+    export type APIKey = { query: string } | { header: string } | { cookie: string };
+    // @ts-ignore
+    export interface HTTPAPISpecReference {
+       // REQUIRED. The short name of the HTTPAPISpec. This is the resource name defined by the metadata name field.
+       // @ts-ignore
+       readonly name: string;
+       // Optional namespace of the HTTPAPISpec. Defaults to the encompassing HTTPAPISpecBinding's metadata namespace field.
+       // @ts-ignore
+       readonly namespace: string;
+    }
+    // @ts-ignore
+    export interface HTTPAPISpecBinding {
+       // REQUIRED. One or more services to map the listed HTTPAPISpec onto.
+       // @ts-ignore
+       readonly services: IstioService[];
+       // REQUIRED. One or more HTTPAPISpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the HTTPAPISpecs should not overlap.
+       // @ts-ignore
+       readonly apiSpecs: HTTPAPISpecReference[];
+    }
+    // @ts-ignore
+    export interface IstioService {
+       // The short name of the service such as "foo".
+       // @ts-ignore
+       readonly name: string;
+       // Optional namespace of the service. Defaults to value of metadata namespace field.
+       // @ts-ignore
+       readonly namespace: string;
+       // Domain suffix used to construct the service FQDN in implementations that support such specification.
+       // @ts-ignore
+       readonly domain: string;
+       // The service FQDN.
+       // @ts-ignore
+       readonly service: string;
+       // Optional one or more labels that uniquely identify the service version.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface NetworkFailPolicy {
+       // @ts-ignore
+       readonly policy: FailPolicy;
+       // Max retries on transport error.
+       // @ts-ignore
+       readonly maxRetry: number;
+       // @ts-ignore
+       readonly baseRetryWait: Duration;
+       // @ts-ignore
+       readonly maxRetryWait: Duration;
+    }
+    // @ts-ignore
+    export type FailPolicy = 'FAIL_OPEN' | 'FAIL_CLOSE';
+    // @ts-ignore
+    export interface ServiceConfig {
+       // If true, do not call Mixer Check.
+       // @ts-ignore
+       readonly disableCheckCalls: boolean;
+       // If true, do not call Mixer Report.
+       // @ts-ignore
+       readonly disableReportCalls: boolean;
+       // @ts-ignore
+       readonly mixerAttributes: Attributes;
+       // HTTP API specifications to generate API attributes.
+       // @ts-ignore
+       readonly httpApiSpec: HTTPAPISpec[];
+       // Quota specifications to generate quota requirements.
+       // @ts-ignore
+       readonly quotaSpec: QuotaSpec[];
+       // @ts-ignore
+       readonly networkFailPolicy: NetworkFailPolicy;
+       // @ts-ignore
+       readonly forwardAttributes: Attributes;
+    }
+    // @ts-ignore
+    export interface QuotaSpec {
+       // A list of Quota rules.
+       // @ts-ignore
+       readonly rules: QuotaRule[];
+    }
+    // @ts-ignore
+    export interface TransportConfig {
+       // @ts-ignore
+       readonly networkFailPolicy: NetworkFailPolicy;
+       // The flag to disable check cache.
+       // @ts-ignore
+       readonly disableCheckCache: boolean;
+       // The flag to disable quota cache.
+       // @ts-ignore
+       readonly disableQuotaCache: boolean;
+       // The flag to disable report batch.
+       // @ts-ignore
+       readonly disableReportBatch: boolean;
+       // @ts-ignore
+       readonly statsUpdateInterval: Duration;
+       // Name of the cluster that will forward check calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
+       // @ts-ignore
+       readonly checkCluster: string;
+       // Name of the cluster that will forward report calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
+       // @ts-ignore
+       readonly reportCluster: string;
+       // @ts-ignore
+       readonly attributesForMixerProxy: Attributes;
+       // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
+       // @ts-ignore
+       readonly reportBatchMaxEntries: number;
+       // @ts-ignore
+       readonly reportBatchMaxTime: Duration;
+    }
+    // @ts-ignore
+    export interface HttpClientConfig {
+       // @ts-ignore
+       readonly mixerAttributes: Attributes;
+       // @ts-ignore
+       readonly forwardAttributes: Attributes;
+       // @ts-ignore
+       readonly transport: TransportConfig;
+       // Map of control configuration indexed by destination.service. This is used to support per-service configuration for cases where a mixerclient serves multiple services.
+       // @ts-ignore
+       readonly serviceConfigs: Record<string, ServiceConfig>;
+       // Default destination service name if none was specified in the client request.
+       // @ts-ignore
+       readonly defaultDestinationService: string;
+    }
+    // @ts-ignore
+    export interface TcpClientConfig {
+       // If set to true, disables Mixer check calls.
+       // @ts-ignore
+       readonly disableCheckCalls: boolean;
+       // If set to true, disables Mixer check calls.
+       // @ts-ignore
+       readonly disableReportCalls: boolean;
+       // @ts-ignore
+       readonly mixerAttributes: Attributes;
+       // @ts-ignore
+       readonly transport: TransportConfig;
+       // @ts-ignore
+       readonly connectionQuotaSpec: QuotaSpec;
+       // @ts-ignore
+       readonly reportInterval: Duration;
+    }
+    // @ts-ignore
+    export interface QuotaRule {
+       // The list of quotas to charge.
+       // @ts-ignore
+       readonly quotas: Quota[];
+       // If empty, match all request. If any of match is true, it is matched.
+       // @ts-ignore
+       readonly match: AttributeMatch[];
+    }
+    // @ts-ignore
+    export interface AttributeMatch {
+       // Map of attribute names to StringMatch type. Each map element specifies one condition to match.
+       // @ts-ignore
+       readonly clause: Record<string, StringMatch>;
+    }
+    // @ts-ignore
+    export interface Quota {
+       // The quota name to charge
+       // @ts-ignore
+       readonly quota: string;
+       // The quota amount to charge
+       // @ts-ignore
+       readonly charge: number;
+    }
+    // @ts-ignore
+    export type StringMatch = { exact: string } | { prefix: string } | { regex: string };
+    // @ts-ignore
+    export interface QuotaSpecBinding {
+       // REQUIRED. One or more services to map the listed QuotaSpec onto.
+       // @ts-ignore
+       readonly services: IstioService[];
+       // REQUIRED. One or more QuotaSpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the QuotaSpecs should not overlap.
+       // @ts-ignore
+       readonly quotaSpecs: QuotaSpecReference[];
+    }
+    // @ts-ignore
+    export interface QuotaSpecReference {
+       // REQUIRED. The short name of the QuotaSpec. This is the resource name defined by the metadata name field.
+       // @ts-ignore
+       readonly name: string;
+       // Optional namespace of the QuotaSpec. Defaults to the value of the metadata namespace field.
+       // @ts-ignore
+       readonly namespace: string;
+    }
+    // @ts-ignore
+    export interface Duration {
+       // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
+       // @ts-ignore
+       readonly seconds: number;
+       // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Attributes {
+       // A map of attribute name to its value.
+       // @ts-ignore
+       readonly attributes: Record<string, AttributeValue>;
+    }
+    // @ts-ignore
+    export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
+    // @ts-ignore
+    export interface Timestamp {
+       // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+       // @ts-ignore
+       readonly seconds: number;
+       // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface StringMap {
+       // Holds a set of name/value pairs.
+       // @ts-ignore
+       readonly entries: Record<string, string>;
+    }
+  }
+}
+
+export namespace mcp {
+  export namespace v1alpha1 {
+    // @ts-ignore
+    export interface SinkNode {
+       // An opaque identifier for the MCP node.
+       // @ts-ignore
+       readonly id: string;
+       // Opaque annotations extending the node identifier.
+       // @ts-ignore
+       readonly annotations: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface MeshConfigRequest {
+       // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
+       // @ts-ignore
+       readonly typeUrl: string;
+       // The version_info provided in the request messages will be the version_info received with the most recent successfully processed response or empty on the first request. It is expected that no new request is sent after a response is received until the client instance is ready to ACK/NACK the new configuration. ACK/NACK takes place by returning the new API config version as applied or the previous API config version respectively. Each type_url (see below) has an independent version associated with it.
+       // @ts-ignore
+       readonly versionInfo: string;
+       // @ts-ignore
+       readonly sinkNode: SinkNode;
+       // The nonce corresponding to MeshConfigResponse being ACK/NACKed. See above discussion on version_info and the MeshConfigResponse nonce comment. This may be empty if no nonce is available, e.g. at startup.
+       // @ts-ignore
+       readonly responseNonce: string;
+       // @ts-ignore
+       readonly errorDetail: Status;
+    }
+    // @ts-ignore
+    export interface MeshConfigResponse {
+       // Type URL for resources wrapped in the provided resources(s). This must be consistent with the type_url in the wrapper messages if resources is non-empty.
+       // @ts-ignore
+       readonly typeUrl: string;
+       // The version of the response data.
+       // @ts-ignore
+       readonly versionInfo: string;
+       // The nonce provides a way to explicitly ack a specific MeshConfigResponse in a following MeshConfigRequest. Additional messages may have been sent by client to the management server for the previous version on the stream prior to this MeshConfigResponse, that were unprocessed at response send time. The nonce allows the management server to ignore any further MeshConfigRequests for the previous version until a MeshConfigRequest bearing the nonce.
+       // @ts-ignore
+       readonly nonce: string;
+    }
+    // @ts-ignore
+    export interface IncrementalMeshConfigRequest {
+       // Type of the resource that is being requested, e.g. "type.googleapis.com/istio.io.networking.v1alpha3.VirtualService".
+       // @ts-ignore
+       readonly typeUrl: string;
+       // @ts-ignore
+       readonly sinkNode: SinkNode;
+       // When the IncrementalMeshConfigRequest is a ACK or NACK message in response to a previous IncrementalMeshConfigResponse, the response_nonce must be the nonce in the IncrementalMeshConfigResponse. Otherwise response_nonce must be omitted.
+       // @ts-ignore
+       readonly responseNonce: string;
+       // @ts-ignore
+       readonly errorDetail: Status;
+       // When the IncrementalMeshConfigRequest is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
+       // @ts-ignore
+       readonly initialResourceVersions: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface IncrementalMeshConfigResponse {
+       // The nonce provides a way for IncrementalMeshConfigRequests to uniquely reference an IncrementalMeshConfigResponse. The nonce is required.
+       // @ts-ignore
+       readonly nonce: string;
+       // The version of the response data (used for debugging).
+       // @ts-ignore
+       readonly systemVersionInfo: string;
+       // Resources names of resources that have be deleted and to be removed from the MCP Client. Removed resources for missing resources can be ignored.
+       // @ts-ignore
+       readonly removedResources: string[];
+    }
+    // @ts-ignore
+    export interface RequestResources {
+       // @ts-ignore
+       readonly sinkNode: SinkNode;
+       // When the RequestResources is an ACK or NACK message in response to a previous RequestResources, the response_nonce must be the nonce in the RequestResources. Otherwise response_nonce must be omitted.
+       // @ts-ignore
+       readonly responseNonce: string;
+       // @ts-ignore
+       readonly errorDetail: Status;
+       // When the RequestResources is the first in a stream, the initial_resource_versions must be populated. Otherwise, initial_resource_versions must be omitted. The keys are the resources names of the MCP resources known to the MCP client. The values in the map are the associated resource level version info.
+       // @ts-ignore
+       readonly initialResourceVersions: Record<string, string>;
+       // Type of resource collection that is being requested, e.g.
+       // @ts-ignore
+       readonly collection: string;
+       // Request an incremental update for the specified collection. The source may choose to honor this request or ignore and and provide a full-state update in the corresponding `Resource` response.
+       // @ts-ignore
+       readonly incremental: boolean;
+    }
+    // @ts-ignore
+    export interface Resources {
+       // Required. The nonce provides a way for RequestChange to uniquely reference a RequestResources.
+       // @ts-ignore
+       readonly nonce: string;
+       // The version of the response data (used for debugging).
+       // @ts-ignore
+       readonly systemVersionInfo: string;
+       // Names of resources that have been deleted and to be removed from the MCP sink node. Removed resources for missing resources can be ignored.
+       // @ts-ignore
+       readonly removedResources: string[];
+       // Type of resource collection that is being requested, e.g.
+       // @ts-ignore
+       readonly collection: string;
+       // This resource response is an incremental update. The source should only send incremental updates if the sink requested them.
+       // @ts-ignore
+       readonly incremental: boolean;
+    }
+    // @ts-ignore
+    export interface Metadata {
+       // Fully qualified name of the resource. Unique in context of a collection.
+       // @ts-ignore
+       readonly name: string;
+       // Map of string keys and values that can be used by source and sink to communicate arbitrary metadata about this resource.
+       // @ts-ignore
+       readonly annotations: Record<string, string>;
+       // @ts-ignore
+       readonly createTime: Timestamp;
+       // Resource version. This is used to determine when resources change across resource updates. It should be treated as opaque by consumers/sinks.
+       // @ts-ignore
+       readonly version: string;
+       // Map of string keys and values that can be used to organize and categorize resources within a collection.
+       // @ts-ignore
+       readonly labels: Record<string, string>;
+    }
+    // @ts-ignore
+    export interface Resource {
+       // @ts-ignore
+       readonly body: Any;
+       // @ts-ignore
+       readonly metadata: Metadata;
+    }
+    // @ts-ignore
+    export interface Any {
+       // A URL/resource name that uniquely identifies the type of the serialized protocol buffer message. This string must contain at least one "/" character. The last segment of the URL's path must represent the fully qualified name of the type (as in `path/google.protobuf.Duration`). The name should be in a canonical form (e.g., leading "." is not accepted).
+       // @ts-ignore
+       readonly typeUrl: string;
+       // Must be a valid serialized protocol buffer of the above specified type.
+       // @ts-ignore
+       readonly value: string;
+    }
+    // @ts-ignore
+    export interface Timestamp {
+       // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+       // @ts-ignore
+       readonly seconds: number;
+       // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+       // @ts-ignore
+       readonly nanos: number;
+    }
+    // @ts-ignore
+    export interface Status {
+       // The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+       // @ts-ignore
+       readonly code: number;
+       // A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+       // @ts-ignore
+       readonly message: string;
+       // A list of messages that carry the error details. There is a common set of message types for APIs to use.
+       // @ts-ignore
+       readonly details: Any[];
+    }
   }
 }
 
@@ -1491,411 +1896,6 @@ export namespace networking {
        // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
        // @ts-ignore
        readonly nanos: number;
-    }
-  }
-}
-
-export namespace mixer {
-  export namespace v1 {
-    // @ts-ignore
-    export interface Attributes {
-       // A map of attribute name to its value.
-       // @ts-ignore
-       readonly attributes: Record<string, AttributeValue>;
-    }
-    // @ts-ignore
-    export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
-    // @ts-ignore
-    export interface StringMap {
-       // Holds a set of name/value pairs.
-       // @ts-ignore
-       readonly entries: Record<string, string>;
-    }
-    // @ts-ignore
-    export interface CompressedAttributes {
-       // Holds attributes of type STRING, DNS_NAME, EMAIL_ADDRESS, URI
-       // @ts-ignore
-       readonly strings: Record<string, number>;
-       // Holds attributes of type BYTES
-       // @ts-ignore
-       readonly bytes: object;
-       // The message-level dictionary.
-       // @ts-ignore
-       readonly words: string[];
-       // Holds attributes of type INT64
-       // @ts-ignore
-       readonly int64s: Record<string, number>;
-       // Holds attributes of type DOUBLE
-       // @ts-ignore
-       readonly doubles: Record<string, number>;
-       // Holds attributes of type BOOL
-       // @ts-ignore
-       readonly bools: Record<string, boolean>;
-       // Holds attributes of type TIMESTAMP
-       // @ts-ignore
-       readonly timestamps: Record<string, Timestamp>;
-       // Holds attributes of type DURATION
-       // @ts-ignore
-       readonly durations: Record<string, Duration>;
-       // Holds attributes of type STRING_MAP
-       // @ts-ignore
-       readonly stringMaps: Record<string, StringMap>;
-    }
-    // @ts-ignore
-    export interface StringMap {
-       // Holds a set of name/value pairs.
-       // @ts-ignore
-       readonly entries: Record<string, number>;
-    }
-    // @ts-ignore
-    export interface CheckRequest {
-       // The number of words in the global dictionary, used with to populate the attributes. This value is used as a quick way to determine whether the client is using a dictionary that the server understands.
-       // @ts-ignore
-       readonly globalWordCount: number;
-       // Used for deduplicating `Check` calls in the case of failed RPCs and retries. This should be a UUID per call, where the same UUID is used for retries of the same call.
-       // @ts-ignore
-       readonly deduplicationId: string;
-       // The individual quotas to allocate
-       // @ts-ignore
-       readonly quotas: Record<string, QuotaParams>;
-    }
-    // @ts-ignore
-    export interface QuotaParams {
-       // Amount of quota to allocate
-       // @ts-ignore
-       readonly amount: number;
-       // When true, supports returning less quota than what was requested.
-       // @ts-ignore
-       readonly bestEffort: boolean;
-    }
-    // @ts-ignore
-    export interface CheckResponse {
-       // The resulting quota, one entry per requested quota.
-       // @ts-ignore
-       readonly quotas: Record<string, QuotaResult>;
-    }
-    // @ts-ignore
-    export interface QuotaResult {
-       // The amount of granted quota. When `QuotaParams.best_effort` is true, this will be >= 0. If `QuotaParams.best_effort` is false, this will be either 0 or >= `QuotaParams.amount`.
-       // @ts-ignore
-       readonly grantedAmount: number;
-    }
-    // @ts-ignore
-    export interface PreconditionResult {
-       // The number of uses for which this result can be considered valid.
-       // @ts-ignore
-       readonly validUseCount: number;
-       // @ts-ignore
-       readonly referencedAttributes: ReferencedAttributes;
-       // @ts-ignore
-       readonly routeDirective: RouteDirective;
-    }
-    // @ts-ignore
-    export interface ReferencedAttributes {
-       // The message-level dictionary. Refer to [CompressedAttributes][istio.mixer.v1.CompressedAttributes] for information on using dictionaries.
-       // @ts-ignore
-       readonly words: string[];
-    }
-    // @ts-ignore
-    export interface RouteDirective {
-       // If set, enables a direct response without proxying the request to the routing destination. Required to be a value in the 2xx or 3xx range.
-       // @ts-ignore
-       readonly directResponseCode: number;
-       // Supplies the response body for the direct response. If this setting is omitted, no body is included in the generated response.
-       // @ts-ignore
-       readonly directResponseBody: string;
-    }
-    // @ts-ignore
-    export type Condition = 'CONDITION_UNSPECIFIED' | 'ABSENCE' | 'EXACT' | 'REGEX';
-    // @ts-ignore
-    export interface AttributeMatch {
-       // The name of the attribute. This is a dictionary index encoded in a manner identical to all strings in the [CompressedAttributes][istio.mixer.v1.CompressedAttributes] message.
-       // @ts-ignore
-       readonly name: number;
-       // @ts-ignore
-       readonly condition: Condition;
-       // If a REGEX condition is provided for a STRING_MAP attribute, clients should use the regex value to match against map keys.
-       // @ts-ignore
-       readonly regex: string;
-       // A key in a STRING_MAP. When multiple keys from a STRING_MAP attribute were referenced, there will be multiple AttributeMatch messages with different map_key values. Values for map_key SHOULD be ignored for attributes that are not STRING_MAP.
-       // @ts-ignore
-       readonly mapKey: number;
-    }
-    // @ts-ignore
-    export interface HeaderOperation {
-       // Header name.
-       // @ts-ignore
-       readonly name: string;
-       // Header value.
-       // @ts-ignore
-       readonly value: string;
-       // @ts-ignore
-       readonly operation: Operation;
-    }
-    // @ts-ignore
-    export type Operation = 'REPLACE' | 'REMOVE' | 'APPEND';
-    // @ts-ignore
-    export interface ReportRequest {
-       // The number of words in the global dictionary. To detect global dictionary out of sync between client and server.
-       // @ts-ignore
-       readonly globalWordCount: number;
-       // @ts-ignore
-       readonly repeatedAttributesSemantics: RepeatedAttributesSemantics;
-       // The default message-level dictionary for all the attributes. Individual attribute messages can have their own dictionaries, but if they don't then this set of words, if it is provided, is used instead.
-       // @ts-ignore
-       readonly defaultWords: string[];
-    }
-    // @ts-ignore
-    export type RepeatedAttributesSemantics = 'DELTA_ENCODING' | 'INDEPENDENT_ENCODING';
-    // @ts-ignore
-    export interface ReportResponse {
-    }
-    // @ts-ignore
-    export interface Duration {
-       // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-       // @ts-ignore
-       readonly seconds: number;
-       // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-       // @ts-ignore
-       readonly nanos: number;
-    }
-    // @ts-ignore
-    export interface Timestamp {
-       // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-       // @ts-ignore
-       readonly seconds: number;
-       // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-       // @ts-ignore
-       readonly nanos: number;
-    }
-    // @ts-ignore
-    export interface HTTPAPISpec {
-       // @ts-ignore
-       readonly attributes: Attributes;
-       // List of HTTP patterns to match.
-       // @ts-ignore
-       readonly patterns: HTTPAPISpecPattern[];
-       // List of APIKey that describes how to extract an API-KEY from an HTTP request. The first API-Key match found in the list is used, i.e. 'OR' semantics.
-       // @ts-ignore
-       readonly apiKeys: APIKey[];
-    }
-    // @ts-ignore
-    export type HTTPAPISpecPattern = { attributes: Attributes } | { httpMethod: string } | { uriTemplate: string } | { attributes: Attributes } | { regex: string } | { httpMethod: string };
-    // @ts-ignore
-    export type APIKey = { query: string } | { header: string } | { cookie: string };
-    // @ts-ignore
-    export interface HTTPAPISpecReference {
-       // REQUIRED. The short name of the HTTPAPISpec. This is the resource name defined by the metadata name field.
-       // @ts-ignore
-       readonly name: string;
-       // Optional namespace of the HTTPAPISpec. Defaults to the encompassing HTTPAPISpecBinding's metadata namespace field.
-       // @ts-ignore
-       readonly namespace: string;
-    }
-    // @ts-ignore
-    export interface HTTPAPISpecBinding {
-       // REQUIRED. One or more services to map the listed HTTPAPISpec onto.
-       // @ts-ignore
-       readonly services: IstioService[];
-       // REQUIRED. One or more HTTPAPISpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the HTTPAPISpecs should not overlap.
-       // @ts-ignore
-       readonly apiSpecs: HTTPAPISpecReference[];
-    }
-    // @ts-ignore
-    export interface IstioService {
-       // The short name of the service such as "foo".
-       // @ts-ignore
-       readonly name: string;
-       // Optional namespace of the service. Defaults to value of metadata namespace field.
-       // @ts-ignore
-       readonly namespace: string;
-       // Domain suffix used to construct the service FQDN in implementations that support such specification.
-       // @ts-ignore
-       readonly domain: string;
-       // The service FQDN.
-       // @ts-ignore
-       readonly service: string;
-       // Optional one or more labels that uniquely identify the service version.
-       // @ts-ignore
-       readonly labels: Record<string, string>;
-    }
-    // @ts-ignore
-    export interface NetworkFailPolicy {
-       // @ts-ignore
-       readonly policy: FailPolicy;
-       // Max retries on transport error.
-       // @ts-ignore
-       readonly maxRetry: number;
-       // @ts-ignore
-       readonly baseRetryWait: Duration;
-       // @ts-ignore
-       readonly maxRetryWait: Duration;
-    }
-    // @ts-ignore
-    export type FailPolicy = 'FAIL_OPEN' | 'FAIL_CLOSE';
-    // @ts-ignore
-    export interface ServiceConfig {
-       // If true, do not call Mixer Check.
-       // @ts-ignore
-       readonly disableCheckCalls: boolean;
-       // If true, do not call Mixer Report.
-       // @ts-ignore
-       readonly disableReportCalls: boolean;
-       // @ts-ignore
-       readonly mixerAttributes: Attributes;
-       // HTTP API specifications to generate API attributes.
-       // @ts-ignore
-       readonly httpApiSpec: HTTPAPISpec[];
-       // Quota specifications to generate quota requirements.
-       // @ts-ignore
-       readonly quotaSpec: QuotaSpec[];
-       // @ts-ignore
-       readonly networkFailPolicy: NetworkFailPolicy;
-       // @ts-ignore
-       readonly forwardAttributes: Attributes;
-    }
-    // @ts-ignore
-    export interface QuotaSpec {
-       // A list of Quota rules.
-       // @ts-ignore
-       readonly rules: QuotaRule[];
-    }
-    // @ts-ignore
-    export interface TransportConfig {
-       // @ts-ignore
-       readonly networkFailPolicy: NetworkFailPolicy;
-       // The flag to disable check cache.
-       // @ts-ignore
-       readonly disableCheckCache: boolean;
-       // The flag to disable quota cache.
-       // @ts-ignore
-       readonly disableQuotaCache: boolean;
-       // The flag to disable report batch.
-       // @ts-ignore
-       readonly disableReportBatch: boolean;
-       // @ts-ignore
-       readonly statsUpdateInterval: Duration;
-       // Name of the cluster that will forward check calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
-       // @ts-ignore
-       readonly checkCluster: string;
-       // Name of the cluster that will forward report calls to a pool of mixer servers. Defaults to "mixer_server". By using different names for checkCluster and reportCluster, it is possible to have one set of Mixer servers handle check calls, while another set of Mixer servers handle report calls.
-       // @ts-ignore
-       readonly reportCluster: string;
-       // @ts-ignore
-       readonly attributesForMixerProxy: Attributes;
-       // When disable_report_batch is false, this value specifies the maximum number of requests that are batched in report. If left unspecified, the default value of report_batch_max_entries == 0 will use the hardcoded defaults of istio::mixerclient::ReportOptions.
-       // @ts-ignore
-       readonly reportBatchMaxEntries: number;
-       // @ts-ignore
-       readonly reportBatchMaxTime: Duration;
-    }
-    // @ts-ignore
-    export interface HttpClientConfig {
-       // @ts-ignore
-       readonly mixerAttributes: Attributes;
-       // @ts-ignore
-       readonly forwardAttributes: Attributes;
-       // @ts-ignore
-       readonly transport: TransportConfig;
-       // Map of control configuration indexed by destination.service. This is used to support per-service configuration for cases where a mixerclient serves multiple services.
-       // @ts-ignore
-       readonly serviceConfigs: Record<string, ServiceConfig>;
-       // Default destination service name if none was specified in the client request.
-       // @ts-ignore
-       readonly defaultDestinationService: string;
-    }
-    // @ts-ignore
-    export interface TcpClientConfig {
-       // If set to true, disables Mixer check calls.
-       // @ts-ignore
-       readonly disableCheckCalls: boolean;
-       // If set to true, disables Mixer check calls.
-       // @ts-ignore
-       readonly disableReportCalls: boolean;
-       // @ts-ignore
-       readonly mixerAttributes: Attributes;
-       // @ts-ignore
-       readonly transport: TransportConfig;
-       // @ts-ignore
-       readonly connectionQuotaSpec: QuotaSpec;
-       // @ts-ignore
-       readonly reportInterval: Duration;
-    }
-    // @ts-ignore
-    export interface QuotaRule {
-       // The list of quotas to charge.
-       // @ts-ignore
-       readonly quotas: Quota[];
-       // If empty, match all request. If any of match is true, it is matched.
-       // @ts-ignore
-       readonly match: AttributeMatch[];
-    }
-    // @ts-ignore
-    export interface AttributeMatch {
-       // Map of attribute names to StringMatch type. Each map element specifies one condition to match.
-       // @ts-ignore
-       readonly clause: Record<string, StringMatch>;
-    }
-    // @ts-ignore
-    export interface Quota {
-       // The quota name to charge
-       // @ts-ignore
-       readonly quota: string;
-       // The quota amount to charge
-       // @ts-ignore
-       readonly charge: number;
-    }
-    // @ts-ignore
-    export type StringMatch = { exact: string } | { prefix: string } | { regex: string };
-    // @ts-ignore
-    export interface QuotaSpecBinding {
-       // REQUIRED. One or more services to map the listed QuotaSpec onto.
-       // @ts-ignore
-       readonly services: IstioService[];
-       // REQUIRED. One or more QuotaSpec references that should be mapped to the specified service(s). The aggregate collection of match conditions defined in the QuotaSpecs should not overlap.
-       // @ts-ignore
-       readonly quotaSpecs: QuotaSpecReference[];
-    }
-    // @ts-ignore
-    export interface QuotaSpecReference {
-       // REQUIRED. The short name of the QuotaSpec. This is the resource name defined by the metadata name field.
-       // @ts-ignore
-       readonly name: string;
-       // Optional namespace of the QuotaSpec. Defaults to the value of the metadata namespace field.
-       // @ts-ignore
-       readonly namespace: string;
-    }
-    // @ts-ignore
-    export interface Duration {
-       // Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive. Note: these bounds are computed from: 60 sec/min * 60 min/hr * 24 hr/day * 365.25 days/year * 10000 years
-       // @ts-ignore
-       readonly seconds: number;
-       // Signed fractions of a second at nanosecond resolution of the span of time. Durations less than one second are represented with a 0 `seconds` field and a positive or negative `nanos` field. For durations of one second or more, a non-zero value for the `nanos` field must be of the same sign as the `seconds` field. Must be from -999,999,999 to +999,999,999 inclusive.
-       // @ts-ignore
-       readonly nanos: number;
-    }
-    // @ts-ignore
-    export interface Attributes {
-       // A map of attribute name to its value.
-       // @ts-ignore
-       readonly attributes: Record<string, AttributeValue>;
-    }
-    // @ts-ignore
-    export type AttributeValue = { stringValue: string } | { int64Value: number } | { doubleValue: number } | { boolValue: boolean } | { bytesValue: string } | { timestampValue: Timestamp } | { durationValue: Duration } | { stringMapValue: StringMap };
-    // @ts-ignore
-    export interface Timestamp {
-       // Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
-       // @ts-ignore
-       readonly seconds: number;
-       // Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
-       // @ts-ignore
-       readonly nanos: number;
-    }
-    // @ts-ignore
-    export interface StringMap {
-       // Holds a set of name/value pairs.
-       // @ts-ignore
-       readonly entries: Record<string, string>;
     }
   }
 }

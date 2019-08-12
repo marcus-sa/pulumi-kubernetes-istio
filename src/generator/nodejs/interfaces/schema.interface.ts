@@ -6,7 +6,7 @@ import { PropertyTS } from './property.interface';
 export interface SchemaTS {
   schema: string;
   apiVersion: string;
-  description: string;
+  description?: string;
   // gvk: GroupVersionKind;
   isEnum?: boolean;
   isKind?: boolean;
