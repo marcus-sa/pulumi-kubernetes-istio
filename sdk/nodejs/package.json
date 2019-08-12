@@ -1,6 +1,6 @@
 {
-  "name": "pulumi-k8s-istio",
-  "version": "0.0.2",
+  "name": "pki",
+  "version": "0.0.1",
   "files": [
     "lib"
   ],

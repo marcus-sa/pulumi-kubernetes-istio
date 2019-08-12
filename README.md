@@ -1,4 +1,4 @@
-## Pulumi Kubernetes Istio
+## PKI (Pulumi Kubernetes Istio)
 Pulumi Kubernetes resources for Istio generated from the [Istio API](https://github.com/istio/istio-api)
 
 <!--### Languages
@@ -11,7 +11,7 @@ Pulumi Kubernetes resources for Istio generated from the [Istio API](https://git
 -->
 ### Installation
 ```
-$ yarn add @pulumi/pulumi @pulumi/kubernetes pulumi-k8s-istio
+$ yarn add pki @pulumi/pulumi @pulumi/kubernetes
 ```
 
 ### Prerequisites
@@ -20,13 +20,13 @@ Ensure you have instantiated Istio using `@pulumi/kubernetes`
 An example on how to do so can be found [here](https://github.com/pulumi/pulumi-kubernetes/blob/master/tests/integration/istio/step1/istio.ts).
 
 ### Usage
-Pulumi Kubernetes Istio follows the same API spec as `@pulumi/kubernetes`
+PKI follows the same API spec as `@pulumi/kubernetes`
 
 #### Example
 
 Gateway
 ```ts
-import * as istio from 'pulumi-k8s-istio';
+import * as istio from 'pki';
 
 // ...
 
