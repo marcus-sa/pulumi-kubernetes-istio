@@ -1,15 +1,19 @@
 {
   "private": true,
   "scripts": {
-    "gen:sdk:nodejs": "ts-node src/gen.ts nodejs",
-    "gen:sdk:python": "ts-node src/gen.ts python",
-    "publish:sdk:nodejs": "yarn test && yarn gen:sdk:nodejs && cd sdk/nodejs && yarn build && yarn publish",
-    "test": "jest"
+    "test": "jest",
+    "generate": "yarn generate:nodejs",
+    "generate:nodejs": "ts-node src/cli.ts nodejs",
+    "generate:python": "ts-node src/cli.ts python",
+    "build": "yarn build:nodejs",
+    "build:nodejs": "cd sdk/nodejs && yarn build",
+    "publish": "yarn publish:nodejs",
+    "publish:nodejs": "cd sdk/nodejs && yarn publish"
   },
   "husky": {
     "hooks": {
       "pre-push": "yarn test",
-      "pre-commit": "yarn gen:sdk:nodejs && pretty-quick --staged"
+      "pre-commit": "yarn generate && pretty-quick --staged"
     }
   },
   "devDependencies": {

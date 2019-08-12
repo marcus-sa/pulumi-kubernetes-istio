@@ -1,0 +1,78 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:12
+
+jobs:
+  install:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+  test:
+    <<: *defaults
+    steps:
+      - checkoutg
+      - run:
+          name: Unit tests
+          command: yarn test
+
+  generate:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Generate SDKs
+          command: yarn generate
+
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Build SDKs
+          command: yarn build
+
+  publish:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Publish SDKs
+          command: yarn publish
+
+workflows:
+  version: 2
+
+  install-test-generate-build-and-publish:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
+      - generate:
+          requires:
+            - test
+      - build:
+          requires:
+            - generate
+      - publish:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
