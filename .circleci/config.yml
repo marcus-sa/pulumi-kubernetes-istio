@@ -67,15 +67,14 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
-      - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - add_ssh_keys:
           fingerprints:
             - $SSH_FINGERPRINT
       - run:
           name: Publish SDKs
-          command: yarn run publish
+          command: |
+            npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+            yarn run publish
 
 workflows:
   version: 2
