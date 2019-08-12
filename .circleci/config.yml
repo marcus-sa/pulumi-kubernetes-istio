@@ -5,37 +5,21 @@ defaults: &defaults
   docker:
     - image: circleci/node:12
 
-aliases:
-  - &root-yarn |
-    yarn install --non-interactive --cache-folder ~/.cache/yarn
-
-  - &root-restore-yarn-cache
-    keys:
-      - root-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      # Fallback in case checksum fails
-      - root-yarn-{{ .Branch }}-
-
-  - &root-save-yarn-cache
-    paths:
-      - node_modules
-      - ~/.cache/yarn
-    key: root-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
-
 jobs:
-  install:
+  root_install:
     <<: *defaults
     steps:
       - checkout
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+            - root-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
           command: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+          key: root-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
       - persist_to_workspace:
@@ -64,6 +48,54 @@ jobs:
           root: ~/repo
           paths: ./sdk
 
+  install_nodejs_sdk:
+    <<: *defaults
+    working_directory: ~/repo/sdk/nodejs
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo/sdk/nodejs
+      - restore_cache:
+          name: Restore Yarn SDK Package Cache
+          keys:
+            - sdk-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install SDK dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn SDK Package Cache
+          key: sdk-yarn-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - persist_to_workspace:
+          root: ~/repo
+          paths: ./node_modules
+
+    build_nodejs_sdk:
+      <<: *defaults
+      working_directory:
+      steps:
+        - checkout:
+        - attach_workspace:
+            at: ~/repo/sdk/nodejs
+        - run:
+            name: Build Node SDK
+            command: yarn build
+        - persist_to_workspace:
+            root: ~/repo
+            paths: ./lib
+
+    publish_nodejs_sdk:
+      <<: *defaults
+      working_directory: ~/repo/sdk/nodejs
+      steps:
+        - checkout:
+        - attach_workspace:
+            at: ~/repo/sdk/nodejs
+        - run:
+          name: Publish Node SDK
+          command: yarn run publish
+
   build:
     <<: *defaults
     steps:
@@ -72,7 +104,7 @@ jobs:
           at: ~/repo
       - run:
           name: Build SDKs
-          command: yarn run build
+          command: yarn build
       - persist_to_workspace:
           root: ~/repo
           paths: ./sdk
@@ -92,19 +124,28 @@ workflows:
 
   test-generate-build-and-publish:
     jobs:
-      - install
+      - root_install
       - test:
           requires:
-            - install
+            - root_install
       - generate:
           requires:
             - test
-      - build:
-          requires:
-            - generate
-      - publish:
+      - install_nodejs_sdk:
           filters:
             branches:
               only: master
           requires:
-            - build
+            - generate
+      - build_nodejs_sdk:
+          filters:
+            branches:
+              only: master
+          requires:
+            - install_nodejs_sdk
+      - publish_nodejs_sdk:
+          filters:
+            branches:
+              only: master
+          requires:
+            - install_nodejs_sdk
