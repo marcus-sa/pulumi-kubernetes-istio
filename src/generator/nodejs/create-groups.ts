@@ -5,7 +5,7 @@ import { getDefinitions } from './get-definitions';
 import { createSchemas } from './create-schemas';
 
 // TODO: Clean this up
-export async function createGroups(
+export function createGroups(
   groupVersions: GroupVersions[],
   paths: string[],
   istioApiPath: string,
@@ -22,10 +22,10 @@ export async function createGroups(
       };
 
       return definitions.reduce((version, definition) =>
-        deepmerge(version, {
+        deepmerge<VersionTS>(version, {
           schemas: createSchemas(definition, false),
           inputs: createSchemas(definition, true),
-        } as VersionTS),
+        }),
         initial,
       );
     }));
