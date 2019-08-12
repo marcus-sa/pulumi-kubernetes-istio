@@ -41,10 +41,10 @@ export class NodeGenerator extends AbstractGenerator {
 
     await this.generateTypesIndex();
 
-    const indexTs = mustache.render(indexTemplate, { groups });
-    await this.template.write(indexTs, ['index.ts']);
-
     const groupsWithKinds = filterGroupsWithKinds(groups);
+
+    const indexTs = mustache.render(indexTemplate, { groups: groupsWithKinds });
+    await this.template.write(indexTs, ['index.ts']);
 
 
 		for (const { group, versions } of groupsWithKinds) {

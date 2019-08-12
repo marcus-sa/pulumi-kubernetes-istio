@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getGroupVersions should combine all paths into a group -> versions with no duplicates 1`] = `
+exports[`getGroupVersions should combine all paths into group -> versions with no duplicates 1`] = `
 Array [
   Object {
     "group": "authentication",
