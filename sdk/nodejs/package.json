@@ -6,8 +6,8 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc",
-    "publish": "semantic-release"
+    "build": "rm -rf lib && tsc",
+    "semantic-release": "yarn exec semantic-release"
   },
   "peerDependencies": {
     "@pulumi/kubernetes": "^0.25.6",
@@ -28,11 +28,5 @@
         }
       ]
     ]
-  },
-  "devDependencies": {
-    "@semantic-release/commit-analyzer": "^6.3.0",
-    "@semantic-release/git": "^7.0.16",
-    "@semantic-release/npm": "^5.1.13",
-    "semantic-release": "^15.13.19"
   }
 }
