@@ -2,5 +2,6 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 // Export kinds:
-export * from './service-role-binding';
-export * from './service-role';
+export * from './rule';
+export * from './instance';
+export * from './handler';

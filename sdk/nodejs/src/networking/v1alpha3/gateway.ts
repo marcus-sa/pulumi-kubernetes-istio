@@ -20,7 +20,7 @@ export class Gateway extends CustomResource {
     /**
      * Spec holds information about the request being evaluated
      */
-    public readonly spec: Output<output.networking.v1alpha3.GatewaySpec>;
+    public readonly spec: Output<output.networking.v1alpha3.Gateway>;
 
     public static get(name: string, id: Input<ID>, opts: CustomResourceOptions = {}): Gateway {
         return new Gateway(name, undefined, { ...opts, id });
@@ -41,7 +41,8 @@ export class Gateway extends CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args: input.networking.v1alpha3.Gateway = {}, opts: CustomResourceOptions = {}) {
+    // @TODO: Generate input types for args
+    constructor(name: string, args: { metadata: types.input.meta.v1.ObjectMeta, spec: input.networking.v1alpha3.Gateway }, opts: CustomResourceOptions = {}) {
         const inputs: Inputs = {
             apiVersion: 'networking.istio.io/v1alpha3',
             kind: 'Gateway',
@@ -49,9 +50,9 @@ export class Gateway extends CustomResource {
             spec: args.spec,
         };
 
-        if (!opts.version) {
-            opts.version = getVersion();
-        }
+        //if (!opts.version) {
+        //    opts.version = getVersion();
+        //}
 
         super(Gateway.__pulumiType, name, inputs, opts);
     }

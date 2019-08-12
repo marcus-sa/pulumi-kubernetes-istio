@@ -1,6 +1,6 @@
 import { isReferenceObject, isSchemaObject, ReferenceObject, SchemaObject } from 'openapi3-ts';
 
-import { getSchemaName } from './utils';
+import { getSchemaName } from '../../utils';
 
 export function createSchemaType(schema: SchemaObject): string {
   if (isReferenceObject(schema)) {

@@ -1,6 +1,6 @@
 import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 
-import { getSchemaName, isKind } from './utils';
+import { getSchemaName, isKind } from '../../utils';
 import { addRequiredDescription } from './add-required-desc'
 import { createSchemaType } from './create-schema-type';
 import { PropertyTS, SchemaTS } from './interfaces';

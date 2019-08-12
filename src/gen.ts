@@ -1,12 +1,9 @@
 import * as execa from 'execa';
 import * as glob from 'fast-glob';
 import { join } from 'path';
-import { readFile, writeFile } from 'fs-extra';
-import * as mustache from 'mustache';
 
-import { Options, Generator } from './interfaces/options.interface';
+import { Options, Generator } from './interfaces';
 import { createGenerator } from './generator/create';
-import { SDK } from './enums';
 
 // Usage: <language> <istio-api-repo-url> <istio-api-path> <template-dir> <out-dir>
 (async () => {

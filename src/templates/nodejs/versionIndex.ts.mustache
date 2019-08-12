@@ -1,0 +1,7 @@
+// Import versions:
+{{#versions}}
+import * as {{version}} from './{{version}}';
+{{/versions}}
+
+// Export sub-modules
+export { {{#versions}}{{version}}, {{/versions}} };

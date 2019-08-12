@@ -1,7 +1,7 @@
 import { OpenAPIObject } from 'openapi3-ts';
 import { join } from 'path';
 
-import { isOpenApiDefinition } from './utils';
+import { isOpenApiDefinition } from '../../utils';
 
 export async function getDefinition(path: string, istioApiPath: string): Promise<OpenAPIObject | null> {
   const definition = await import(join(istioApiPath, path));
