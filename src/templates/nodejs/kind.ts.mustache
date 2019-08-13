@@ -11,6 +11,9 @@ export class {{kind}} extends k8s.apiextensions.CustomResource {
     const inputs: k8s.apiextensions.CustomResourceArgs = {
       apiVersion: '{{{apiVersion}}}',
       kind: '{{{kind}}}',
+      metadata: {
+        name,
+      },
       ...args,
     };
 

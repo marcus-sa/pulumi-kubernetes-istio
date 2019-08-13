@@ -19,7 +19,7 @@ export namespace {{group}} {
     {{^isEnum}}
     {{#isKind}}
     export interface {{schema}}Args {
-      metadata: k8s.apiextensions.CustomResourceArgs['metadata'];
+      metadata?: k8s.apiextensions.CustomResourceArgs['metadata'];
       spec: Input<{{schema}}>;
     }
     {{/isKind}}
