@@ -22,7 +22,7 @@
     "@types/mustache": "0.8.32",
     "@types/node": "12.7.1",
     "deepmerge": "4.0.0",
-    "execa": "2.0.3",
+    "execa": "2.0.4",
     "fast-glob": "3.0.4",
     "fs-extra": "8.1.0",
     "husky": "3.0.3",
