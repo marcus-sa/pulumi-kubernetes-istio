@@ -21,7 +21,7 @@
     "@types/jest": "24.0.17",
     "@types/mustache": "0.8.32",
     "@types/node": "12.7.1",
-    "deepmerge": "4.2.0",
+    "deepmerge": "4.2.2",
     "execa": "2.0.4",
     "fast-glob": "3.1.0",
     "fs-extra": "8.1.0",
