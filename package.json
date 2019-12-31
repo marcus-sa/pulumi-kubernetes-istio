@@ -35,10 +35,10 @@
     "ts-jest": "24.0.2",
     "ts-node": "8.4.1",
     "typescript": "3.6.3",
-    "@semantic-release/commit-analyzer": "6.3.0",
-    "@semantic-release/git": "7.0.16",
-    "@semantic-release/npm": "5.1.13",
-    "semantic-release": "15.13.21",
+    "@semantic-release/commit-analyzer": "6.3.3",
+    "@semantic-release/git": "7.0.18",
+    "@semantic-release/npm": "5.3.5",
+    "semantic-release": "15.14.0",
     "@pulumi/kubernetes": "1.2.3",
     "@pulumi/pulumi": "0.17.28"
   }
