@@ -139,6 +139,13 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@grpc/grpc-js@^0.6.15":
+  version "0.6.18"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-0.6.18.tgz#ba3b3dfef869533161d192a385412a4abd0db127"
+  integrity sha512-uAzv/tM8qpbf1vpx1xPMfcUMzbfdqJtdCYAqY/LsLeQQlnTb4vApylojr+wlCyr7bZeg3AFfHvtihnNOQQt/nA==
+  dependencies:
+    semver "^6.2.0"
+
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"
@@ -466,15 +473,15 @@
     shell-quote "^1.6.1"
     tmp "^0.0.33"
 
-"@pulumi/pulumi@0.17.28":
-  version "0.17.28"
-  resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-0.17.28.tgz#26f27c0075685b98647263565bfe8bb12adc0542"
-  integrity sha512-pVKahH9Ryl6wIpzdOKjsu2gEshDCA7elB34paJpPXw+3ARViSPri7y/2uTdmMRg36jsbrOdNGEohKJEqIZLioA==
+"@pulumi/pulumi@2.20.0":
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-2.20.0.tgz#4c6206cb66bb12b3766b6e1e8e81e26bbc3346d6"
+  integrity sha512-4xs+CeHGutP+7C2i3NGupprByLwpfhXridmnqDGTLHoF++E9Qozsa7Pef4DkZG2NZSDB3FymgDyd3MeQa4ksVw==
   dependencies:
+    "@grpc/grpc-js" "^0.6.15"
     "@pulumi/query" "^0.3.0"
-    deasync "^0.1.15"
     google-protobuf "^3.5.0"
-    grpc "1.21.1"
+    js-yaml "^3.14.0"
     minimist "^1.2.0"
     normalize-package-data "^2.4.0"
     protobufjs "^6.8.6"
@@ -482,8 +489,8 @@
     require-from-string "^2.0.1"
     semver "^6.1.0"
     source-map-support "^0.4.16"
-    ts-node "^7.0.0"
-    typescript "^3.0.0"
+    ts-node "^7.0.1"
+    typescript "~3.7.3"
     upath "^1.1.0"
 
 "@pulumi/pulumi@^1.0.0":
@@ -3740,6 +3747,14 @@ js-yaml@^3.12.0, js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
+js-yaml@^3.14.0:
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.1.tgz#dae812fdb3825fa306609a8717383c50c36a0537"
+  integrity sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
@@ -6788,7 +6803,7 @@ ts-node@8.4.1:
     source-map-support "^0.5.6"
     yn "^3.0.0"
 
-ts-node@^7.0.0:
+ts-node@^7.0.0, ts-node@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-7.0.1.tgz#9562dc2d1e6d248d24bc55f773e3f614337d9baf"
   integrity sha512-BVwVbPJRspzNh2yfslyT1PSbl5uIk03EZlb493RKHN4qej/D06n1cEhjlOJG69oFsE7OT8XjpTUcYf6pKTLMhw==
@@ -6845,6 +6860,11 @@ typescript@^3.0.0:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
   integrity sha512-ACzBtm/PhXBDId6a6sDJfroT2pOWt/oOnk4/dElG5G33ZL776N3Y6/6bKZJBFpd+b05F3Ct9qDjMeJmRWtE2/g==
+
+typescript@~3.7.3:
+  version "3.7.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
+  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
 
 uglify-js@^3.1.4:
   version "3.6.0"
