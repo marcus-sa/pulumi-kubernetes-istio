@@ -39,7 +39,7 @@
     "@semantic-release/git": "7.0.16",
     "@semantic-release/npm": "5.1.13",
     "semantic-release": "15.13.21",
-    "@pulumi/kubernetes": "1.2.3",
+    "@pulumi/kubernetes": "2.8.0",
     "@pulumi/pulumi": "0.17.28"
   }
 }

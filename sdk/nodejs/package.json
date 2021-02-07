@@ -10,7 +10,7 @@
     "semantic-release": "yarn exec semantic-release"
   },
   "peerDependencies": {
-    "@pulumi/kubernetes": "^0.25.6 || ^1.0.0",
+    "@pulumi/kubernetes": "^0.25.6 || ^1.0.0 || ^2.0.0",
     "@pulumi/pulumi": "^0.17.28"
   },
   "pulumi": {
