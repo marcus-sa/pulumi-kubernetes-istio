@@ -55,7 +55,7 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@pulumi/gcp@":
+"@pulumi/gcp@^0.18.16":
   version "0.18.16"
   resolved "https://registry.yarnpkg.com/@pulumi/gcp/-/gcp-0.18.16.tgz#7bfd738e8f0ab53d1ecc3fffdf4fcdc8a24a70b1"
   integrity sha512-O2TWMnGda4KhBDrhJwvu1apDn5t1ap2+IWWuSbPJxhqZvuI9V7arjwA3SvDJb71QhD6n4GLS4ffcK4p5FFIMgQ==
@@ -894,7 +894,7 @@ protobufjs@^6.8.6:
     long "^4.0.0"
 
 "pulumi-k8s-istio@file:../../sdk/nodejs":
-  version "0.0.1"
+  version "1.1.0"
 
 rc@^1.2.7:
   version "1.2.8"
@@ -1213,9 +1213,9 @@ wrappy@1:
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
 y18n@^3.2.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.1.tgz#6d15fba884c08679c0d77e88e7759e811e07fa41"
-  integrity sha1-bRX7qITAhnnA136I53WegR4H+kE=
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.2.tgz#85c901bd6470ce71fc4bb723ad209b70f7f28696"
+  integrity sha512-uGZHXkHnhF0XeeAPgnKfPv1bgKAYyVvmNL1xlKsPYZPaIHxGti2hHqvOCQv71XMsLxu1QjergkqogUnms5D3YQ==
 
 yallist@^3.0.0, yallist@^3.0.2, yallist@^3.0.3:
   version "3.0.3"
