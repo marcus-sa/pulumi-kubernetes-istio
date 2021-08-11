@@ -55,7 +55,7 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@pulumi/gcp@":
+"@pulumi/gcp@^0.18.16":
   version "0.18.16"
   resolved "https://registry.yarnpkg.com/@pulumi/gcp/-/gcp-0.18.16.tgz#7bfd738e8f0ab53d1ecc3fffdf4fcdc8a24a70b1"
   integrity sha512-O2TWMnGda4KhBDrhJwvu1apDn5t1ap2+IWWuSbPJxhqZvuI9V7arjwA3SvDJb71QhD6n4GLS4ffcK4p5FFIMgQ==
@@ -855,9 +855,9 @@ path-is-absolute@^1.0.0:
   integrity sha1-F0uSaHNVNP+8es5r9TpanhtcX18=
 
 path-parse@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
-  integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
+  integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
@@ -894,7 +894,7 @@ protobufjs@^6.8.6:
     long "^4.0.0"
 
 "pulumi-k8s-istio@file:../../sdk/nodejs":
-  version "0.0.1"
+  version "1.1.0"
 
 rc@^1.2.7:
   version "1.2.8"
