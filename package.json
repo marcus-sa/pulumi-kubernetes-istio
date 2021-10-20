@@ -40,6 +40,6 @@
     "@semantic-release/npm": "5.1.13",
     "semantic-release": "15.13.21",
     "@pulumi/kubernetes": "1.2.3",
-    "@pulumi/pulumi": "0.17.28"
+    "@pulumi/pulumi": "3.15.0"
   }
 }
